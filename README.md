@@ -58,7 +58,7 @@ channels==4.0.0
 
 ## suppl.
 ```
-DjangoTemplate/
+DjangoOpenAIStreamingChat/
 ├─accounts
 │  ├─forms
 │  ├─models
