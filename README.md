@@ -1,5 +1,5 @@
 # DjangoOpenAIStreamingChat
-<img height="450px" src="https://github.com/MITSUHIRO-KURIKI/DjangoOpenAIStreamingChat/blob/main/static/templates/pages/home/img/image.png">
+<img src="https://github.com/MITSUHIRO-KURIKI/DjangoOpenAIStreamingChat/blob/main/static/templates/pages/home/img/image.png">
 
 ## What is this?
 [DjangoTemplate](https://github.com/MITSUHIRO-KURIKI/DjangoTemplate/ "DjangoTemplate")をベースに[OpenAI API](https://openai.com/blog/openai-api "OpenAI API")を利用したチャットアプリを学習として作成しました
