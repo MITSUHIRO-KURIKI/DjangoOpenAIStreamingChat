@@ -1,0 +1,23 @@
+@charset "UTF-8";
+ :root {
+    --fade-up-content-animation-duration: 1000ms;
+    --fade-up-content-translate-y:        15px;
+ }
+.fade-up-content {
+    opacity: 0;
+}
+.fadeUpContent {
+    animation-name:      fadeUpAnime;
+    animation-duration:  var(--fade-up-content-animation-duration);
+    animation-fill-mode: forwards;
+}
+@keyframes fadeUpAnime {
+    0% {
+        opacity: 0;
+        transform: translateY(var(--fade-up-content-translate-y));
+     }
+     100% {
+        opacity: 1;
+        transform: translateY(0px);
+     }
+}

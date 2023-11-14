@@ -1,0 +1,25 @@
+:root {
+    --home-section-padding-y:       5vw;
+    --home-section-title-padding-x: 8vw;
+}
+[data-bs-theme=light] {
+    --home-contents-bg: rgba(247, 242, 247, 0.3);
+}
+[data-bs-theme=dark] {
+    --home-contents-bg: rgba(50, 47, 56, 0.3);
+}
+#HomeContentsArea {
+    background-color: var(--home-contents-bg);
+}
+section {
+    padding: var(--home-section-padding-y) 0 0 0;
+}
+section .title {
+    padding: 0 var(--home-section-title-padding-x);
+}
+section .body {
+    padding: 0 var(--home-section-title-padding-x);
+}
+section .image {
+    padding: 0 var(--home-section-title-padding-x);
+}

@@ -1,0 +1,67 @@
+@charset "UTF-8";
+:root {
+    --font-family-base:      "Noto Sans JP", "Noto Sans", Arial, Roboto, sans-serif, "Segoe UI", system-ui, -apple-system, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --base-font-size:        15px;
+    --base-font-weight:      400;
+    --base-line-height:      1;
+    /* font size */
+    --custom-fs-250: calc( var(--base-font-size) * 2.5 );
+    --custom-fs-200: calc( var(--base-font-size) * 2 );
+    --custom-fs-175: calc( var(--base-font-size) * 1.75 );
+    --custom-fs-150: calc( var(--base-font-size) * 1.5 );
+    --custom-fs-125: calc( var(--base-font-size) * 1.25 );
+    --custom-fs-100: var(--base-font-size);
+    --custom-fs-90:  calc( var(--base-font-size) * .9 );
+    --custom-fs-80:  calc( var(--base-font-size) * .8 );
+    --custom-fs-70:  calc( var(--base-font-size) * .7 );
+    --custom-fs-60:  calc( var(--base-font-size) * .6 );
+    --custom-fs-50:  calc( var(--base-font-size) * .5 );
+    /* font weight */
+    --custom-fw-100: 100;
+    --custom-fw-200: 200;
+    --custom-fw-300: 300;
+    --custom-fw-400: 400;
+    --custom-fw-500: 500;
+    --custom-fw-600: 600;
+    --custom-fw-700: 700;
+    --custom-fw-800: 800;
+    --custom-fw-900: 900;
+    /* line-height */
+    --custom-lh-150: calc( var(--base-line-height) * 1.5 );
+    --custom-lh-125: calc( var(--base-line-height) * 1.25 );
+    --custom-lh-100: var(--base-line-height);
+    --custom-lh-95:  calc( var(--base-line-height) * .95 );
+    --custom-lh-90:  calc( var(--base-line-height) * .9 );
+}
+/* font-size */
+.fs-1  { font-size: var(--custom-fs-250); }
+.fs-2  { font-size: var(--custom-fs-200); }
+.fs-3  { font-size: var(--custom-fs-175); }
+.fs-4  { font-size: var(--custom-fs-150); }
+.fs-5  { font-size: var(--custom-fs-125); }
+.fs-6  { font-size: var(--custom-fs-100); }
+.fs-7  { font-size: var(--custom-fs-90); }
+.fs-8  { font-size: var(--custom-fs-80); }
+.fs-9  { font-size: var(--custom-fs-70); }
+.fs-10 { font-size: var(--custom-fs-60); }
+.fs-11 { font-size: var(--custom-fs-50); }
+/* font-weight */
+.fw-base,
+.fw-normal,
+.font-weight-base { font-weight: var(--base-font-weight); }
+.fw-1 { font-weight: var(--custom-fw-100); }
+.fw-2 { font-weight: var(--custom-fw-200); }
+.fw-3 { font-weight: var(--custom-fw-300); }
+.fw-4 { font-weight: var(--custom-fw-400); }
+.fw-5 { font-weight: var(--custom-fw-500); }
+.fw-6 { font-weight: var(--custom-fw-600); }
+.fw-7 { font-weight: var(--custom-fw-700); }
+.fw-8 { font-weight: var(--custom-fw-800); }
+.fw-9 { font-weight: var(--custom-fw-900); }
+/* line-height */
+.lh-s-2 { line-height: var(--custom-lh-90); }
+.lh-s-1 { line-height: var(--custom-lh-95); }
+.lh-1 { line-height: var(--custom-lh-100); }
+.lh-2 { line-height: var(--custom-lh-125); }
+.lh-3 { line-height: var(--custom-lh-150); }

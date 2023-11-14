@@ -1,0 +1,23 @@
+@charset "UTF-8";
+@import url(../../../base/color.css);
+
+#HeroArea .card,
+#HeroArea .card-img,
+#HeroArea .card-img-overlay {
+    border:                0;
+    border-radius:         0:
+    -moz-border-radius:    0;
+    -webkit-border-radius: 0;
+}
+.btn-django,
+.btn-outline-django:hover {
+    color:            var(--bs-white) !important;
+    border:           3px solid transparent;
+    background-color: var(--django-theme-color);
+}
+.btn-django:hover,
+.btn-outline-django {
+    color:            var(--django-theme-color) !important;
+    border:           3px solid var(--django-theme-color);
+    background-color: transparent;
+}

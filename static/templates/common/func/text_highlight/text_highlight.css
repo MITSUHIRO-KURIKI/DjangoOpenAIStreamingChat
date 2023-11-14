@@ -1,0 +1,14 @@
+@charset "UTF-8";
+/* ハイライト文字に出てこないものを使用 */
+/* \0030 -> class="0" */
+/* \0031 -> class="1" */
+span.\0030 {
+    font-weight:      var(--custom-fw-600);
+    line-height:      var(--custom-lh-125);
+    background-color: var(--bs-highlight-bg);
+}
+span.\0031 {
+    font-weight:      var(--custom-fw-500);
+    line-height:      var(--custom-lh-125);
+    background-color: var(--bs-success-bg-subtle);
+}

@@ -1,0 +1,85 @@
+@charset "UTF-8";
+@import url(../../../base/color.css);
+
+:root {
+    /* Navbar */
+    --navber-height:              3rem;
+    --navber-border-bottom-px:    1px;
+    --navber-border-bottom-color: var(--bs-border-color);
+    --navber-transition:          300ms;
+    /* NavberDropdown */
+    --dropdown-botton-img-px:         2rem;
+    --dropdown-menu-width:            25vw;
+    --dropdown-menu-min-width:        20rem;
+    --dropdown-menu-user-icon-img-px: 5rem;
+    /* すりガラス */
+    --frosted-glass-blur:                5px;
+    --frosted-glass-border-bottom-px:    1px;
+    --frosted-glass-border-bottom-color: var(--bs-border-color-translucent);
+}
+/* Navbar */
+#Navbar {
+    height:             var(--navber-height);
+    -webkit-transition: all var(--navber-transition) linear;
+    -moz-transition:    all var(--navber-transition) linear;
+    -ms-transition:     all var(--navber-transition) linear;
+    -o-transition:      all var(--navber-transition) linear;
+}
+#Navbar.hide{
+    top: calc( -1 * var(--navber-height) );
+}
+#NavbarItem {
+    -webkit-transition: all var(--navber-transition) linear;
+    -moz-transition:    all var(--navber-transition) linear;
+    -ms-transition:     all var(--navber-transition) linear;
+    -o-transition:      all var(--navber-transition) linear;
+}
+.navbar {
+    border-bottom:           var(--navber-border-bottom-px) solid var(--navber-border-bottom-color);
+    background-color:        var(--navbar-bg);
+    -webkit-backdrop-filter: none;
+	backdrop-filter:         none;
+}
+/* NavberDropdown */
+#NavberDropdown .dropdown_botton_img {
+    width:  var(--dropdown-botton-img-px);
+    height: var(--dropdown-botton-img-px);
+}
+#NavberDropdown .dropdown-menu {
+    width:     var(--dropdown-menu-width);
+    min-width: var(--dropdown-menu-min-width);
+}
+#NavberDropdown .dropdown_menu_user_icon_img {
+    width:  var(--dropdown-menu-user-icon-img-px);
+    height: var(--dropdown-menu-user-icon-img-px);
+}
+
+/* すりガラス */
+.frosted-glass {
+    border-bottom:           var(--frosted-glass-border-bottom-px) solid var(--frosted-glass-border-bottom-color);
+    background-color:        var(--frosted-glass-bg-color);
+    -webkit-backdrop-filter: blur(var(--frosted-glass-blur));
+	backdrop-filter:         blur(var(--frosted-glass-blur));
+}
+.frosted-glass .navbar-brand,
+.frosted-glass .navbar-toggler,
+.frosted-glass .dropdown-toggle,
+.frosted-glass a.nav-link:link,
+.frosted-glass a.nav-link:active,
+.frosted-glass a.nav-link:visited,
+.frosted-glass a.nav-link:hover {
+    color: var(--navbar-frosted-glass-text-color);
+}
+.navber-color-reset {
+    border-bottom:           var(--navber-border-bottom-px) solid var(--navber-border-bottom-color);
+    background-color:        var(--navbar-bg);
+    -webkit-backdrop-filter: none;
+	backdrop-filter:         none;
+}
+.navber-color-reset .navbar-toggler,
+.navber-color-reset a:link,
+.navber-color-reset a:active,
+.navber-color-reset a:visited,
+.navber-color-reset a:hover {
+    color:            var(--bs-emphasis-color) !important;
+}

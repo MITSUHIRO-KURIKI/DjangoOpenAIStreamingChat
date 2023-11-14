@@ -1,0 +1,31 @@
+@charset "UTF-8";
+ /* 一単語づつ fade in */
+ /* 使い方 */
+ /* <div class='fade-in-one-word'><span>a</span>...</div> */
+ 
+:root {
+    --fade-in-one-word-duration:    200ms;
+    --fade-in-one-word-translate-y: calc( var(--base-font-size) * .8 );
+}
+
+.fade-in-one-word > span {
+    display: inline-flex;
+    opacity: 0;
+}
+.fadeInOneWordHandler{
+    animation: fadeInOneWordAnimation var(--fade-in-one-word-duration) linear forwards;
+}
+@keyframes fadeInOneWordAnimation {
+    0%{
+        opacity:   0;
+        transform: translateY(var(--fade-in-one-word-translate-y));
+    }
+    30%{
+        opacity:   0.7;
+        transform: translateY(calc( var(--fade-in-one-word-translate-y) * 7 / 10 ));
+    }
+    100%{
+        opacity:   1;
+        transform: translateY(0);
+    }
+}

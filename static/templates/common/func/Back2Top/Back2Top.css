@@ -1,0 +1,15 @@
+@charset "UTF-8";
+#Back2Top > a {
+    position:   fixed;
+    right:      1.5vw;
+    bottom:     2vw;
+    z-index:    1030;
+    transition: 1s;
+    opacity:    0.2;
+}
+#Back2Top > a:hover{ 
+    opacity: 0.8;
+}
+#Back2Top i {
+    font-size: 1.5rem;
+}

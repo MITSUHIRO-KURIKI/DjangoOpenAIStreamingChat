@@ -1,0 +1,43 @@
+@charset "UTF-8";
+@import url(../../../../base/color.css);
+
+/* chat-header */
+.chat-header {
+    padding-top:             3vw; /* sub-container-3 padding-top */
+}
+.chat-header,
+.chat-header .form-control {
+    background-color:        var(--bs-body-color-rgb);
+    -webkit-backdrop-filter: blur(var(--frosted-glass-blur));
+	backdrop-filter:         blur(var(--frosted-glass-blur));
+}
+.f-room-title {
+    font-size:   var(--custom-fs-125);
+    font-weight: var(--custom-fw-500);
+    line-height: var(--custom-lh-100);
+}
+.chat-input-area,
+.chat-input-area .form-control {
+    box-shadow: none;
+    background: var(--bs-tertiary-bg);
+}
+
+/* chat-main */
+.chat-main {
+    padding-left:   calc( var(--frosted-glass-blur) * 2 );
+    padding-right:  calc( var(--frosted-glass-blur) * 2 );
+    padding-bottom: 5vh;
+}
+.message-icon {
+    width:  48px;
+    height: 48px;
+}
+
+/* room一覧 */
+#RoomList a {
+    padding-top:    .5rem;
+    padding-bottom: .5rem;
+}
+#RoomList li {
+    border-bottom:  2px solid var(--bs-border-color);
+}

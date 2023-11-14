@@ -1,0 +1,9 @@
+
+@charset "UTF-8";
+@import url(../../../base/font.css);
+
+.f-content-title {
+    font-size:   var(--custom-fs-175);
+    font-weight: var(--custom-fw-300);
+    line-height: var(--custom-lh-100);
+}

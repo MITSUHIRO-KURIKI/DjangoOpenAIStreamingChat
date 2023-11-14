@@ -1,0 +1,58 @@
+@charset "UTF-8";
+@import url(../../../common/css/bs-color/bs-color.css);
+/* Border bottom effects */
+:root {
+	--border-bottom-animation-color:       var(--bs-primary);
+    --border-bottom-animation-transition:  500ms;
+}
+
+.input-border-none {
+	padding: 0;
+	margine: 0;
+	border:     none;
+    box-shadow: none !important;
+}
+.border-bottom-animation {
+	position: absolute;
+	content:  "";
+	width:    0;
+	height:   2px;
+	z-index:  1030;
+	-webkit-transition: all var(--border-bottom-animation-transition) ease;
+	-moz-transition:    all var(--border-bottom-animation-transition) ease;
+	-ms-transition:     all var(--border-bottom-animation-transition) ease;
+	-o-transition:      all var(--border-bottom-animation-transition) ease;
+	transition:         all var(--border-bottom-animation-transition) ease;
+}
+
+/* Border bottom left */
+.input-border-none ~ .border-bottom-animation.left {
+	left:   0;
+	bottom: 0;
+}
+.input-border-none:focus ~ .border-bottom-animation.left {
+	background: var(--border-bottom-animation-color);
+	width:      100%;
+}
+
+/* Border bottom right */
+.input-border-none ~ .border-bottom-animation.right {
+	right:  0;
+	bottom: 0;
+}
+.input-border-none:focus ~ .border-bottom-animation.right {
+	background: var(--border-bottom-animation-color);
+	width:      100%;
+}
+
+/* Border bottom center */
+.input-border-none ~ .border-bottom-animation.center {
+	left:   0;
+	right:  0;
+	bottom: 0;
+	margin: 0 auto;
+}
+.input-border-none:focus ~ .border-bottom-animation.center {
+	background: var(--border-bottom-animation-color);
+	width:      100%;
+}
