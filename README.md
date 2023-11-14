@@ -15,7 +15,7 @@
 * 上り/下りで使用したToken数を確認できます
 
 ## イメージ
-<center><img height="450px" src="https://github.com/MITSUHIRO-KURIKI/DjangoOpenAIStreamingChat/blob/main/static/templates/pages/home/img/img_fps10.gif"></center>
+<center><img height="430px" src="https://github.com/MITSUHIRO-KURIKI/DjangoOpenAIStreamingChat/blob/main/static/templates/pages/home/img/img_fps10.gif"></center>
 
 ## 設置
 <sup>[DjangoTemplate](https://mitsuhiro-kuriki.github.io/DjangoTemplate/ "DjangoTemplate")との差分のみ表示</sup>
