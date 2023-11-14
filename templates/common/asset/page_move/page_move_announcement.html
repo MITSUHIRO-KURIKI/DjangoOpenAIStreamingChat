@@ -1,0 +1,14 @@
+{% comment %} 
+<form method="post" onSubmit="is_note_msg=false;">
+    ...
+</form>
+{% endcomment %}
+<script type="text/javascript">
+    let is_note_msg=true;
+    window.onbeforeunload = function(event){
+      if(is_note_msg){
+          event.preventDefault();
+          event.returnValue = 'Check';
+      };
+    };
+</script>

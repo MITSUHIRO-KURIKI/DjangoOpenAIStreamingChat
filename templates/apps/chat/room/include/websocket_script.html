@@ -1,0 +1,177 @@
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const ChatOutputArea = document.getElementById('ChatOutputArea'),
+              ChatInputArea  = document.getElementById('ChatInputArea'),
+              ChatSendButton = document.getElementById('ChatSendButton');
+
+        const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws",
+              ws_port   = '',
+              ws_url    = `${ws_scheme}://${window.location.host}${ws_port}/ws/chat/room/{{ object.room_id.room_id }}`;
+        
+        let socket    = null,
+            iteration = 0;
+
+        // WebSocket接続を確立するための関数
+        function connectWebSocket() {
+
+            socket = new WebSocket(ws_url);
+
+            socket.addEventListener('open', () => {
+                updateSendButton('send');
+            });
+            socket.addEventListener('message', (e) => {
+                receiveMessage(e);
+            });
+            socket.addEventListener('close', () => {
+                updateSendButton('disconnect');
+            });
+            socket.addEventListener('error', (error) => {
+                console.error('WebSocket error:', error);
+            });
+        };
+
+        // 送信ボタンの状態を更新
+        function updateSendButton(status) {
+            if (status === 'send') {
+                // 送信可能状態
+                ChatSendButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+            } else if (status === 'disconnect') {
+                // 切断状態
+                ChatSendButton.innerHTML = '<i class="fa-solid fa-plug"></i>';
+            };
+        };
+
+        // メッセージを送信する
+        function sendMessage() {
+            if (socket && socket.readyState == WebSocket.OPEN) {
+                let post_data = {
+                    'user_sentence': ChatInputArea.value,
+                    {% if room_settings_form.system_sentence %}   'system_sentence':"{{ room_settings_form.system_sentence.value | linebreaksbr }}",{% endif %}
+                    {% if room_settings_form.assistant_sentence %}'assistant_sentence':"{{ room_settings_form.assistant_sentence.value | linebreaksbr }}",{% endif %}
+                    {% if room_settings_form.history_len %}       'history_len':{{ room_settings_form.history_len.value }},{% endif %}
+                    {% if room_settings_form.model_name %}        'model_name':"{{ room_settings_form.model_name.value }}",{% endif %}
+                    {% if room_settings_form.max_tokens %}        'max_tokens':{{ room_settings_form.max_tokens.value }},{% endif %}
+                    {% if room_settings_form.temperature %}       'temperature':{{ room_settings_form.temperature.value }},{% endif %}
+                    {% if room_settings_form.top_p %}             'top_p':{{ room_settings_form.top_p.value }},{% endif %}
+                    {% if room_settings_form.presence_penalty %}  'presence_penalty':{{ room_settings_form.presence_penalty.value }},{% endif %}
+                    {% if room_settings_form.frequency_penalty %} 'frequency_penalty':{{ room_settings_form.frequency_penalty.value }},{% endif %}
+                };
+                socket.send(JSON.stringify(post_data));
+                // HumanMessageDiv をチャットエリアに表示
+                let HumanMessageDiv       = document.createElement('div');
+                HumanMessageDiv.classList.add('d-flex', 'flex-row', 'align-items-start', 'mt-3');
+                HumanMessageDiv.innerHTML = `
+                        <a name="HumanMessageIter_${iteration}"></a> 
+                        <div class="flex-column">
+                            <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                                 class="row rounded-circle border border-1 message-icon"
+                                 alt="user_icon" />
+                            <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
+                        </div>
+                        <div class="flex-column ms-2 mt-2">
+                            <span class="human-message" id="HumanMessageIter_${iteration}"></span>
+                        </div>`;
+                let humanMessageId = 'HumanMessageIter_' + iteration;
+                ChatOutputArea.appendChild(HumanMessageDiv);
+                document.getElementById(humanMessageId).innerText = ChatInputArea.value;
+                // AIMessageDiv をチャットエリアに表示
+                let AIMessageDiv = document.createElement('div');
+                AIMessageDiv.classList.add('d-flex', 'flex-row', 'align-items-start', 'mt-3');
+                AIMessageDiv.innerHTML = `
+                        <a name="AiMessageIter_${iteration}"></a> 
+                        <div class="flex-column">
+                            <img src="{{ object.ai_icon.url }}"
+                                 class="row rounded-circle border border-1 message-icon"
+                                 alt="user_icon" />
+                            <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+                        </div>
+                        <div class="flex-column ms-2 mt-2">
+                            <span id="loadingIndicator_${iteration}">
+                                <span class="spinner-grow spinner-grow-sm text-info me-1" role="status" aria-hidden="true"></span>
+                                <small class="text-info">Generating...</small>
+                            </span>
+                            <span class="ai-message" id="AiMessageIter_${iteration}"></span>
+                        </div>`;
+                ChatOutputArea.appendChild(AIMessageDiv);
+                // 時刻
+                let now          = new Date(),
+                    TimeStampDiv = document.createElement('div');
+                TimeStampDiv.classList.add('d-flex', 'flex-row', 'justify-content-end');
+                TimeStampDiv.innerHTML = `
+                <span class="fs-9 fw-2">
+                    ${now.getFullYear()}年${now.getMonth()}月${now.getDate()}日${now.getHours()}:${now.getMinutes()}
+                </span>`;
+                ChatOutputArea.appendChild(TimeStampDiv);
+                // ChatInputAreaクリア
+                ChatInputArea.value = '';
+
+                // 生成エリアへ自動スクロール
+                let offSet = $(window).height() / 2,
+                    href   = '#AiMessageIter_' + (iteration),
+                    target = $(href == "#" || href == "" ? 'html' : href),
+                    position = target.offset().top - offSet;
+                $("body,html").animate({
+                    scrollTop: position,
+                }, 0, 'easeInOutCubic');
+
+                // カウントアップ
+                iteration += 1;
+            } else {
+                // 接続が閉じている場合は再接続
+                connectWebSocket();
+            };
+        };
+
+        // チャットメッセージの送信
+        ChatSendButton.addEventListener('click', sendMessage);
+        // エンターキーでの送信
+        // Offcanvasの開閉状態を管理する
+        let isSettingsOffcanvasOpen = false;
+        const settingsOffcanvas = document.getElementById('RoomSettingsOffcanvasWithEndOptions');
+        settingsOffcanvas.addEventListener('show.bs.offcanvas', () => {
+            isSettingsOffcanvasOpen = true;
+        });
+        settingsOffcanvas.addEventListener('hidden.bs.offcanvas', () => {
+            isSettingsOffcanvasOpen = false;
+        });
+        // エンターキーでの送信判定
+        window.document.onkeydown = function(event){
+            // チャットインプットor送信ボタンorルーム名インプットにフォーカスしていない
+            // かつRoomSettingsOffcanvasが開いていないことを確認
+            if ( document.activeElement !== document.getElementById('ChatInputArea') &&
+                 document.activeElement !== document.getElementById('ChatSendButton') &&
+                 document.activeElement !== document.getElementById('{{ form.room_name.id_for_label }}') &&
+                 !isSettingsOffcanvasOpen ) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();  // デフォルトのエンターキーの動作を阻止
+                    event.stopPropagation(); // イベントの伝播を止める
+                    sendMessage();           // メッセージ送信関数呼出し
+                };
+            };
+        };
+
+        // WebSocketからのメッセージを受け取る
+        function receiveMessage(event) {
+            try {
+                let data               = JSON.parse(event.data),
+                    aiMessageId        = 'AiMessageIter_' + (iteration - 1),
+                    loadingIndicatorId = 'loadingIndicator_' + (iteration - 1);
+                document.getElementById(loadingIndicatorId).style.display = 'none';
+                document.getElementById(aiMessageId).innerText += `${data.llm_answer}`;
+            } catch (e) {
+                console.error('Error parsing message data:', e);
+                document.getElementById(loadingIndicatorId).style.display = 'none';
+            };
+        };
+
+        // ウィンドウが閉じられる際にはWebSocket切断
+        window.addEventListener('beforeunload', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            };
+        });
+
+        // WebSocket接続を開始
+        connectWebSocket();
+    });
+</script>

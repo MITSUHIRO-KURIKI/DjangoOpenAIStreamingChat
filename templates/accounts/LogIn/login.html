@@ -1,0 +1,129 @@
+{% extends 'accounts/accounts_base.html' %}
+
+{# --- TITLE --- #}
+{% block accounts_title %} - Log in{% endblock %}
+
+{# --- CONTENT --- #}
+{% block accounts_content %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row text-center pb-3">
+            <h1 class="f-content-title">Log in</h1>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {# --- FORM ERROR CUSTOM --- #}
+            {% if form.errors %}
+            <div class="row d-flex justify-content-center">
+                <div class="col-xl-6 col-lg-10 col-sm-12">
+                    <div class="alert alert-info" role="alert">
+                        正しいメールアドレスとパスワードを入力してください。<br>
+                        パスワードを忘れた場合は<a href="{% url 'accounts:password_reset' %}" class="alert-link">こちらで</a>再設定できます。
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.username.id_for_label }}"
+                            class="sr-only">
+                            {{ form.username.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.username.field.widget.input_type }}"
+                                   class="form-input-vertical-cluster-beginning form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                   name="{{ form.username.html_name }}"
+                                   id="{{ form.username.id_for_label }}"
+                                   {% if invalid_username %}
+                                        value="{{invalid_username}}"
+                                   {% else %}
+                                        placeholder="{{ form.username.label }}"
+                                        autofocus
+                                   {% endif %}
+                                   {% if form.username.field.required %}required{% endif %} />
+                            <label for="{{ form.username.id_for_label }}">
+                                {{ form.username.label }}
+                            </label>
+                            {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.password.id_for_label }}"
+                            class="sr-only">
+                            {{ form.password.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.password.field.widget.input_type }}"
+                                   class="form-input-vertical-cluster-end form-control {% if form.password.errors %}is-invalid{% endif %}" 
+                                   name="{{ form.password.html_name }}" 
+                                   id="{{ form.password.id_for_label }}"
+                                   placeholder="{{ form.password.label }}"
+                                   {% if invalid_username %}
+                                        autofocus
+                                   {% endif %}
+                                   {% if form.password.field.required %}required{% endif %} />
+                            <label for="{{ form.password.id_for_label }}">
+                                {{ form.password.label }}
+                            </label>
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-3">
+                        {# --- CHECK TYPE --- #}
+                        <div class="form-check form-switch">
+                            <input type="{{ form.is_login_remenber.field.widget.input_type }}"
+                                   class="form-check-input" 
+                                   role="switch"
+                                   name="{{ form.is_login_remenber.html_name }}" 
+                                   id="{{ form.is_login_remenber.id_for_label }}"
+                                   {% if form.is_login_remenber.field.required %}required{% endif %} />
+                            <label class="form-check-label"
+                                    for="{{ form.is_login_remenber.id_for_label }}">
+                                {{ form.is_login_remenber.label }}
+                            </label>
+                            {% if form.is_login_remenber.errors %}
+                                {% for error in form.is_login_remenber.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">Log in</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3 col-md-12">
+        {#--- Displayed md or less --- #}
+        <div class="d-lg-none"><hr /></div>
+        {% if IS_USE_SOCIAL_LOGIN %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}"><i class="beginning-sentence-icon fa-brands fa-google"></i>Log in with Google</a>
+            <hr />
+        {% endif %}
+        <a href="{% url 'accounts:password_reset' %}"><i class="beginning-sentence-icon fa-solid fa-circle-question"></i>Forgot password?</a>
+        <hr />
+        <a href="{% url 'accounts:signup' %}"><i class="beginning-sentence-icon fas fa-user-plus mr-1"></i>Sign up</a>
+        <hr />
+    </div>
+</div>
+{% endblock %}

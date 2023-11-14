@@ -1,0 +1,55 @@
+{% comment %} 
+template引数:
+ * AjaxFuncName
+ * pagenate
+ * url_param
+{% endcomment %}
+<div class="d-flex align-items-center mt-4" id="PagenationNav">
+    {# --- PagenationNav Items --- #}
+    <ul class="pagination" id="PagenationNavItems">
+        <li class="page-item">
+            <button type="button"
+                    class="page-link"
+                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.previous_page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+        </li>
+        {% for page in pagenate.nav_list %}
+            <li class="page-item {% if page == '…' %}disabled{% elif page == pagenate.page %}active{% endif %}">
+                <button type="button"
+                        class="page-link"
+                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                    {{ page }}
+                </button>
+            </li>
+        {% endfor %}
+        <li class="page-item">
+            <button type="button"
+                    class="page-link"
+                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.next_page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </li>
+    </ul>
+    {# --- PagenationNav Jump --- #}
+    <div class="btn-group">
+        <button type="button"
+                class="btn btn-sm dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+            <i class="fa-solid fa-person-running"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+            {% for page in pagenate.nav_range %}
+            <li>
+                <button type="button"
+                        class="dropdown-item"
+                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                    {{ page }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

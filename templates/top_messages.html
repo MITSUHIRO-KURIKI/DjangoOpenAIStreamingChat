@@ -1,0 +1,73 @@
+{# --- INLINE MESSAGE --- #}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-fadeout alert-dismissible fade show text-center font-weight-bold fixed-top"
+             role="alert"
+             id="TopMessage">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ message | linebreaksbr }}
+        </div>
+        {# --- fadeOut --- #}
+        <script type="text/javascript">
+            {% if message.tags == 'info' %}
+                var delay_time = {% if message_delay_time %}{{message_delay_time}}{% else %}3000{% endif %}
+            {% else %}
+                var delay_time = {% if message_delay_time %}{{message_delay_time}}{% else %}3000{% endif %}
+            {% endif %}
+            $(function () {
+                $('.alert-fadeout').delay(delay_time).fadeOut('slow');
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+{# --- FORM MESSAGE  --- #}
+{% if inlines %}
+    {% if form.errors %}
+        <div class="alert alert-danger alert-fadeout alert-dismissible fade show text-center fixed-top"
+             role="alert"
+             id="TopMessage">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
+            入力にエラーがあります。フォームのエラー内容をご確認ください。
+        </div>
+        {# --- fadeOut --- #}
+        <script type="text/javascript">
+            var delay_time = {% if message_delay_time %}{{message_delay_time}}{% else %}3000{% endif %}
+            $(function () {
+                $('.alert-fadeout').delay(delay_time).fadeOut('slow');
+            });
+        </script>
+    {% else %}
+        {% for formset in inlines %}
+            {% if formset.errors %}
+                <div class="alert alert-danger alert-fadeout alert-dismissible fade show text-center font-weight-bold fixed-top"
+                     role="alert"
+                     id="TopMessage">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    入力にエラーがあります。フォームのエラー内容をご確認ください。
+                </div>
+                {# --- fadeOut --- #}
+                <script type="text/javascript">
+                    var delay_time = {% if message_delay_time %}{{message_delay_time}}{% else %}3000{% endif %}
+                    $('.alert-fadeout').delay(delay_time).fadeOut('slow');
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% elif form %}
+    {% if form.errors %}
+        <div class="alert alert-danger alert-fadeout alert-dismissible fade show text-center font-weight-bold fixed-top"
+             role="alert"
+             id="TopMessage">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            入力にエラーがあります。フォームのエラー内容をご確認ください。
+        </div>
+        {# --- fadeOut --- #}
+        <script type="text/javascript">
+            var delay_time = {% if message_delay_time %}{{message_delay_time}}{% else %}3000{% endif %}
+            $(function () {
+                $('.alert-fadeout').delay(delay_time).fadeOut('slow');
+            });
+        </script>
+    {% endif %}
+{% endif %}

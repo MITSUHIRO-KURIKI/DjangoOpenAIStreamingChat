@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{# --- TITLE --- #}
+{% block title %}{% block user_properties_title %}{% endblock %}{% endblock %}
+{% block og1_title %}{% endblock %}
+{% block og2_title %}{% endblock %}
+{# --- DESCRIPTION --- #}
+{% block description %}{% endblock %}
+{% block og1_description %}{% endblock %}
+{% block og2_description %}{% endblock %}
+{# --- KEYWORDS --- #}
+{% block keywords %}{% endblock %}
+{# --- CSS --- #}
+{% block css_previous %}
+{# --- Custom style for form-utils --- #}
+<link rel="stylesheet" href="{% static 'templates/common/css/form-utils/form-utils.css' %}" />
+{# --- Custom style for sidenav --- #}
+<link rel="stylesheet" href="{% static 'templates/common/func/sidenav/sidenav.css' %}" />
+{% block user_properties_css_previous %}{% endblock %}
+{% endblock %}
+{# --- SCRIPT previous --- #}
+{% block js_previous %}
+{# --- Custom script for sidenav --- #}
+<script src="{% static 'templates/common/func/sidenav/sidenav.js' %}"></script>
+{# --- Custom script for on-click-disable --- #}
+<script src="{% static 'templates/common/func/on-click-disable/submit-form.js' %}"></script>
+{% block user_properties_js_previous %}{% endblock %}
+{% endblock %}
+{# --- META --- #}
+{% block metatag %}{% endblock %}
+{# --- CONTENT --- #}
+{% block content %}
+{% if IS_NOT_DISPLAY_SIDENAV %}
+    {# --- NOT DISPLAY SIDENAV --- #}
+    <div class="sub-container-3">
+{% else %}
+    {% block user_properties_sidenav %}{% endblock %}
+    <div class="sub-container-use-sidenav-3" id="SideNavContent">
+{% endif %}
+        {% block user_properties_content %}{% endblock %}
+    </div>
+{% endblock %}
+{# --- SCRIPT rear --- #}
+{% block js_rear %}{% block user_properties_js_rear %}{% endblock %}{% endblock %}
+{# --- FOOTER --- #}
+{% block footer %}{% include 'footer.html' %}{% endblock %}

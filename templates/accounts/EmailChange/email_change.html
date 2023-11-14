@@ -1,0 +1,88 @@
+{% extends 'apps/user_properties/user_properties_base.html' %}
+
+{# --- TITLE --- #}
+{% block user_properties_title %} - Change Email{% endblock %}
+
+{# --- SCRIPT previous --- #}
+{% block user_properties_js_previous %}
+    {% if IS_USE_RECAPTCHA %}
+        {% include 'common/asset/grecaptcha/grecaptcha_script.html' %}
+    {% endif %}
+{% endblock %}
+
+{# --- SIDENAV --- #}
+{% block user_properties_sidenav %}
+{% include 'apps/user_properties/asset/sidenav/sidenav.html' with email_change_active='active' %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block user_properties_content %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row pb-3">
+            <h1 class="f-content-title">メールアドレスの変更</h1>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="row">
+                <fieldset disabled>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-6 col-lg-10 col-sm-12">
+                            <label for="disabledTextInput">
+                                現在のメールアドレス
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="disabledTextInput"
+                                   placeholder="{{ user.email }}" />
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.change_email.id_for_label }}"
+                            class="sr-only">
+                            変更したいメールアドレス
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.change_email.field.widget.input_type }}"
+                                   class="form-control {% if form.change_email.errors %}is-invalid{% endif %}"
+                                   name="{{ form.change_email.html_name }}"
+                                   id="{{ form.change_email.id_for_label }}"
+                                   placeholder="{{ form.change_email.label }}"
+                                   autofocus
+                                   {% if form.change_email.field.required %}required{% endif %} />
+                            <label for="{{ form.change_email.id_for_label }}">
+                                変更したいメールアドレス
+                            </label>
+                            {% if form.change_email.errors %}
+                                {% for error in form.change_email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.change_email.help_text %}
+                                <div class="form-text">
+                                    {{ form.change_email.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if IS_USE_RECAPTCHA %}
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-2">
+                        {% include 'common/asset/grecaptcha/grecaptcha_btn.html' %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">変更</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

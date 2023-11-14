@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{# --- TITLE --- #}
+{% block title %}{% block chat_title %}{% endblock %}{% endblock %}
+{% block og1_title %}{% endblock %}
+{% block og2_title %}{% endblock %}
+{# --- DESCRIPTION --- #}
+{% block description %}{% endblock %}
+{% block og1_description %}{% endblock %}
+{% block og2_description %}{% endblock %}
+{# --- KEYWORDS --- #}
+{% block keywords %}{% endblock %}
+{# --- CSS --- #}
+{% block css_previous %}
+{# --- Custom style for room --- #}
+<link rel="stylesheet" href="{% static 'templates/pages/apps/chat/css/room.css' %}" />
+{# --- Custom style for border_bottom_effect --- #}
+<link rel="stylesheet" href="{% static 'templates/common/css/border_bottom_effect/border_bottom_effect.css' %}" />
+{% block chat_css_previous %}{% endblock %}{% endblock %}
+{# --- SCRIPT previous --- #}
+{% block js_previous %}
+{# --- Custom script for tooltip --- #}
+<script src="{% static 'templates/common/func/tooltip/tooltip.js' %}"></script>
+{% block chat_js_previous %}{% endblock %}{% endblock %}
+{# --- META --- #}
+{% block metatag %}{% endblock %}
+{# --- CONTENT --- #}
+{% block content %}
+<div class="sub-container-0">
+    {% block chat_content %}{% endblock %}
+</div>
+{% endblock %}
+{# --- SCRIPT rear --- #}
+{% block js_rear %}{% block chat_js_rear %}{% endblock %}{% endblock %}
+{# --- FOOTER --- #}
+{% block footer %}{% include 'footer.html' %}{% endblock %}

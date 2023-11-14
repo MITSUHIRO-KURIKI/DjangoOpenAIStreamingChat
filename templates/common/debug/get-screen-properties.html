@@ -1,0 +1,78 @@
+<div class="m-0 p-0 pb-1 position-fixed bottom-0 start-0 w-100">
+    <div class="m-0 p-0 text-center">
+        <p style="font-size: 11px; line-height: 11px; color: var(--bs-code-color);" class="m-0 p-0">
+            w: <span id="PrintScreenWidth">-</span><span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+            h: <span id="PrintScreenHeight">-</span><span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+            srl: <span id="PrintScrollTop">-</span><span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+            cls: <span id="PrintBreakpointClass">-</span>
+        </p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // breakpoints
+    // https://getbootstrap.jp/docs/5.3/layout/breakpoints/
+    function SetScreenSize() {
+        let ScreenWidth  = $(window).width(),
+            ScreenHeight = $(window).height(),
+            winScrollTop = $(window).scrollTop(),
+            BreakpointClass = 'None';
+        ScrollTop = Math.round(winScrollTop);
+        if ( ScreenWidth >= 1400 ) {
+            BreakpointClass = 'xxl'
+        } else if ( ScreenWidth >= 1200  ) {
+            BreakpointClass = 'xl'
+        } else if ( ScreenWidth >= 992  ) {
+            BreakpointClass = 'lg'
+        } else if ( ScreenWidth >= 768  ) {
+            BreakpointClass = 'md'
+        } else if ( ScreenWidth >= 576  ) {
+            BreakpointClass = 'sm'
+        } else {
+            BreakpointClass = 'xs'
+        };
+        $("#PrintScreenWidth").text(ScreenWidth);
+        $("#PrintScreenHeight").text(ScreenHeight);
+        $("#PrintScrollTop").text(ScrollTop);
+        $("#PrintBreakpointClass").text(BreakpointClass);
+    };
+    function GetScreenSize() {
+        let ScreenWidth  = $(window).width(),
+            ScreenHeight = $(window).height(),
+            BreakpointClass = 'None';
+        if ( ScreenWidth >= 1400 ) {
+            BreakpointClass = 'xxl'
+        } else if ( ScreenWidth >= 1200  ) {
+            BreakpointClass = 'xl'
+        } else if ( ScreenWidth >= 992  ) {
+            BreakpointClass = 'lg'
+        } else if ( ScreenWidth >= 768  ) {
+            BreakpointClass = 'md'
+        } else if ( ScreenWidth >= 576  ) {
+            BreakpointClass = 'sm'
+        } else {
+            BreakpointClass = 'xs'
+        };
+        $("#PrintScreenWidth").text(ScreenWidth);
+        $("#PrintScreenHeight").text(ScreenHeight);
+        $("#PrintBreakpointClass").text(BreakpointClass);
+    };
+    function GetScrollPoint() {
+        let winScrollTop = $(window).scrollTop();
+        ScrollTop = Math.round(winScrollTop);
+        $("#PrintScrollTop").text(ScrollTop);
+    };
+    
+    // document ready
+    $(function() {
+        SetScreenSize();
+    });
+    // window resize
+    $(window).resize(function(){
+        GetScreenSize();
+    });
+    // document scroll
+    $(document).on('scroll', function() {
+        GetScrollPoint();
+    });
+</script>

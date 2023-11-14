@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{# --- TITLE --- #}
+{% block title %}{% block accounts_title %}{% endblock %}{% endblock %}
+{% block og1_title %}{% endblock %}
+{% block og2_title %}{% endblock %}
+{# --- DESCRIPTION --- #}
+{% block description %}{% endblock %}
+{% block og1_description %}{% endblock %}
+{% block og2_description %}{% endblock %}
+{# --- KEYWORDS --- #}
+{% block keywords %}{% endblock %}
+{# --- CSS --- #}
+{% block css_previous %}
+{# --- Custom style for form-utils --- #}
+<link rel="stylesheet" href="{% static 'templates/common/css/form-utils/form-utils.css' %}" />
+{% block accounts_css_previous %}{% endblock %}
+{% endblock %}
+{# --- SCRIPT previous --- #}
+{% block js_previous %}
+{# --- Custom script for on-click-disable --- #}
+<script src="{% static 'templates/common/func/on-click-disable/submit-form.js' %}"></script>
+{% block account_js_previous %}{% endblock %}{% endblock %}
+{# --- META --- #}
+{% block metatag %}{% endblock %}
+{# --- CONTENT --- #}
+{% block content %}
+<div class="sub-container-3">
+    {% block accounts_content %}{% endblock %}
+</div>
+{% endblock %}
+{# --- SCRIPT rear --- #}
+{% block js_rear %}{% block accounts_js_rear %}{% endblock %}{% endblock %}

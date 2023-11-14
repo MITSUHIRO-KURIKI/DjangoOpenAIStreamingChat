@@ -1,0 +1,13 @@
+{% comment %} 
+template引数:
+ * FormIdOrClass
+ * MonitoringInputID
+{% endcomment %}
+<script type="text/javascript">
+    window.addEventListener('DOMContentLoaded', function(){
+        const input_name = document.getElementById("{{ MonitoringInputID }}");
+        input_name.addEventListener("change",function(){
+            $("{{ FormIdOrClass }}").submit();
+        });
+    });
+</script>

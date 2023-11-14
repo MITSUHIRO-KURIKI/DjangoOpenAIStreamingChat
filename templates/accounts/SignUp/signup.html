@@ -1,0 +1,181 @@
+{% extends 'accounts/accounts_base.html' %}
+
+{# --- TITLE --- #}
+{% block accounts_title %} - Sign up{% endblock %}
+
+{# --- SCRIPT previous --- #}
+{% block account_js_previous %}
+    {% if IS_USE_RECAPTCHA %}
+        {% include 'common/asset/grecaptcha/grecaptcha_script.html' %}
+    {% endif %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block accounts_content %}
+{# --- PAGE MOVE ANNOUNCEMENT --- #}
+{% include 'common/asset/page_move/page_move_announcement.html' %}
+
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row text-center pb-3">
+            <h1 class="f-content-title">sign up</h1>
+        </div>
+        <form method="post" onSubmit="is_note_msg=false;">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.unique_account_id.id_for_label }}"
+                               class="sr-only">
+                            {{ form.unique_account_id.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.unique_account_id.field.widget.input_type }}"
+                                   class="form-control {% if form.unique_account_id.errors %}is-invalid{% endif %}"
+                                   name="{{ form.unique_account_id.html_name }}"
+                                   id="{{ form.unique_account_id.id_for_label }}"
+                                   {% if invalid_unique_account_id %}
+                                        value="{{invalid_unique_account_id}}"
+                                   {% elif request.session.invalid_unique_account_id %}
+                                        value="{{request.session.invalid_unique_account_id}}"
+                                   {% else %}
+                                        placeholder="{{ form.unique_account_id.label }}"
+                                   {% endif %}
+                                   autofocus
+                                   {% if form.unique_account_id.field.required %}required{% endif %} />
+                            <label for="{{ form.unique_account_id.id_for_label }}">
+                                {{ form.unique_account_id.label }}
+                            </label>
+                            {% if form.unique_account_id.errors %}
+                                {% for error in form.unique_account_id.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.unique_account_id.help_text %}
+                                <div class="form-text">
+                                    {{ form.unique_account_id.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.email.id_for_label }}"
+                               class="sr-only">
+                            {{ form.email.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.email.field.widget.input_type }}"
+                                   class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                   name="{{ form.email.html_name }}"
+                                   id="{{ form.email.id_for_label }}"
+                                   {% if invalid_email %}
+                                        value="{{invalid_email}}"
+                                   {% elif request.session.invalid_email %}
+                                        value="{{request.session.invalid_email}}"
+                                   {% else %}
+                                        placeholder="{{ form.invalid_email.label }}"
+                                   {% endif %}
+                                   autofocus
+                                   {% if form.email.field.required %}required{% endif %} />
+                            <label for="{{ form.email.id_for_label }}">
+                                {{ form.email.label }}
+                            </label>
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.email.help_text %}
+                                <div class="form-text">
+                                    {{ form.email.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-3 col-lg-5 col-sm-12">
+                        <label for="{{ form.password1.id_for_label }}"
+                            class="sr-only">
+                            {{ form.password1.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.password1.field.widget.input_type }}"
+                                   class="form-input-horizontal-cluster-beginning form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                   name="{{ form.password1.html_name }}"
+                                   id="{{ form.password1.id_for_label }}"
+                                   placeholder="{{ form.password1.label }}"
+                                   autofocus
+                                   {% if form.password1.field.required %}required{% endif %} />
+                            <label for="{{ form.password1.id_for_label }}">
+                                {{ form.password1.label }}
+                            </label>
+                            {% if form.password1.errors %}
+                                {% for error in form.password1.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-5 col-sm-12">
+                        <label for="{{ form.password2.id_for_label }}"
+                            class="sr-only">
+                            {{ form.password2.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.password2.field.widget.input_type }}"
+                                   class="form-input-horizontal-cluster-end form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                   name="{{ form.password2.html_name }}"
+                                   id="{{ form.password2.id_for_label }}"
+                                   placeholder="{{ form.password2.label }}"
+                                   autofocus
+                                   {% if form.password2.field.required %}required{% endif %} />
+                            <label for="{{ form.password2.id_for_label }}">
+                                {{ form.password2.label }}
+                            </label>
+                            {% if form.password2.errors %}
+                                {% for error in form.password2.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.password2.help_text %}
+                                <div class="form-text">
+                                    {{ form.password2.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if IS_USE_RECAPTCHA %}
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-2">
+                        {% include 'common/asset/grecaptcha/grecaptcha_btn.html' %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">Sign up</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3 col-md-12">
+        {#--- Displayed md or less --- #}
+        <div class="d-lg-none"><hr /></div>
+        {% if IS_USE_SOCIAL_LOGIN %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}"><i class="beginning-sentence-icon fa-brands fa-google"></i>Sign in with Google</a>
+            <hr />
+        {% endif %}
+        <a href="{% url 'accounts:login' %}"><i class="beginning-sentence-icon fas fa-sign-in-alt"></i>Log in</a>
+        <hr />
+    </div>
+</div>
+{% endblock %}

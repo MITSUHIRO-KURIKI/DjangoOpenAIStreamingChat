@@ -1,0 +1,48 @@
+{% extends 'navbar.html' %}
+
+{% block navber_include_sideber %}
+{% if user.is_authenticated %}
+<div id="SideNav">
+    {# --- Displayed md or less --- #}
+    <button class="btn d-lg-none" id='SideNavScrollLeftBtn'>
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+    <ul class="list-group" id="SideNavScrollArea">
+        <li class="pt-lg-2">
+            <a class="list-group-item list-group-item-action {{ user_profile_active }}"
+               href="{% url 'accounts:user_properties:user_profile' %}">
+                <span>プロフィール</span>
+            </a>
+        </li>
+        <li class="pt-lg-2">
+            <a class="list-group-item list-group-item-action {{ user_reception_setting_active }}"
+               href="{% url 'accounts:user_properties:user_reception_setting' %}">
+               <span>受信設定</span>
+            </a>
+        </li>
+        <li class="pt-lg-2">
+            <a class="list-group-item list-group-item-action {{ email_change_active }}"
+               href="{% url 'accounts:email_change' %}">
+               <span>メールアドレスの変更</span>
+            </a>
+        </li>
+        <li class="pt-lg-2">
+            <a class="list-group-item list-group-item-action {{ password_change_active }}"
+               href="{% url 'accounts:password_change' %}">
+               <span>パスワード変更</span>
+            </a>
+        </li>
+        <li class="pt-lg-2">
+            <a class="list-group-item list-group-item-action {{ delete_active }}"
+               href="{% url 'accounts:delete' %}">
+               <span>アカウントの閉鎖</span>
+            </a>
+        </li>
+    </ul>
+    {# --- Displayed md or less --- #}
+    <button class="btn d-lg-none" id='SideNavScrollRightBtn'>
+        <i class="fa-solid fa-angle-right"></i>
+    </button>
+</div>
+{% endif %}
+{% endblock %}

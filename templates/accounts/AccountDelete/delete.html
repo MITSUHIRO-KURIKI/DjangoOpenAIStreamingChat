@@ -1,0 +1,75 @@
+{% extends 'apps/user_properties/user_properties_base.html' %}
+{% load static %}
+
+{# --- TITLE --- #}
+{% block user_properties_title %} - Close account{% endblock %}
+
+{# --- SIDENAV --- #}
+{% block user_properties_sidenav %}
+{% include 'apps/user_properties/asset/sidenav/sidenav.html' with delete_active='active' %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block user_properties_content %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row pb-3">
+            <h1 class="f-content-title">アカウントの削除</h1>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.check_text.id_for_label }}"
+                               class="sr-only">
+                            {{ form.check_text.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.check_text.field.widget.input_type }}"
+                                   {# --- messages 受け取りで発火 --- #}
+                                   class="form-control {% if messages %}is-invalid{% endif %}"
+                                   name="{{ form.check_text.html_name }}"
+                                   id="{{ form.check_text.id_for_label }}"
+                                   placeholder="{{ form.check_text.label }}"
+                                   autofocus
+                                   {% if form.check_text.field.required %}required{% endif %} />
+                            <label for="{{ form.check_text.id_for_label }}">
+                                Input Check Text
+                            </label>
+                            {% if form.check_text.errors %}
+                                {% for error in form.check_text.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.check_text.help_text %}
+                                <div class="form-text">
+                                    {{ form.check_text.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit"
+                                type="submit"
+                                class="btn btn-danger check-confirm on-click-disable w-100"
+                                data-check-confirm-text="本当に削除しますか？削除後はもとに戻せません">
+                                アカウントの削除
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{# --- SCRIPT rear --- #}
+{% block user_properties_js_rear %}
+{# --- Custom script for check-confirm --- #}
+<script src="{% static 'templates/common/func/check-confirm/check-confirm.js' %}"></script>
+{% endblock %}

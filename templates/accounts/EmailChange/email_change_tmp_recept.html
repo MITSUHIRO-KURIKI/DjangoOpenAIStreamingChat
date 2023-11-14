@@ -1,0 +1,16 @@
+{% extends 'apps/user_properties/user_properties_base.html' %}
+
+{# --- TITLE --- #}
+{% block user_properties_title %} - A confirmation email has been sent{% endblock %}
+
+{# --- SIDENAV --- #}
+{% block user_properties_sidenav %}
+{% include 'apps/user_properties/asset/sidenav/sidenav.html' with email_change_active='active' %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block user_properties_content %}
+<h1 class="f-content-title">認証メールを送信しました</h1>
+<p>まだ、メールアドレスの変更は完了していません。</p>
+<p>新しいメールアドレスに送信されたメールから認証を完了してください。</p>
+{% endblock %}

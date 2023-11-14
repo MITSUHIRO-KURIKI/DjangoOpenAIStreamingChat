@@ -1,0 +1,19 @@
+{% comment %} 
+template引数:
+ * SliderId
+{% endcomment %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        // スライダー/Tooltipの初期化
+        let slider             = document.getElementById('{{ SliderId }}');
+        let sliderValueDisplay = document.getElementById('sliderValue_{{ SliderId }}');
+        let slidertooltip      = new bootstrap.Tooltip(slider);
+        // スライダーの値が変更されたときのイベントリスナーを設定
+        slider.addEventListener('input', function() {
+            sliderValueDisplay.textContent = this.value;
+            slider.setAttribute('data-bs-original-title', `${slider.value}`);
+            slidertooltip.update();
+            slidertooltip.show();
+        });
+    });
+</script>

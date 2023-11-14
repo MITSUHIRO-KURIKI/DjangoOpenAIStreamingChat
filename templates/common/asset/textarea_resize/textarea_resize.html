@@ -1,0 +1,22 @@
+{% comment %} 
+template引数:
+ * TextAreaId
+{% endcomment %}
+<script type="text/javascript">
+    $(function () {
+        $("#{{ TextAreaId }}").click(function() {
+            let textarea = document.getElementById('{{ TextAreaId }}');
+            textarea.style.height = 'auto'
+            let scrollHeight = textarea.scrollHeight;
+            let offsetY = 5
+            textarea.style.height = scrollHeight + offsetY + 'px';
+        });
+        $("#{{ TextAreaId }}").keyup(function() {
+            let textarea = document.getElementById('{{ TextAreaId }}');
+            textarea.style.height = 'auto'
+            let scrollHeight = textarea.scrollHeight;
+            let offsetY = 5
+            textarea.style.height = scrollHeight + offsetY + 'px';
+        });
+    });
+</script>

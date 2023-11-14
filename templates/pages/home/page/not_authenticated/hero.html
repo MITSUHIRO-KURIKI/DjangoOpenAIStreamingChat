@@ -1,0 +1,26 @@
+{% load static %}
+<div class="card">
+    <img class="card-img vh-100 vw-auto object-fit-cover"
+         src="{% static 'templates/pages/home/img/hero.jpeg' %}"
+         style="object-position: 100% 100%;"
+           alt="hero-image">
+    <div class="card-img-overlay"style="background: rgba(0, 0, 0, 0.05);"></div>
+    <div class="card-img-overlay d-flex align-items-center justify-content-center">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-md-9 text-md-start col-sm-12 text-sm-center">
+                <h1 class="display-3 text-white">Django Chat</h1>
+            </div>
+            <div class="col-md-8 text-md-start col-sm-12 text-sm-center">
+                <p class="lead text-white">
+                    Django is a high-performance web application framework using the Python programming language.<br />
+                    This template project Implement chat using the OpenAI API.
+                </p>
+            </div>
+            <div class="col-12 text-center mt-5">
+                <a class="btn btn-django btn-lg mx-2" href="{% url 'accounts:signup' %}" role="button">GET STARTED</a>
+                <span class="text-white-50">or</span>
+                <a class="btn btn-outline-django btn-lg mx-2" href="{% url 'accounts:login' %}" role="button">log in</a>
+            </div>
+        </div>
+    </div>
+</div>

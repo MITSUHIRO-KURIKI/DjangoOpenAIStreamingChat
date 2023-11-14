@@ -1,0 +1,49 @@
+<div class="offcanvas offcanvas-end min-vw-50"
+     data-bs-scroll="false"
+     tabindex="-1"
+     id="RoomListOffcanvasWithEndOptions"
+     aria-labelledby="RoomListOffcanvasWithEndOptionsLabel">
+    <div class="offcanvas-header">
+        <div class="offcanvas-title">
+            <a class="btn btn-sm btn-outline-primary"
+               href="{% url 'chat:room_create' %}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="right"
+               data-html="false"
+               title="新規作成">
+                <i class="beginning-sentence-icon fa-solid fa-plus"></i>あたらしいルームを作成
+            </a>
+        </div>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close">
+        </button>
+    </div>
+    <div class="offcanvas-body pb-4">
+        <ul class="list-group" id="RoomList">
+            {% for room_object in room_objects %}
+                <li class="">
+                    <div class="d-flex flex-row align-items-start mt-3">
+                        <div class="flex-column flex-grow-1">
+                            <a class="list-group-item list-group-item-action"
+                               href="{% url 'chat:room' room_id=room_object.room_id %}">
+                                <span>{{ room_object.related_room_settings_model_room_id.room_name }}</span>
+                            </a>
+                        </div>
+                        <div class="flex-column flex-shrink-1">
+                            <a class="btn btn-sm btn-outline-danger m-1 p-1"
+                               href="{% url 'chat:room_delete' room_id=room_object.room_id %}"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="left"
+                               data-html="false"
+                               title="削除">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

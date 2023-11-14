@@ -1,0 +1,52 @@
+<div class="chat-main">
+    {% for message_object in message_objects %}
+        {# --- Human --- #}
+        <div class="d-flex flex-row align-items-start mt-3">
+            <div class="flex-column">
+                <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                     class="row rounded-circle border border-1 message-icon"
+                     alt="user_icon" />
+                <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
+            </div>
+            <div class="flex-column ms-2 mt-2">
+                <span class="human-message">
+                    {{ message_object.user_message | linebreaksbr }}
+                </span>
+            </div>
+        </div>
+        {# --- Ai --- #}
+        <div class="d-flex flex-row align-items-start mt-3">
+            <div class="flex-column">
+                <img src="{{ object.ai_icon.url }}"
+                     class="row rounded-circle border border-1 message-icon"
+                     alt="user_icon" />
+                <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+            </div>
+            <div class="flex-column ms-2 mt-2">
+                <span class="ai-message">
+                    {{ message_object.llm_response | linebreaksbr }}
+                </span>
+            </div>
+        </div>
+        {# --- timestomp and infomation --- #}
+        <div class="d-flex flex-row justify-content-end align-items-center">
+            <span class="fs-9 fw-2">{{ message_object.date_create }}</span>
+            <button class="btn btn-sm rounded"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseArea_{{ forloop.counter }}"
+                    aria-expanded="false"
+                    aria-controls="collapseArea_{{ forloop.counter }}">
+                <i class="fa-solid fa-circle-info"></i>
+            </button>
+        </div>
+        <div class="collapse"
+             id="collapseArea_{{ forloop.counter }}">
+            <div class="card card-body">
+                <small>user_settings: {{ message_object.user_settings }}</small>
+                <small>response_info: {{ message_object.response_info }}</small>
+            </div>
+        </div>
+    {% endfor %}
+    <div id="ChatOutputArea"></div>
+</div>

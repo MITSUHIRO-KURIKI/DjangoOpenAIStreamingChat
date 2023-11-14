@@ -1,0 +1,105 @@
+{% extends 'apps/user_properties/user_properties_base.html' %}
+{% load static %}
+
+{# --- TITLE --- #}
+{% block user_properties_title %} - Profile{% endblock %}
+
+{# --- SIDENAV --- #}
+{% block user_properties_sidenav %}
+{% include 'apps/user_properties/asset/sidenav/sidenav.html' with user_profile_active='active' %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block user_properties_content %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row pb-3">
+            <h1 class="f-content-title">プロフィール</h1>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="row d-flex justify-content-center">
+                    {# --- FILE INPUT TYPE (file-input-and-preview.js) --- #}
+                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 pt-2">
+                        <label for="{{ form.user_icon.id_for_label }}">{{ form.user_icon.label }}</label>
+                    </div>
+                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 d-flex justify-content-center py-3">
+                        <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                             class="rounded-circle border border-2"
+                             id="CustomFileInputPreviewImage"
+                             alt="user_icon"
+                             style="width:200px;height:200px;" />
+                    </div>
+                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 d-flex justify-content-center pt-2">
+                        <div class="invisible" id="CustomFileInitFile" hidden>{{ user.related_user_profile_unique_account_id.user_icon.url }}</div>
+                        <div class="input-group bs-custom-file">
+                            <input type="{{ form.user_icon.field.widget.input_type }}"
+                                   class="form-control {% if form.user_icon.errors %}is-invalid{% endif %}"
+                                   name="{{ form.user_icon.html_name }}" 
+                                   id="CustomFileInput" />
+                            <button type="button" class="btn btn-secondary" id="CustomFileInputReset">clear</button>
+                            {% if form.user_icon.errors %}
+                                {% for error in form.user_icon.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 pt-2">
+                        {% if form.user_icon.help_text %}
+                            <div class="form-text">
+                                {{ form.user_icon.help_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center pt-4">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.display_name.id_for_label }}"
+                               class="sr-only">
+                            {{ form.display_name.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.display_name.field.widget.input_type }}"
+                                   class="form-control {% if form.display_name.errors %}is-invalid{% endif %}"
+                                   name="{{ form.display_name.html_name }}"
+                                   id="{{ form.display_name.id_for_label }}"
+                                   value="{{ user.related_user_profile_unique_account_id.display_name }}"
+                                   {% if form.display_name.field.required %}required{% endif %} />
+                            <label for="{{ form.display_name.id_for_label }}">
+                                {{ form.display_name.label }}
+                            </label>
+                            {% if form.display_name.errors %}
+                                {% for error in form.display_name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.display_name.help_text %}
+                                <div class="form-text">
+                                    {{ form.display_name.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">更新</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{# --- SCRIPT rear --- #}
+{% block user_properties_js_rear %}
+{# --- Custom script for bs-custom-file-input --- #}
+<script src="{% static 'templates/common/func/bs-custom-file-input/file-input-and-preview.js' %}"></script>
+{% endblock %}

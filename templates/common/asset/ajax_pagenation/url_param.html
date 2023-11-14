@@ -1,0 +1,56 @@
+{% comment %} 
+template引数:
+ * url_param
+{% endcomment %}
+<div class="d-flex justify-content-between align-items-center mt-4 pb-2" id="PagenationNav">
+
+    {# --- search --- #}
+    <div class="flex-grow-1">
+        <form class="search-input-form w-50" action="{% url 'sample:items' %}" method="GET">
+            <input type="text"
+                   class=""
+                   name="q"
+                   {% if url_param.q %}
+                        value="{{url_param.q}}"
+                   {% else %}
+                        placeholder=""
+                   {% endif %} />
+        </form>
+    </div>
+
+    {# --- sort --- #}
+    <div class="btn-group">
+        <button type="button"
+                class="btn btn-sm dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+            {% if url_param.sort != 'desc' %}
+                <i class="beginning-sentence-icon fa-solid fa-arrow-down-1-9"></i>昇順
+            {% else %}
+                <i class="beginning-sentence-icon fa-solid fa-arrow-down-9-1"></i>降順
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="?p=true{% if url_param.per_n %}&per_n={{ url_param.per_n }}{% endif %}&sort=asc{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">昇順</a></li>
+            <li><a href="?p=true{% if url_param.per_n %}&per_n={{ url_param.per_n }}{% endif %}&sort=desc{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">降順</a></li>
+        </ul>
+    </div>
+
+    {# --- 表示件数 --- #}
+    <div class="btn-group">
+        <button type="button"
+                class="btn btn-sm dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+            <i class="beginning-sentence-icon fa-solid fa-list-ol"></i>表示件数: {{ url_param.per_n }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="?p=true&per_n=10{% if url_param.sort %}&sort={{ url_param.sort }}{% endif %}{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">10</a></li>
+            <li><a href="?p=true&per_n=20{% if url_param.sort %}&sort={{ url_param.sort }}{% endif %}{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">20</a></li>
+            <li><a href="?p=true&per_n=50{% if url_param.sort %}&sort={{ url_param.sort }}{% endif %}{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">50</a></li>
+            <li><a href="?p=true&per_n=100{% if url_param.sort %}&sort={{ url_param.sort }}{% endif %}{% if url_param.q %}&q={{ url_param.q }}{% endif %}" role="button" class="dropdown-item">100</a></li>
+        </ul>
+    </div>
+</div>

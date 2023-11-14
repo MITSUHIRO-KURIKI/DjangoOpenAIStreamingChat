@@ -1,0 +1,116 @@
+{% load static %}
+<!doctype html>
+<html lang="ja" data-bs-theme="auto">
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+    {# --- Common --- #}
+    <meta chaset="utf-8" />
+    <meta http-equiv="content-language" content="ja">
+    <meta http-equiv="X-UA-Compatible" context="IE=edge" />
+    <meta name="format-detection" content="telephone=no,email=no,address=no" />
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
+    <meta name="viewport" context="width=device-with, initial-scale=1, shrink-to-fit=no" />
+    <script type="text/javascript">
+        document.querySelector("[name=viewport]").setAttribute("content", "width=device-width, initial-scale=1, user-scalable=no");
+    </script>
+    {# --- TITLE and DESCRIPTION --- #}
+    <title>Django Chat{% block title %}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <meta name="keywords"    content="{% block keywords %}{% endblock %}" />
+    {# --- OGP --- #}
+    <meta property="og:title"        content="Django Chat{% block og1_title %}{% endblock %}" />
+    <meta property="og:type"         content="website" />
+    <meta property="og:url"          content="{{FRONTEND_URL}}" />
+    {% comment %} <meta property="og:image"        content="{% static 'templates/meta_image/ogp.jpg' %}" /> {# 1200px 630px #} {% endcomment %}
+    <meta property="og:description"  content="{% block og1_description %}{% endblock %}" />
+    <meta property="og:locale"       content="ja_JP" />
+    <meta name="twitter:card"        content="summary" />
+    <meta name="twitter:site"        content="@mitsuhiro-k" />
+    <meta name="twitter:creator"     content="@mitsuhiro-k" />
+    <meta name="twitter:title"       content="Django Chat{% block og2_title %}{% endblock %}" />
+    <meta name="twitter:description" content="{% block og2_description %}{% endblock %}" />
+    {# --- CSS --- #}
+    {# --- ress 5.0.2 --- #}
+    <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
+    {# --- Noto Sans JP ---#}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;300;400;500;600;700;800&display=swap">
+    {# --- boostrap 5.3.2 --- #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {# --- font-awesome 6.1.1 --- #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    {# --- Base styles --- #}
+    <link rel="stylesheet" href="{% static 'templates/base/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'templates/base/print.css' %}" />
+    {# --- bs-color --- #}
+    <link rel="stylesheet" href="{% static 'templates/common/css/bs-color/bs-color.css' %}" />
+    {# --- font-utils --- #}
+    <link rel="stylesheet" href="{% static 'templates/common/css/font-utils/font-utils.css' %}" />
+    {# --- layout-utils --- #}
+    <link rel="stylesheet" href="{% static 'templates/common/css/layout-utils/layout-utils.css' %}" />
+    {# --- Custom style for scrollspy-styles --- #}
+    {% if ScrollSpyDataTargetID %}
+    <link rel="stylesheet" href="{% static 'templates/common/css/scrollspy-styles/scrollspy-styles.css' %}" />
+    {% endif %}
+    {# --- Custom style for navbar --- #}
+    <link rel="stylesheet" href="{% static 'templates/common/func/navbar/navbar.css' %}" />
+    {# --- Custom style for Back2Top --- #}
+    <link rel="stylesheet" href="{% static 'templates/common/func/Back2Top/Back2Top.css' %}" />
+    {% block css_previous %}{% endblock %}
+    {# --- SCRIPT previous --- #}
+    {# --- jquery 3.6 --- #}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {# --- Custom script for bs-color-modes --- #}
+    <script src="{% static 'templates/common/func/bs-color-modes/bs-color-modes.js' %}"></script>
+    {# --- Custom script for navbar --- #}
+    <script src="{% static 'templates/common/func/navbar/navbar.js' %}"></script>
+    {% block js_previous %}{% endblock %}
+    {# --- Other Settings --- #}
+    {# --- theme-color --- #}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F2F7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#322F38" />
+    {# --- favicon --- #}
+    {% comment %} <link rel="icon"             href="{% static 'templates/meta_image/favicon.svg' %}" type="image/svg+xml" /> {# 48px 48px #} {% endcomment %}
+    {% comment %} <link rel="icon alternate"   href="{% static 'templates/meta_image/favicon.png' %}" type="image/png" />     {# 48px 48px #} {% endcomment %}
+    {% comment %} <link rel="apple-touch-icon" href="{% static 'templates/meta_image/favicon.png' %}" sizes="180x180" />      {# 180px 180px #} {% endcomment %}
+    {# --- Other --- #}
+    <meta name="author" content="K.Mitsuhiro" />
+    {# --- metatag --- #}
+    {% block metatag %}{% endblock %}
+</head>
+<body {% if ScrollSpyDataTargetID %}data-bs-spy="scroll" data-bs-target="#{{ ScrollSpyDataTargetID }}" data-bs-root-margin="0px 0px -88%"{% endif %}>
+    {# --- NAVBAR --- #}
+    {% if not IS_USE_SIDENAV %}
+        {% include 'navbar.html' %}
+    {% endif %}
+    {# --- HERO AREA --- #}
+    <div id="HeroArea">{% block hero %}{% endblock %}</div>
+    {# --- NO CONTEINER --- #}
+    <div>{% block no_container %}{% endblock %}</div>
+    {# --- CONTEINER--- #}
+    <div class="container {% if not IS_USE_NO_CONTAINER %}min-vh-100"{% else %}" hidden{% endif %}>
+        {# --- TOP MESSAGE --- #}
+        {% include 'top_messages.html' %}
+        {# --- CONTENT --- #}
+        {% block content %}{% endblock %}
+    </div>
+    {# --- SCRIPT rear --- #}
+    {# --- boostrap 5.3.2 --- #}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    {# --- Custom script for Back2Top --- #}
+    <script src="{% static 'templates/common/func/Back2Top/Back2Top.js' %}"></script>
+    {% block js_rear %}{% endblock %}
+    {# --- bs-color-modes --- #}
+    {% include 'common/asset/bs-color-modes/bs-color-modes.html' %}
+    {# --- Back2Top --- #}
+    <p id="Back2Top"><a href="#"><i class="fa-solid fa-circle-chevron-up"></i></a></p>
+
+    {# --- DEBUG用 --- #}
+    {% if DEBUG %}
+        {# --- get-screen-properties --- #}
+        {% include 'common/debug/get-screen-properties.html' %}
+    {% endif %}
+    {# --- FOOTER --- #}
+    {% block footer %}{% endblock %}
+</body>
+</html>

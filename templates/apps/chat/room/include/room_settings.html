@@ -1,0 +1,375 @@
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ room_settings_form.non_field_errors }}
+
+    <div class="offcanvas offcanvas-end min-vw-50"
+         data-bs-scroll="false"
+         tabindex="-1"
+         id="RoomSettingsOffcanvasWithEndOptions"
+         aria-labelledby="RoomSettingsOffcanvasWithEndOptionsLabel">
+        <div class="offcanvas-header">
+            <h3 class="f-room-title">ルーム設定</h3>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close">
+            </button>
+        </div>
+        <div class="offcanvas-body pb-5">
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                {# --- FILE INPUT TYPE (file-input-and-preview.js) --- #}
+                <div class="col-xl-10 col-lg-10 col-sm-12 me-1 d-flex justify-content-center py-3">
+                    <img src="{{ object.ai_icon.url }}"
+                         class="rounded-circle border border-2"
+                         id="CustomFileInputPreviewImage"
+                         alt="ai_icon"
+                         style="width:200px;height:200px;" />
+                </div>
+                <div class="col-xl-10 col-lg-10 col-sm-12 me-1 d-flex justify-content-center pt-2">
+                    <div class="invisible" id="CustomFileInitFile" hidden>{{ object.ai_icon.url }}</div>
+                    <div class="input-group bs-custom-file">
+                        <input type="{{ room_settings_form.ai_icon.field.widget.input_type }}"
+                               class="form-control {% if room_settings_form.ai_icon.errors %}is-invalid{% endif %}"
+                               name="{{ room_settings_form.ai_icon.html_name }}" 
+                               id="CustomFileInput" />
+                        <button type="button" class="btn btn-secondary" id="CustomFileInputReset">clear</button>
+                        {% if room_settings_form.ai_icon.errors %}
+                            {% for error in room_settings_form.ai_icon.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-xl-10 col-lg-10 col-sm-12 me-1 pt-2">
+                    {% if room_settings_form.ai_icon.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.ai_icon.help_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- TEXTAREA TYPE --- #}
+                    <label for="{{ room_settings_form.system_sentence.id_for_label }}"
+                           class="sr-only">
+                           {{ room_settings_form.system_sentence.label }}
+                    </label>
+                    <div class="form-floating">
+                        <textarea type="{{ room_settings_form.system_sentence.field.widget.input_type }}"
+                                  class="form-control {% if room_settings_form.system_sentence.errors %}is-invalid{% endif %}"
+                                  name="{{ room_settings_form.system_sentence.html_name }}"
+                                  id="{{ room_settings_form.system_sentence.id_for_label }}"
+                                  placeholder="{{ room_settings_form.system_sentence.label }}"
+                                  autofocus
+                                  {% if room_settings_form.system_sentence.field.required %}required{% endif %}>{{ room_settings_form.system_sentence.value }}</textarea>
+                        <label for="{{ room_settings_form.system_sentence.id_for_label }}">
+                            {{ room_settings_form.system_sentence.label }}
+                        </label>
+                        {% if room_settings_form.system_sentence.errors %}
+                            {% for error in room_settings_form.system_sentence.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if room_settings_form.system_sentence.help_text %}
+                            <div class="form-text">
+                                {{ room_settings_form.system_sentence.help_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% with TextAreaId=room_settings_form.system_sentence.id_for_label %}
+                        {% include 'common/asset/textarea_resize/textarea_resize.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- TEXTAREA TYPE --- #}
+                    <label for="{{ room_settings_form.assistant_sentence.id_for_label }}"
+                           class="sr-only">
+                           {{ room_settings_form.assistant_sentence.label }}
+                    </label>
+                    <div class="form-floating">
+                        <textarea type="{{ room_settings_form.assistant_sentence.field.widget.input_type }}"
+                                  class="form-control {% if room_settings_form.assistant_sentence.errors %}is-invalid{% endif %}"
+                                  name="{{ room_settings_form.assistant_sentence.html_name }}"
+                                  id="{{ room_settings_form.assistant_sentence.id_for_label }}"
+                                  placeholder="{{ room_settings_form.assistant_sentence.label }}"
+                                  autofocus
+                                  {% if room_settings_form.assistant_sentence.field.required %}required{% endif %}>{{ room_settings_form.assistant_sentence.value }}</textarea>
+                        <label for="{{ room_settings_form.assistant_sentence.id_for_label }}">
+                            {{ room_settings_form.assistant_sentence.label }}
+                        </label>
+                        {% if room_settings_form.assistant_sentence.errors %}
+                            {% for error in room_settings_form.assistant_sentence.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if room_settings_form.assistant_sentence.help_text %}
+                            <div class="form-text">
+                                {{ room_settings_form.assistant_sentence.help_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% with TextAreaId=room_settings_form.assistant_sentence.id_for_label %}
+                        {% include 'common/asset/textarea_resize/textarea_resize.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.history_len.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.history_len.label }}: <span id="sliderValue_{{ room_settings_form.history_len.id_for_label }}">{{ room_settings_form.history_len.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.history_len.html_name }}"
+                           id="{{ room_settings_form.history_len.id_for_label }}"
+                           value="{{ room_settings_form.history_len.value }}"
+                           min="0"
+                           max="{{ MaxHistoryLen }}"
+                           step="1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.history_len.value }}"
+                           {% if room_settings_form.history_len.field.required %}required{% endif %}>
+                    {% if room_settings_form.history_len.errors %}
+                        {% for error in room_settings_form.history_len.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.history_len.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.history_len.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.history_len.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.max_tokens.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.max_tokens.label }}: <span id="sliderValue_{{ room_settings_form.max_tokens.id_for_label }}">{{ room_settings_form.max_tokens.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.max_tokens.html_name }}"
+                           id="{{ room_settings_form.max_tokens.id_for_label }}"
+                           value="{{ room_settings_form.max_tokens.value }}"
+                           min="{{ MinTokens }}"
+                           max="{{ MaxTokens }}"
+                           step="1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.max_tokens.value }}"
+                           {% if room_settings_form.max_tokens.field.required %}required{% endif %}>
+                    {% if room_settings_form.max_tokens.errors %}
+                        {% for error in room_settings_form.max_tokens.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.max_tokens.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.max_tokens.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.max_tokens.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.temperature.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.temperature.label }}: <span id="sliderValue_{{ room_settings_form.temperature.id_for_label }}">{{ room_settings_form.temperature.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.temperature.html_name }}"
+                           id="{{ room_settings_form.temperature.id_for_label }}"
+                           value="{{ room_settings_form.temperature.value }}"
+                           min="0"
+                           max="2"
+                           step="0.1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.temperature.value }}"
+                           {% if room_settings_form.temperature.field.required %}required{% endif %}>
+                    {% if room_settings_form.temperature.errors %}
+                        {% for error in room_settings_form.temperature.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.temperature.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.temperature.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.temperature.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.top_p.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.top_p.label }}: <span id="sliderValue_{{ room_settings_form.top_p.id_for_label }}">{{ room_settings_form.top_p.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.top_p.html_name }}"
+                           id="{{ room_settings_form.top_p.id_for_label }}"
+                           value="{{ room_settings_form.top_p.value }}"
+                           min="0"
+                           max="1"
+                           step="0.1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.top_p.value }}"
+                           {% if room_settings_form.top_p.field.required %}required{% endif %}>
+                    {% if room_settings_form.top_p.errors %}
+                        {% for error in room_settings_form.top_p.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.top_p.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.top_p.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.top_p.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.presence_penalty.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.presence_penalty.label }}: <span id="sliderValue_{{ room_settings_form.presence_penalty.id_for_label }}">{{ room_settings_form.presence_penalty.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.presence_penalty.html_name }}"
+                           id="{{ room_settings_form.presence_penalty.id_for_label }}"
+                           value="{{ room_settings_form.presence_penalty.value }}"
+                           min="-2"
+                           max="2"
+                           step="0.1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.presence_penalty.value }}"
+                           {% if room_settings_form.presence_penalty.field.required %}required{% endif %}>
+                    {% if room_settings_form.presence_penalty.errors %}
+                        {% for error in room_settings_form.presence_penalty.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.presence_penalty.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.presence_penalty.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.presence_penalty.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- SLIDER RANGE TYPE --- #}
+                    <label for="{{ room_settings_form.frequency_penalty.id_for_label }}"
+                           class="form-label">
+                           {{ room_settings_form.frequency_penalty.label }}: <span id="sliderValue_{{ room_settings_form.frequency_penalty.id_for_label }}">{{ room_settings_form.frequency_penalty.value }}</span>
+                    </label>
+                    <input type="range"
+                           class="form-range"
+                           name="{{ room_settings_form.frequency_penalty.html_name }}"
+                           id="{{ room_settings_form.frequency_penalty.id_for_label }}"
+                           value="{{ room_settings_form.frequency_penalty.value }}"
+                           min="-2"
+                           max="2"
+                           step="0.1"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ room_settings_form.frequency_penalty.value }}"
+                           {% if room_settings_form.frequency_penalty.field.required %}required{% endif %}>
+                    {% if room_settings_form.frequency_penalty.errors %}
+                        {% for error in room_settings_form.frequency_penalty.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.frequency_penalty.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.frequency_penalty.help_text }}
+                        </div>
+                    {% endif %}
+                    {% with SliderId=room_settings_form.frequency_penalty.id_for_label %}
+                        {% include 'common/asset/slider_range/slider_range.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    {# --- TEXTAREA TYPE --- #}
+                    <label for="{{ room_settings_form.comment.id_for_label }}"
+                           class="sr-only">
+                           {{ room_settings_form.comment.label }}
+                    </label>
+                    <div class="form-floating">
+                        <textarea type="{{ room_settings_form.comment.field.widget.input_type }}"
+                                  class="form-control {% if room_settings_form.comment.errors %}is-invalid{% endif %}"
+                                  name="{{ room_settings_form.comment.html_name }}"
+                                  id="{{ room_settings_form.comment.id_for_label }}"
+                                  placeholder="{{ room_settings_form.comment.label }}"
+                                  autofocus
+                                  {% if room_settings_form.comment.field.required %}required{% endif %}>{{ room_settings_form.comment.value }}</textarea>
+                        <label for="{{ room_settings_form.comment.id_for_label }}">
+                            {{ room_settings_form.comment.label }}
+                        </label>
+                        {% if room_settings_form.comment.errors %}
+                            {% for error in room_settings_form.comment.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if room_settings_form.comment.help_text %}
+                            <div class="form-text">
+                                {{ room_settings_form.comment.help_text }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% with TextAreaId=room_settings_form.comment.id_for_label %}
+                        {% include 'common/asset/textarea_resize/textarea_resize.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center py-3">
+                <div class="col-xl-10 col-lg-10 col-sm-12 me-1 pt-2">
+                    <button type="submit" name="submit_room_settings_form" class="btn btn-primary on-click-disable w-100">更新</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

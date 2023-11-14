@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{# --- TITLE --- #}
+{% block title %}{% block home_title %}{% endblock %}{% endblock %}
+{% block og1_title %}{% endblock %}
+{% block og2_title %}{% endblock %}
+{# --- DESCRIPTION --- #}
+{% block description %}{% endblock %}
+{% block og1_description %}{% endblock %}
+{% block og2_description %}{% endblock %}
+{# --- KEYWORDS --- #}
+{% block keywords %}{% endblock %}
+{# --- CSS --- #}
+{% block css_previous %}
+{# --- Custom style for hero --- #}
+<link rel="stylesheet" href="{% static 'templates/pages/home/css/sections.css' %}" />
+{# --- Custom style for fade_in_content --- #}
+<link rel="stylesheet" href="{% static 'templates/common/func/fade_in_content/fade_in_content.css' %}" />
+{# --- Custom style for fade_in_one_word_at_a_time --- #}
+<link rel="stylesheet" href="{% static 'templates/common/func/fade_in_one_word_at_a_time/fade_in_one_word_at_a_time.css' %}" />
+{% if not user.is_authenticated %}
+    {# --- Custom style for hero --- #}
+    <link rel="stylesheet" href="{% static 'templates/pages/home/css/hero.css' %}" />
+{% endif %}
+{% block home_css_previous %}{% endblock %}
+{% endblock %}
+{# --- SCRIPT previous --- #}
+{% block js_previous %}
+{# --- Custom script for fade_in_content --- #}
+<script src="{% static 'templates/common/func/fade_in_content/fade_in_content.js' %}"></script>
+{# --- Custom script for fade_in_one_word_at_a_time --- #}
+<script src="{% static 'templates/common/func/fade_in_one_word_at_a_time/fade_in_one_word_at_a_time.js' %}"></script>
+{% block home_js_previous %}{% endblock %}{% endblock %}
+{# --- META --- #}
+{% block metatag %}{% endblock %}
+{# --- HERO AREA --- #}
+{% block hero %}
+    {% if not user.is_authenticated %}
+        {% include 'pages/home/page/not_authenticated/hero.html' %}
+    {% endif%}
+{% endblock %}
+{# --- NO CONTEINER --- #}
+{% block no_container %}
+{% if user.is_authenticated %}
+    <div class="no-container">
+        {% include 'pages/home/page/main.html' %}
+    </div>
+{% else %}
+    {% include 'pages/home/page/main.html' %}
+{% endif %}
+{% endblock %}
+{# --- SCRIPT rear --- #}
+{% block js_rear %}{% block home_js_rear %}{% endblock %}{% endblock %}
+{# --- FOOTER --- #}
+{% block footer %}{% include 'footer.html' %}{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'apps/chat/chat_base.html' %}
+{% load static %}
+{% load access_dict %}
+
+{# --- CONTENT --- #}
+{% block chat_content %}
+{# --- room header --- #}
+{% include 'apps/chat/room/include/room_header.html' %}
+
+{# --- room一覧(offcanvas) --- #}
+{% include 'apps/chat/room/include/room_list.html' %}
+
+{# --- room設定 --- #}
+{% include 'apps/chat/room/include/room_settings.html' %}
+
+{# --- chat main --- #}
+{% include 'apps/chat/room/include/chat_main.html' %}
+
+{# --- WebSocket Script --- #}
+{% include 'apps/chat/room/include/websocket_script.html' %}
+{% endblock %}
+
+{# --- SCRIPT rear --- #}
+{% block chat_js_rear %}
+{# --- Custom script for bs-custom-file-input --- #}
+<script src="{% static 'templates/common/func/bs-custom-file-input/file-input-and-preview.js' %}"></script>
+{% endblock %}

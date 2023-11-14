@@ -1,0 +1,7 @@
+
+パスワード再設定の手続きを受け付けました。
+以下のURLにアクセスして、新しいパスワードを設定してください。
+
+{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confilm' uid token %}
+
+※認証URLの有効期限は{{TOKEN_EXPIRED}}分です。有効期限を過ぎると無効になります。

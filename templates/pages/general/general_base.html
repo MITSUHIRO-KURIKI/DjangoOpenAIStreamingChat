@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{# --- TITLE --- #}
+{% block title %}{% block general_title %}{% endblock %}{% endblock %}
+{% block og1_title %}{% endblock %}
+{% block og2_title %}{% endblock %}
+{# --- DESCRIPTION --- #}
+{% block description %}{% endblock %}
+{% block og1_description %}{% endblock %}
+{% block og2_description %}{% endblock %}
+{# --- KEYWORDS --- #}
+{% block keywords %}{% endblock %}
+{# --- CSS --- #}
+{% block css_previous %}{% block general_css_previous %}{% endblock %}{% endblock %}
+{# --- SCRIPT previous --- #}
+{% block js_previous %}{% block general_js_previous %}{% endblock %}{% endblock %}
+{# --- META --- #}
+{% block metatag %}{% endblock %}
+{# --- CONTENT --- #}
+{% block content %}
+<div class="sub-container-3">
+    {% block general_content %}{% endblock %}
+</div>
+{% endblock %}
+{# --- SCRIPT rear --- #}
+{% block js_rear %}{% block general_js_rear %}{% endblock %}{% endblock %}
+{# --- FOOTER --- #}
+{% block footer %}{% include 'footer.html' %}{% endblock %}

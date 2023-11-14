@@ -1,0 +1,13 @@
+{% comment %} 
+template引数:
+ * RECAPTCHA_PUBLIC_KEY
+{% endcomment %}
+<div class="g-recaptcha"
+     data-sitekey="{{ RECAPTCHA_PUBLIC_KEY }}"
+     data-callback="VerifyCallBack">
+</div>
+<script type="text/javascript">
+     function VerifyCallBack(response) {
+         document.getElementById('submit').disabled = false;
+     };
+</script>

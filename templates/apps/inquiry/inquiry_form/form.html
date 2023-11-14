@@ -1,0 +1,120 @@
+{% extends 'apps/inquiry/inquiry_base.html' %}
+{% load static %}
+
+{# --- TITLE --- #}
+{% block inquiry_title %} - Contact or Inquiry{% endblock %}
+
+{# --- SCRIPT previous --- #}
+{% block inquiry_js_previous %}
+    {% if IS_USE_RECAPTCHA %}
+        {% include 'common/asset/grecaptcha/grecaptcha_script.html' %}
+    {% endif %}
+{# --- Custom script for on-click-disable --- #}
+<script src="{% static 'templates/common/func/on-click-disable/submit-form.js' %}"></script>
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block inquiry_content %}
+{# --- PAGE MOVE ANNOUNCEMENT --- #}
+{% include 'common/asset/page_move/page_move_announcement.html' %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row text-center pb-3">
+            <h1 class="f-content-title">お問い合わせ</h1>
+        </div>
+        <form method="post" onSubmit="is_note_msg=false;">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-10 col-lg-10 col-sm-12">
+                        {# --- TEXTAREA TYPE --- #}
+                        <label for="{{ form.inquiry_text.id_for_label }}"
+                               class="sr-only">
+                               {{ form.inquiry_text.label }}
+                        </label>
+                        <div class="form-floating">
+                            <textarea type="{{ form.inquiry_text.field.widget.input_type }}"
+                                      class="form-control {% if form.inquiry_text.errors %}is-invalid{% endif %}"
+                                      name="{{ form.inquiry_text.html_name }}"
+                                      id="{{ form.inquiry_text.id_for_label }}"
+                                      placeholder="{{ form.inquiry_text.label }}"
+                                      autofocus
+                                      {% if form.inquiry_text.field.required %}required{% endif %}>{% if invalid_inquiry_text_data %}{{invalid_inquiry_text_data}}{% elif request.session.invalid_inquiry_text_data %}{{request.session.invalid_inquiry_text_data}}{% endif %}</textarea>
+                            <label for="{{ form.inquiry_text.id_for_label }}">
+                                {{ form.inquiry_text.label }}
+                            </label>
+                            {% if form.inquiry_text.errors %}
+                                {% for error in form.inquiry_text.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.inquiry_text.help_text %}
+                                <div class="form-text">
+                                    {{ form.inquiry_text.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% with TextAreaId=form.inquiry_text.id_for_label %}
+                            {% include 'common/asset/textarea_resize/textarea_resize.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-6 col-lg-6 col-sm-12 mt-3">
+                            <label for="{{ form.email.id_for_label }}"
+                                class="sr-only">
+                                {{ form.email.label }}
+                            </label>
+                            <div class="form-floating">
+                                <input type="{{ form.email.field.widget.input_type }}"
+                                       class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                       name="{{ form.email.html_name }}"
+                                       id="{{ form.email.id_for_label }}"
+                                       {% if user.email %}
+                                            value="{{ user.email }}"
+                                       {% else %}
+                                            placeholder="{{ form.email.label }}"
+                                       {% endif %}
+                                       autofocus
+                                       {% if form.email.field.required %}required{% endif %} />
+                                <label for="{{ form.email.id_for_label }}">
+                                    {{ form.email.label }}
+                                </label>
+                                {% if form.email.errors %}
+                                    {% for error in form.email.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if form.email.help_text %}
+                                    <div class="form-text">
+                                        {{ form.email.help_text }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {# --- dummy spacing --- #}
+                        {# --- Displayed lg or above ---#}
+                        <div class="col-xl-4 col-lg-4 d-none d-lg-block"></div>
+                    </div>
+                    {% if IS_USE_RECAPTCHA %}
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-10 col-lg-10 col-sm-12 mt-2">
+                            {% include 'common/asset/grecaptcha/grecaptcha_btn.html' %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-10 col-lg-10 col-sm-12 mt-4">
+                            <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">送信</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

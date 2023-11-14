@@ -1,0 +1,96 @@
+{% extends 'apps/user_properties/user_properties_base.html' %}
+{% load static %}
+
+{# --- TITLE --- #}
+{% block user_properties_title %} - Reception Settings{% endblock %}
+
+{# --- SIDENAV --- #}
+{% block user_properties_sidenav %}
+{% include 'apps/user_properties/asset/sidenav/sidenav.html' with user_reception_setting_active='active' %}
+{% endblock %}
+
+{# --- CONTENT --- #}
+{% block user_properties_content %}
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row pb-3">
+            <h1 class="f-content-title">お知らせの受信設定</h1>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        {# --- RADIO or CHECKBOX SINGLE CHECK TYPE --- #}
+                        <div class="form-check">
+                            <input type="radio"
+                                   class="form-check-input radio-single-check"
+                                   name="{{ form.is_receive_all.html_name }}"
+                                   id="{{ form.is_receive_all.id_for_label }}"
+                                   {% if user.related_user_reception_setting_unique_account_id.is_receive_all %}
+                                        checked="checked"
+                                   {% endif %}
+                                   {% if form.is_receive_all.field.required %}required{% endif %} />
+                            <label class="form-check-label"
+                                   for="{{ form.is_receive_all.id_for_label }}">
+                                {{ form.is_receive_all.label }}
+                            </label>
+                            {% if form.is_receive_all.errors %}
+                                {% for error in form.is_receive_all.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.is_receive_all.help_text %}
+                                <div class="form-text">
+                                    {{ form.is_receive_all.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <div class="form-check">
+                            <input type="radio"
+                                   class="form-check-input radio-single-check"
+                                   name="{{ form.is_receive_important_only.html_name }}"
+                                   id="{{ form.is_receive_important_only.id_for_label }}"
+                                   {% if user.related_user_reception_setting_unique_account_id.is_receive_important_only %}
+                                        checked="checked"
+                                   {% endif %}
+                                   {% if form.is_receive_important_only.field.required %}required{% endif %} />
+                            <label class="form-check-label"
+                                   for="{{ form.is_receive_important_only.id_for_label }}">
+                                {{ form.is_receive_important_only.label }}
+                            </label>
+                            {% if form.is_receive_important_only.errors %}
+                                {% for error in form.is_receive_important_only.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.is_receive_important_only.help_text %}
+                                <div class="form-text">
+                                    {{ form.is_receive_important_only.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">更新</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{# --- SCRIPT rear --- #}
+{% block user_properties_js_rear %}
+{# --- Custom script for radio-check-control --- #}
+<script src="{% static 'templates/common/func/radio-check-control/check-single-control.js' %}"></script>
+{% endblock %}

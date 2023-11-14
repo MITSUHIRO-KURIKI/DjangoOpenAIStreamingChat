@@ -1,0 +1,140 @@
+{% comment %} 
+template引数:
+ * SummerNoteFormId
+ * summernote_placeholder
+ * summernote_height
+ * MENTIONS_LIST
+{% endcomment %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Add Custom Button
+        const UndoButton = function (context) {
+            let ui = $.summernote.ui;
+            // undo button
+            let button = ui.button({
+                tooltip: 'undo',
+                click: function () {
+                    $('#{{ SummerNoteFormId }}').summernote('undo');
+                }
+            });
+            return button.render();
+        };
+        const RedoButton = function (context) {
+            let ui = $.summernote.ui;
+            // redo button
+            let button = ui.button({
+                tooltip: 'redo',
+                click: function () {
+                    $('#{{ SummerNoteFormId }}').summernote('redo');
+                }
+            });
+            return button.render();
+        };
+        // Summernote Object
+        $('#{{ SummerNoteFormId }}').summernote({
+            inheritPlaceholder: true,
+            focus:              true,
+            lang:               'ja-JP',
+            placeholder:        {% if summernote_placeholder %}{{summernote_placeholder}}{% else %}'input text here'{% endif %},
+            height:             {% if summernote_height %}{{summernote_height}}{% else %}300{% endif %},
+            minHeight:          null,
+            maxHeight:          null,
+            fontSizes:          ['8', '9', '10', '11', '12', '13','14', '18', '24', '36',],
+            lineHeights:        ['0.5', '0.8', '1.0', '1.2', '1.4', '1.5', '1.6', '1.8', '2.0', '3.0',],
+            fontNames:          ["Noto Sans JP", "Noto Sans", "Roboto", "sans-serif", "Segoe UI", "Arial", "Arial Black", "Century", "Century Gothic", "Comic Sans MS", "Consolas", "Courier New", "cursive", "fantasy", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "HiraKakuProN", "HiraKakuProN-W3", "HiraMinProN-W6", "HiraMinProN", "HiraMinProN-W3", "HiraMinProN-W6", "Impact", "Meiryo", "Meiryo UI", "monospace", "serif", "Tahoma", "Times New Roman", "Verdana", "Yu Gothic", "Yu Mincho"],
+            styleTags:          ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', { title: '&nbsp;&nbsp;引用', tag: 'blockquote', className: 'blockquote', value: 'blockquote' }, { title: 'コード', tag: 'pre', className: 'language-css', value: 'pre' }],
+            colorButton: {
+                foreColor: 'red',
+                backColor: 'transparent',
+            },
+            buttons: {
+                undo: UndoButton,
+                redo: RedoButton,
+            },
+            toolbar: [
+                ['undoredo', ['undo', 'redo',]],
+                ['style',    ['style',]],
+                ['font',     ['fontname', 'bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear',]],
+                ['fontsize', ['fontsize',]],
+                ['color',    ['color',]],
+                ['para',     ['ul', 'ol', 'paragraph',]],
+                ['height',   ['height',]],
+                ['table',    ['table',]],
+                ['insert',   ['hr', 'link', 'picture', 'video',]],
+                ['view',     ['fullscreen', 'help', 'codeview',]], // 本番は codeview 消したほうがよいかも(タグを閉じなかった際にサイト崩れる?)
+            ],
+            tableClassName: function() {
+                $(this).addClass('table table-sm table-striped table-hover table-bordered text-break')
+            },
+            dialogsFade:        false,
+            airMode:            false,
+            tabDisable:         true,
+            disableDragAndDrop: true,
+            spellCheck:         true,
+            disableGrammar:     false,
+            hint: [
+                {
+                    // hint2emoji
+                    match: /:([\-+\w*]+)$/,
+                    search: function (keyword, callback) {
+                        callback($.grep(emojis, function (item) {
+                            return item.indexOf(keyword) === 0;
+                        }));
+                    },
+                    template: function (item) {
+                        let content = emojiUrls[item];
+                        return '<img src="' + content + '" width="20" /> :' + item + ':';
+                    },
+                    content: function (item) {
+                        let url = emojiUrls[item];
+                        if (url) {
+                            return $('<img />').attr('src', url).css('width', 20)[0];
+                        }
+                        return '';
+                    }
+                }
+                {% if MENTIONS_LIST %} 
+                , {
+                    // hint2mention: List[str] で渡すとメンションをhintに表示する
+                    // MEMO:
+                    // +++ [ unicode 正規表現 ] +++
+                    // ひらがな: \u3040-\u309f
+                    // カタカナ: \u30a0-\u30ff
+                    // 半角カタカナ:  \uff61-\uff9f
+                    // CJK 統合漢字: \u4e00-\u9fff
+                    // CJK 互換漢字: \uf900-\ufaff
+                    // CJK Unified Ideographs Extension:
+                    //  A: \u3400-\u4dff
+                    //  B: \u20000-\u2a6dd
+                    //  C: \u2a700-\u2b734
+                    //  D: \u2b740-\u2b81f
+                    //  E: \u2b820-\u2ceaf
+                    //  F: \u2ceb0-\u2ebe0
+                    //  G: \u2ceb0-\u2ebe0
+                    // 々〆漢数字のゼロ: \u3005-\u3007
+                    match:    /\B@([\u3040-\u309f\u30a0-\u30ff\uff61-\uff9f\u4e00-\u9fff\uf900-\ufaff\u3005-\u3007\w]+)$/,
+                    mentions: {% autoescape off %}{{ MENTIONS_LIST }}{% endautoescape %},
+                    search: function (keyword, callback) {
+                        callback($.grep(this.mentions, function (item) {
+                            return item.indexOf(keyword) == 0;
+                        }));
+                    },
+                    content: function (item) {
+                        return $('<span>@' + item + '&nbsp;</span>')[0];
+                    }
+                }
+                {% endif %}
+            ],
+        });
+        // Summernote Objectの変更
+        // 動画挿入
+        $('div[aria-label="動画挿入"] > div[class="note-modal-content"] > div[class="note-modal-body"] > div > label > small').text(
+            "(YouTube, Instagram)"
+        );
+        // リンク挿入
+        $('div[aria-label="リンク挿入"] > div[class="note-modal-content"] > div[class="note-modal-body"] > div[class="checkbox sn-checkbox-open-in-new-window"] > label').html(
+            "<small>挿入したリンクは常に新しいウィンドウで開かれます</small>"
+        );
+        $('div[aria-label="リンク挿入"] > div[class="note-modal-content"] > div[class="note-modal-body"] > div[class="checkbox sn-checkbox-use-protocol"]').remove();
+    });
+</script>

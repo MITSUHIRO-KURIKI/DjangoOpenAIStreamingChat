@@ -1,0 +1,135 @@
+{% load static %}
+<div id='HomeContentsArea'>
+    <section>
+        <div class='fade-up-content title'>
+            <h2>What is this?</h2>
+        </div>
+        <div class="fade-up-content body">
+            <p class="lh-2"><a class="alert-link" href="https://github.com/MITSUHIRO-KURIKI/DjangoTemplate" target="_blank" rel="noopener noreferrer">Django Template</a>をベースに<a class="alert-link" href="https://openai.com/blog/openai-api" target="_blank" rel="noopener noreferrer">OpenAI API</a>を利用したチャットアプリを学習として作成しました</p>
+            <p class="lh-2">このチャット機能のメインは apps/chat です</p>
+        </div>
+
+        <div class="fade-up-content body">
+            <div class="card border border-0 mt-4 p-5">
+                <div class="row">
+                    {# --- Order Revers and colsize change md or less ---#}
+                    <div class="order-lg-1 order-1 col-lg-6 col-sm-12 mb-lg-0 mb-4">
+                        <h3 class="fs-6 fw-8">ストリーミング出力</h3>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item"><a class="alert-link" href="https://channels.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">Django Channels(Web Socket)</a>を用いてストリーミング出力に対応しています</li>
+                        </ul>
+                        <h3 class="fs-6 fw-8 mt-4">APIハイパラメータの設定</h3>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">ルーム毎にハイパラメータやアイコンを変更できます</li>
+                        </ul>
+                        <h3 class="fs-6 fw-8 mt-4">その他</h3>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">会話履歴数を指定して過去のやり取りを踏まえた会話ができます</li>
+                            <li class="list-group-item">上り/下りで使用したToken数を確認できます</li>
+                        </ul>
+                    </div>
+                    <div class="order-lg-2 order-2 col fade-up-content card-img d-flex justify-content-center align-text-top mx-5 mb-auto pb-auto"
+                        data-cs-fade-up-content-offset=300>
+                        <img class="rounded img-fluid border border-2" src="{% static 'templates/pages/home/img/img_fps10.gif' %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class='fade-up-content title'>
+            <h2>設置</h2>
+        </div>
+        <div class="fade-up-content body">
+            <p class="lh-2"><a class="alert-link" href="https://mitsuhiro-kuriki.github.io/DjangoTemplate/" target="_blank" rel="noopener noreferrer">Django Template</a>との差分のみ表示</p>
+        </div>
+        <div class="fade-up-content body">
+            <div class="card border border-0 mt-4 p-5">
+                <div class="row">
+                    <div class="mb-4">
+                        <h3 class="fs-6 fw-8 mt-4">config > settings.pyでの設定</h3>
+                        <p class="mb-4">以下デフォルトのため True/False を変更できます</p>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">
+                                RADISの使用
+                            </li>
+                            <small class="text-danger fw-8">GCPでうまく動作せず確認中/詳しい方コメント頂けると有り難いです</small>
+                            <code class="p-2">
+                                IS_USE_RADIS = False
+                            </code>
+                        </ul>
+
+                        <h3 class="fs-6 fw-8 mt-4">.envファイル用意</h3>
+                        <p class="mb-2 mb-4">サンプルとして sample.env を一緒に格納しています</p>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">
+                                OpenAI API KEYの設定
+                            </li>
+                            <code class="p-2">
+                                OPENAI_API_KEY='*** YOUR OPENAI_API_KEY ***'
+                            </code>
+                        </ul>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">
+                                Radisを利用する場合
+                            </li>
+                            <small class="text-danger fw-8">GCPでうまく動作せず確認中/詳しい方コメント頂けると有り難いです</small>
+                            <code class="p-2">
+                                RADIS_HOST='*** RADIS HOST ***'<br />
+                                RADIS_PORT='*** RADIS PORT ***'
+                            </code>
+                        </ul>
+
+                        <h3 class="fs-6 fw-8 my-4">実行</h3>
+                        <ul class="list-group list-group-flush lh-2 list-group-numbered">
+                            <li class="list-group-item">
+                                pip listall
+                            </li>
+                            <code class="p-2">
+                                $ pip install -r requirements-base.txt
+                            </code>
+                            <li class="list-group-item">
+                                マイグレーション(batファイルがあります)
+                            </li>
+                            <code class="p-2">
+                                $ ProjectSetupBat
+                            </code>
+                            <li class="list-group-item">
+                                RunServer
+                            </li>
+                            <code class="p-2">
+                                $ python manage.py runserver
+                            </code>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class='fade-up-content title'>
+            <h2>主な実行環境</h2>
+        </div>
+        <div class="fade-up-content body">
+            <p class="lh-2">詳細は requirements-base.txt をご覧ください</p>
+        </div>
+        <div class="fade-up-content body">
+            <div class="card border border-0 mt-4 p-5">
+                <div class="row">
+                    <div class="mb-4">
+                        <ul class="list-group list-group-flush lh-2">
+                            <li class="list-group-item">python=3.9.18</li>
+                            <li class="list-group-item">Django==4.2.1</li>
+                            <li class="list-group-item">channels==4.0.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="p-4">contents end.</div>
+
+</div>

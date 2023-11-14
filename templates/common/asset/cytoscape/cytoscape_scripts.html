@@ -1,0 +1,398 @@
+{% comment %} 
+template引数:
+ * IdCyData
+ * IdCyDisplayArea
+ * NetWorkType: 'directed' or 'undirected'
+ * CyDisplayAreaHeight
+ * IdCyLayoutStyle
+ * IdCyEdgeStyle
+ * IdCyNavigationSwitch
+ * IdExpandCollapseOpen
+ * IdExpandCollapseClose
+{% endcomment %}
+
+{% load static %}
+{# --- cytoscape-panzoom --- #}
+<link rel="stylesheet" href="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-panzoom/cytoscape-panzoom.css' %}" />
+{# --- cytoscape-navigator --- #}
+<link rel="stylesheet" href="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-navigator/cytoscape-navigator.css' %}" />
+{# --- Custom style for text_highlight --- #}
+<link rel="stylesheet" href="{% static 'templates/common/func/text_highlight/text_highlight.css' %}" />
+<style>
+    #{{ IdCyDisplayArea }} {
+      position:         relative;
+      width:            100%;
+      height:           {{ CyDisplayAreaHeight }};
+      background-color: var(--graph-tertiary-bg);
+    }
+</style>
+
+{# --- cytoscape --- #}
+<script src="{% static 'templates/common/lib/cytoscape/cytoscape.min.js' %}"></script>
+{# --- cytoscape-panzoom --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-panzoom/cytoscape-panzoom.js' %}"></script>
+{# --- cytoscape-navigator --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-navigator/cytoscape-navigator.js' %}"></script>
+{# --- cytoscape-expand-collapse --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-expand-collapse/cytoscape-expand-collapse.js' %}"></script>
+{# --- cytoscape-undo-redo --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-undo-redo/cytoscape-undo-redo.js' %}"></script>
+{# --- numeric --- #}
+<script src="{% static 'templates/common/lib/numeric/numeric.js' %}"></script>
+<script src="{% static 'templates/common/lib/numeric/quadprog.js' %}"></script>
+<script src="{% static 'templates/common/lib/numeric/seedrandom.js' %}"></script>
+<script src="{% static 'templates/common/lib/numeric/sparse2.js' %}"></script>
+<script src="{% static 'templates/common/lib/numeric/svd.js' %}"></script>
+{# --- layout-base --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/layout-base/layout-base.js' %}"></script>
+{# --- cose --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cose-base/cose-base.js' %}"></script>
+{# --- fcose --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-fcose/cytoscape-fcose.js' %}"></script>
+{# --- cola --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/WebCola/cola.min.js' %}"></script>
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-cola/cytoscape-cola.js' %}"></script>
+{# --- avsdf --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/avsdf-base/avsdf-base.js' %}"></script>
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-avsdf/cytoscape-avsdf.js' %}"></script>
+{# --- dagre --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/dagre/dagre.js' %}"></script>
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-dagre/cytoscape-dagre.js' %}"></script>
+{# --- euler --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-euler/cytoscape-euler.js' %}"></script>
+{# --- klay --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/klay/klay.js' %}"></script>
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-klay/cytoscape-klay.js' %}"></script>
+{# --- forcelayout --- #}
+<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-ngraph-forcelayout/cytoscape-ngraph-forcelayout.js' %}"></script>
+{# --- Custom script for text_highlight --- #}
+<script src="{% static 'templates/common/func/text_highlight/text_highlight.js' %}"></script>
+<script type="text/javascript">
+    const BsTheme         = $('html').data('bs-theme'),
+          Color           = getComputedStyle(document.documentElement).getPropertyValue('--bs-body-color'),
+          FontSize        = getComputedStyle(document.documentElement).getPropertyValue('--base-font-size'),
+          nodeBgColor     = getComputedStyle(document.documentElement).getPropertyValue('--bs-highlight-bg'),
+          nodeBorderColor = getComputedStyle(document.documentElement).getPropertyValue('--bs-border-color'),
+          edgeLineColor   = getComputedStyle(document.documentElement).getPropertyValue('--bs-primary-border-subtle'),
+          color1          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-1'),
+          color2          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-2'),
+          color3          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-3'),
+          color4          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-4'),
+          color5          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-5'),
+          color6          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-6'),
+          color7          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-7'),
+          color8          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-8'),
+          color9          = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-9'),
+          color10         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-10'),
+          color11         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-11'),
+          color12         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-12'),
+          color13         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-13'),
+          color14         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-14'),
+          color15         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-15'),
+          color16         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-16'),
+          color17         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-17'),
+          color18         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-18'),
+          color19         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-19'),
+          color20         = getComputedStyle(document.documentElement).getPropertyValue('--tableau20-20'),
+          colors          = [color1,  color2,  color3,  color4,  color5,  color6,  color7,  color8,  color9,  color10,
+                             color11, color12, color13, color14, color15, color16, color17, color18, color19, color20];
+    const CytLayout = (function () {
+        const _setLayout = function (cy, layoutName) {
+            const layout = {
+                name:              layoutName,
+                fit:               true,
+                animate:           true,
+                animationDuration: 1000,
+                randomize:         true,
+            };
+            cy.layout(layout).run();
+            return layout;
+        };
+        return {
+            setLeyout: _setLayout
+        };
+    })();
+    // ハイライト( ノード生成時の backgroundcolor は上書きできないので blacken で対応 )
+    function setBlackenVal() {
+        if(BsTheme == 'light') { return 0.9; } else { return -0.9; }
+    };
+    const CustomStyle = [
+        {
+            'selector': 'node[role="Node"].highlight-target',
+            'style':  {
+                'background-blacken': setBlackenVal(),
+                'opacity': '1',
+            },
+        },
+        {
+            'selector': 'node[role="Node"].highlight',
+            'style':  {
+                'opacity': '1',
+            },
+        },
+        {
+            'selector': 'edge[role="Edge"].highlight',
+            'style':  {
+                'opacity': '1',
+            },
+        },
+        {
+            'selector': 'node[role="Node"].transparent',
+            'style':  {
+                'opacity': '0.1',
+            },
+        },
+        {
+            'selector': 'edge[role="Edge"].transparent',
+            'style':  {
+                'opacity': '0.1',
+            },
+        }
+    ];
+    document.addEventListener('DOMContentLoaded', function () {
+        let setStyles = function (nodes, edges, EdgeStyle) {
+            // node Styles
+            nodes.forEach(function (node) {
+                let data = node.json().data,
+                    randomColor = colors[Math.floor(Math.random() * (colors.length))];
+                if (!data.type) {
+                    node.css('content',            data.label||data.name||data.id);
+                    node.css('width',              data.width||data.size||'20px');
+                    node.css('height',             data.height||data.size||'20px');
+                    node.css('margin',             data.margin||'0px');
+                    node.css('padding',            data.padding||'5px');
+                    node.css('color',              data.color||randomColor||Color);
+                    node.css('font-size',          data.fontSize||FontSize);
+                    node.css('font-weight',        data.fontWeight||400);
+                    node.css('background-color',   data.bgColor||randomColor||nodeBgColor);
+                    node.css('background-opacity', data.bgOpacity||1);
+                    node.css('border-color',       data.borderColor||randomColor||nodeBorderColor);
+                    node.css('border-width',       data.borderWidth||'1px');
+                    node.css('border-opacity',     data.borderOpacity||0);
+                    node.css('shape',              data.nodeShape||'round'); // doc: https://js.cytoscape.org/#style/node-body
+                    node.css('text-justification', 'left');
+                    node.css('text-valign',        data.textValigen||'top');
+                    node.css('text-halign',        data.textHaligen||'center');
+                    node.css('text-wrap',          'wrap');
+                    node.css('z-index',            1030);
+                } else if ((data.type).match(/^g/)) {
+                    // 親ノードのスタイル
+                    node.css("content",            data.label||data.name||data.id);
+                    node.css('margin',             data.margin||'0px');
+                    node.css('padding',            data.padding||'20px');
+                    node.css('color',              data.color||Color)
+                    node.css('font-size',          data.fontSize||FontSize);
+                    node.css('font-weight',        data.fontWeight||400);;
+                    node.css("background-color",   randomColor);
+                    node.css('background-opacity', data.bgOpacity||.1);
+                    node.css('border-color',       data.borderColor||randomColor);
+                    node.css('border-width',       data.borderWidth||'5px');
+                    node.css('border-opacity',     data.borderOpacity||.2);
+                    node.css('shape',              data.nodeShape||'round-rectangle'); // doc: https://js.cytoscape.org/#style/node-body
+                    node.css('text-valign',        data.textValigen||'top');
+                    node.css('text-halign',        data.textHaligen||'center');
+                    node.css('z-index',            1029);
+                }
+            });
+            // edge Styles
+            edges.forEach(function (edge) {
+                let data = edge.json().data,
+                    randomColor = colors[Math.floor(Math.random() * (colors.length))];
+                edge.css('content',            data.label||data.name||'');
+                edge.css('color',              data.color||Color);
+                edge.css('font-size',          data.fontSize||FontSize);
+                edge.css('font-weight',        data.fontWeight||400);
+                edge.css('width',              data.lineWeight||5);
+                edge.css('curve-style',        EdgeStyle);
+                edge.css('line-color',         data.lineColor||edgeLineColor);
+                edge.css('line-style',         data.lineStyle||'solid');     // solid, dotted, or dashed
+                edge.css('line-cap',           data.lineCap||'butt');        // butt, round, or square
+                edge.css('target-arrow-color', data.lineColor||edgeLineColor);
+                edge.css('target-arrow-shape', data.arrowShape||{% if NetWorkType == 'directed' %}'vee'{% else %}'none'{% endif %}); // doc: https://js.cytoscape.org/#style/edge-arrow
+            });
+        };
+        // 実体化
+        let cy = cytoscape({
+            container: $('#{{ IdCyDisplayArea }}'),
+            elements:  eval($('#{{ IdCyData }}').val()),
+            ready: function () {
+                setStyles(this.nodes(), this.edges(), $('#{{ IdCyEdgeStyle }}').val());
+            },
+            style:     CustomStyle,
+        });
+        CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
+
+        // パン、ズームイン／ズームアウトコントロールの配置
+        const PanZoomOptions = {
+            zoomOnly:               false,
+            zoomFactor:             0.05,
+            zoomDelay:              45,
+            minZoom:                0.1,
+            maxZoom:                10,
+            fitPadding:             50,
+            panSpeed:               10,
+            panDistance:            10,
+            panDragAreaSize:        75,
+            panMinPercentSpeed:     0.25,
+            panInactiveArea:        1,
+            panIndicatorMinOpacity: 0.5,
+            fitSelector:            undefined,
+            fitAnimationDuration:   1000,
+            sliderHandleIcon:       'fa fa-minus',
+            zoomInIcon:             'fa fa-plus',
+            zoomOutIcon:            'fa fa-minus',
+            resetIcon:              'fa-solid fa-up-right-and-down-left-from-center',
+            animateOnFit: function(){
+                return false;
+            },
+        };
+        cy.panzoom(PanZoomOptions);
+        // 鳥瞰図ウィジェットの配置(初期 hide クラス付与)
+        const nav = cy.navigator({});
+        $('.cytoscape-navigator').addClass('hide');
+        $('#{{ IdCyNavigationSwitch }}').on('click', function () {
+            if ( $(this).val() == 'false' ) {
+                $(this).val('true');
+                $('.cytoscape-navigator').removeClass('hide');
+            } else {
+                $(this).val('false');
+                $('.cytoscape-navigator').addClass('hide');
+            }
+        });
+        // undo-redo
+        let ur = cy.undoRedo({});
+        document.addEventListener("keydown", function (e) {
+            if(e.which === 46) {
+                let selecteds = cy.$(":selected");
+                if (selecteds.length > 0)
+                    ur.do("remove", selecteds);
+            }
+            else if (e.ctrlKey && e.target.nodeName === 'BODY')
+                if (e.which === 90)
+                    ur.undo();
+                else if (e.which === 89)
+                    ur.redo();
+        });
+        // expand-collapse
+        let ExpandCollapseOptions = {
+            animationDuration: 1000,
+            zIndex:            1029, // panzoom より下にすること
+        };
+        let ExpandCollapseApi = cy.expandCollapse(ExpandCollapseOptions);
+        cy.nodes().on("expandcollapse.aftercollapse", function() { 
+            CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
+        });
+        cy.nodes().on("expandcollapse.afterexpand", function() { 
+            CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
+        });
+        $('#{{ IdExpandCollapseOpen }}').on('click', function () {
+            ur.do('expandAll');
+        });
+        $('#{{ IdExpandCollapseClose }}').on('click', function () {
+            ur.do('collapseAll');
+        });
+        
+        // レイアウトの変更
+        $('#{{ IdCyLayoutStyle }}').change(function () {
+            CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
+        });
+        $('#{{ IdCyEdgeStyle }}').change(function () {
+            setStyles(cy.nodes(), cy.edges(), $('#{{ IdCyEdgeStyle }}').val());
+        });
+        // ノードクリックで要素を強調
+        function resetHighLight() {
+            cy.elements().removeClass('highlight-target');
+            cy.elements().removeClass('highlight');
+            cy.elements().removeClass('transparent');
+        };
+        cy.on('tap', function(e){
+            if ( e.target == cy ) {
+                // cy tap
+                resetHighLight();
+                // text_highlight
+                clearTextHighlight();
+            } else if ( e.target.isNode() ) {
+                // node tap
+                resetHighLight();
+                let selectTarget = e.target;
+                selectTarget.addClass('highlight-target');
+                {% if NetWorkType == 'directed' %}
+                // 有向グラフの場合には全子要素をハイライト
+                selectTarget.successors().addClass('highlight');
+                cy.elements().difference(selectTarget.successors()).not(selectTarget).addClass('transparent');
+                {% else %}
+                // 無向グラフの場合には近傍要素をハイライト
+                selectTarget.neighborhood().addClass('highlight');
+                cy.elements().difference(selectTarget.neighborhood()).not(selectTarget).addClass('transparent');
+                {% endif %}
+
+                // text_highlight
+                let highlightTextList    = [],
+                    subhighlightTextList = [];
+                selectTarget.forEach(function(node, _) {
+                    if ( node.json().data['label'] ) {
+                        var word = node.json().data['label']
+                    } else if ( node.json().data['name'] ) {
+                        var word = node.json().data['name']
+                    } else {
+                        var word = node.json().data['id']
+                    }
+                    highlightTextList.push(word);
+                });
+                {% if NetWorkType == 'directed' %}
+                // 有向グラフの場合には全子要素をハイライト
+                selectTarget.successors().forEach(function(node, _) {
+                    if ( node.json().data['label'] ) {
+                        var word = node.json().data['label']
+                    } else if ( node.json().data['name'] ) {
+                        var word = node.json().data['name']
+                    } else {
+                        var word = node.json().data['id']
+                    }
+                    subhighlightTextList.push(word);
+                });
+                {% else %}
+                // 無向グラフの場合には近傍要素をハイライト
+                selectTarget.neighborhood().forEach(function(node, _) {
+                    if ( node.json().data['label'] ) {
+                        var word = node.json().data['label']
+                    } else if ( node.json().data['name'] ) {
+                        var word = node.json().data['name']
+                    } else {
+                        var word = node.json().data['id']
+                    }
+                    subhighlightTextList.push(word);
+                });
+                {% endif %}
+                addTextHighlight( {
+                    HighlightWords:    highlightTextList,
+                    subHighlightWords: subhighlightTextList,
+                });
+            } else {
+                // edge tap: 接続されたノードをハイライト
+                resetHighLight();
+                let selectTarget = e.target;
+                selectTarget.connectedNodes().addClass('highlight');
+                cy.elements().difference(selectTarget.connectedNodes()).not(selectTarget).addClass('transparent');
+                
+                // text_highlight
+                let highlightTextList    = [],
+                    subhighlightTextList = [];
+                selectTarget.connectedNodes().forEach(function(node, _) {
+                    if ( node.json().data['label'] ) {
+                        var word = node.json().data['label']
+                    } else if ( node.json().data['name'] ) {
+                        var word = node.json().data['name']
+                    } else {
+                        var word = node.json().data['id']
+                    }
+                    highlightTextList.push(word);
+                });
+                addTextHighlight( {
+                    HighlightWords:    highlightTextList,
+                    subHighlightWords: subhighlightTextList,
+                });
+            };
+        });
+    });
+</script>

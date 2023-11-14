@@ -1,0 +1,118 @@
+{% load static %}
+<div class="fixed-top print-hide-area" id="Navbar">
+    <nav class="navbar navbar-expand-md" id="NavbarItem">
+        <div class="container-fluid">
+            <a class="btn navbar-brand"
+               role="button"
+               href="{% url 'home' %}">
+               Django Chat
+            </a>
+            <button class="btn navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#NavbarNav"
+                    aria-controls="NavbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                    id="TogglerNavigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse"
+                id="NavbarNav">
+                <div class="navbar-nav">
+                    <a class="btn nav-link"
+                       role="button"
+                       href="{% url 'chat:room_list' %}">
+                       <i class="beginning-sentence-icon fa-regular fa-comment-dots"></i>AI Chat
+                    </a>
+                    {# --- Displayed sm or less --- #}
+                    <div class="d-md-none text-center">
+                        <div class="border-top"></div>
+                        {% if user.is_authenticated %}
+                        <a class="btn nav-link"
+                           role="button"
+                           href="{% url 'accounts:user_properties:user_profile' %}">
+                            <i class="beginning-sentence-icon fa-solid fa-gear"></i>Settings
+                        </a>
+                        <a class="btn nav-link"
+                           role="button"
+                           href="{% url 'accounts:logout' %}">
+                            <i class="beginning-sentence-icon fas fa-sign-out-alt"></i>Log out
+                        </a>
+                        {% else%}
+                        <a class="btn nav-link"
+                           role="button"
+                           href="{% url 'accounts:signup' %}">
+                            <i class="beginning-sentence-icon fas fa-user-plus"></i>Sign up
+                        </a>
+                        <a class="btn nav-link"
+                           role="button"
+                           href="{% url 'accounts:login' %}">
+                            <i class="beginning-sentence-icon fas fa-sign-in-alt"></i>Log in
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {# --- Displayed md or above ---#}
+            <div class="d-none d-md-block">
+                <div class="btn-group" id="NavberDropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        {% if user.is_authenticated %}
+                        <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                             class="rounded-circle border border-1 dropdown_botton_img"
+                             alt="user_icon" />
+                        {% else %}
+                        <img src="{% static 'apps/user_profile/user_icon/default/default.svg' %}"
+                             class="rounded-circle border border-1 dropdown_botton_img"
+                             alt="user_icon" />
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                    {% if user.is_authenticated %}
+                        <div class="row border-bottom mx-auto p-2">
+                            <div class="col-12 text-center">
+                                <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                                     class="rounded-circle border border-2 dropdown_menu_user_icon_img"
+                                     alt="user_icon" />
+                            </div>
+                            <div class="col-12 font-monospace fs-8 text-muted text-center pt-2">
+                                {{ user.email }}
+                            </div>
+                        </div>
+                    {% endif %}
+                        <div class="p-2 text-center">
+                        {% if user.is_authenticated %}
+                            <a class="btn dropdown-item"
+                               role="button"
+                               href="{% url 'accounts:user_properties:user_profile' %}">
+                                <i class="beginning-sentence-icon fa-solid fa-gear"></i>Settings
+                            </a>
+                            <a class="btn dropdown-item"
+                               role="button"
+                               href="{% url 'accounts:logout' %}">
+                                <i class="beginning-sentence-icon fas fa-sign-out-alt"></i>Log out
+                            </a>
+                        {% else%}
+                            <a class="btn dropdown-item"
+                               role="button"
+                               href="{% url 'accounts:login' %}">
+                                <i class="beginning-sentence-icon fas fa-sign-in-alt"></i>Log in
+                            </a>
+                            <a class="btn dropdown-item"
+                               role="button"
+                               href="{% url 'accounts:signup' %}">
+                                <i class="beginning-sentence-icon fas fa-user-plus"></i>Sign up
+                            </a>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block navber_include_sideber %}{% endblock %}
+</div>

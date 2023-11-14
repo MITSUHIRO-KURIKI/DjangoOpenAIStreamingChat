@@ -1,0 +1,27 @@
+{% extends 'accounts/accounts_base.html' %}
+
+{# --- TITLE --- #}
+{% block accounts_title %} - Your account has been locked{% endblock %}
+
+{# --- CONTENT --- #}
+{% block accounts_content %}
+<h1 class="f-content-title">アカウントがロックされました</h1>
+<div class="card mt-4">
+    <div class="card-body">
+        <p class="card-text"><a href="{% url 'accounts:password_reset' %}">パスワードのリセット</a>から再設定を行ってください。</p>
+        <p class="card-text">5病後にリダイレクトします</p>
+        <a class="btn btn-primary" role="button" href="{% url 'accounts:password_reset' %}">パスワードのリセット</a>
+    </div>
+</div>
+{% endblock %}
+
+{# --- SCRIPT rear --- #}
+{% block accounts_js_rear %}
+    {% if form is None %}
+        <script type="text/javascript">
+            setTimeout(function(){
+                window.location.href = "{% url 'accounts:password_reset' %}";
+            }, 5*1000);
+        </script>
+    {% endif %}
+{% endblock %}
