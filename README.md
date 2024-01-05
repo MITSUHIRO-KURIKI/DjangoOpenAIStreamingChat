@@ -21,7 +21,7 @@
 <sup>[DjangoTemplate](https://mitsuhiro-kuriki.github.io/DjangoTemplate/ "DjangoTemplate")との差分のみ表示</sup>
 
 #### config > settings.pyでの設定
-###### RADISの使用<sup>⚠️</sup>
+###### RADISの使用
 ```
 IS_USE_RADIS = False
 ```
@@ -32,12 +32,12 @@ IS_USE_RADIS = False
 OPENAI_API_KEY='*** YOUR OPENAI_API_KEY ***'
 ```
 
-###### Radisを利用する場合<sup>⚠️</sup>
+###### Radisを利用する場合
 ```
 RADIS_HOST='*** RADIS HOST ***'  
 RADIS_PORT='*** RADIS PORT ***'
 ```
-<sup>⚠️ GCPでうまく動作せず確認中/詳しい方コメント頂けると有り難いです</sup>
+
 ## 実行
 ```
 $ pip install -r requirements-base.txt
