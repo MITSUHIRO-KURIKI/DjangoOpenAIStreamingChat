@@ -18,7 +18,7 @@ STATIC_URL = '/static/'
 # Media files
 MEDIA_URL = '/media/'
 
-if os.getenv('GAE_APPLICATION', None):
+if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
     from google.oauth2 import service_account
     STORAGES = {
         'default':     {'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage'},
@@ -28,7 +28,7 @@ if os.getenv('GAE_APPLICATION', None):
     GS_CREDENTIALS      = service_account.Credentials.from_service_account_file(
         os.path.join(settings.BASE_DIR, GS_CREDENTIALS_JSON),
     )
-    GS_PROJECT_ID       = env.get_value('GPC_PROJECT_ID',str)
+    GS_PROJECT_ID       = env.get_value('GCP_PROJECT_ID',str)
     GS_BUCKET_NAME      = env.get_value('GS_BUCKET_NAME',str)
     GS_IS_GZIPPED       = False
     GS_DEFAULT_ACL      = None
@@ -58,6 +58,6 @@ else:
         GS_CREDENTIALS      = service_account.Credentials.from_service_account_file(
             os.path.join(settings.BASE_DIR, GS_CREDENTIALS_JSON),
         )
-        GS_PROJECT_ID       = env.get_value('GPC_PROJECT_ID',str)
+        GS_PROJECT_ID       = env.get_value('GCP_PROJECT_ID',str)
         GS_BUCKET_NAME      = env.get_value('GS_BUCKET_NAME',str)
         STATIC_ROOT         = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
