@@ -1,7 +1,7 @@
 import os
 
 
-if os.getenv('GAE_APPLICATION', None):
+if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
     def print_color(text:str,
                     ColorCode:int = 1):
         return print(str(text))
