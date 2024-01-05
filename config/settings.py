@@ -42,8 +42,9 @@ except ImportError:
     pass
 
 # ALLOWED_HOSTS
-if os.getenv('GAE_APPLICATION', None):
-    ALLOWED_HOSTS = [env.get_value('ALLOWED_HOSTS_01',str)]
+if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
+    ALLOWED_HOSTS        = [env.get_value('ALLOWED_HOSTS_01',str)]
+    CSRF_TRUSTED_ORIGINS = [env.get_value('FRONTEND_URL',str)]
 else:
     ALLOWED_HOSTS = [env.get_value('ALLOWED_HOSTS_DEBUG',str)]
 
