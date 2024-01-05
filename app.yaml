@@ -1,5 +1,9 @@
-runtime: python39
-entrypoint: gunicorn -b :$PORT config.wsgi:application
+runtime: python
+env: flex
+entrypoint: daphne -b 0.0.0.0 -p $PORT config.asgi:application
+runtime_config:
+  operating_system: 'ubuntu18'
+  runtime_version:  '3.9'
 
 handlers:
   - url: /static
@@ -11,8 +15,11 @@ handlers:
 env_variables:
   REDISHOST: '*** RADIS HOST ***'
   REDISPORT: '*** RADIS PORT ***'
+
+beta_settings:
+    cloud_sql_instances: *** DB_SQL_CONNECTION_NAME ***
+
 # Update with Serverless VPC Access connector details
-vpc_access_connector:
-  name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
 network:
+  name: default
   session_affinity: true
