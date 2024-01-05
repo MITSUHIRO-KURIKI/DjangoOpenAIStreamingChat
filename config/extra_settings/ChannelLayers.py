@@ -14,15 +14,6 @@ if settings.IS_USE_RADIS or not settings.DEBUG:
             },
         },
     }
-    # CACHES = {
-    #     'default': {
-    #         'BACKEND': 'django_redis.cache.RedisCache',
-    #         'LOCATION': f"redis://{env.get_value('RADIS_HOST',str)}:{env.get_value('RADIS_PORT',int)}/0",
-    #         'OPTIONS': {
-    #             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-    #         }
-    #     }
-    # }
 else:
     CHANNEL_LAYERS = {
         "default": {
