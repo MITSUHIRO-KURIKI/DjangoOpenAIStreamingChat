@@ -6,7 +6,7 @@ env = environ.Env()
 env.read_env(os.path.join(settings.BASE_DIR, '.env'))
 
 # Database
-if os.getenv('GAE_APPLICATION', None):
+if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
     if settings.IS_USE_GC_SQL:
         # USE_CloudSQL:
         # アプリケーションからDBへの接続情報
