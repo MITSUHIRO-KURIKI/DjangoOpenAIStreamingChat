@@ -9,7 +9,7 @@ DEBUG = True
 
 # 認証設定
 IS_USE_EMAIL_CERTIFICATION = False  # メール送信でメールアドレスを認証する
-IS_USE_SOCIAL_LOGIN        = True  # ソーシャルログインを有効にする
+IS_USE_SOCIAL_LOGIN        = False  # ソーシャルログインを有効にする
 IS_USE_RECAPTCHA           = False  # RECAPTCHA を有効にする
 
 # 管理者へのメール通知設定
