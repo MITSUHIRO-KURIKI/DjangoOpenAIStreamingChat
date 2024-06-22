@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from common.scripts import grecaptcha_request, RequestUtil
+from common.scripts.DjangoUtils import grecaptcha_request, RequestUtil
 from ..models import Inquiry
 
 class InquiryCreateView(CreateView):
@@ -11,17 +11,16 @@ class InquiryCreateView(CreateView):
     template_name = 'apps/inquiry/inquiry_form/form.html'
     model         = Inquiry
     fields        = ['email','inquiry_text',]
-    success_url   = reverse_lazy('home')
+    success_url   = reverse_lazy('inquiry:inquiry_form')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context.update({
             'RECAPTCHA_PUBLIC_KEY': settings.RECAPTCHA_PUBLIC_KEY if settings.IS_USE_RECAPTCHA else None,
-            'IS_USE_RECAPTCHA': settings.IS_USE_RECAPTCHA,
+            'IS_USE_RECAPTCHA':     settings.IS_USE_RECAPTCHA,
         })
         return context
 
-    # reCaptcha_token の検証
     def post(self, request, *args, **kwargs):
         # reCaptcha_token の検証▽
         if settings.IS_USE_RECAPTCHA:
@@ -44,9 +43,9 @@ class InquiryCreateView(CreateView):
                     request.session['invalid_inquiry_text_data'] = self.request.POST['inquiry_text']
                     reverse_url = reverse_lazy('inquiry:inquiry_form')
                     return HttpResponseRedirect(reverse_url)
-        else:
-            return super().post(request, *args, **kwargs)
         # reCaptcha_token の検証△
+        
+        return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.ip_address = RequestUtil.get_ip(self)
@@ -66,6 +65,7 @@ class InquiryCreateView(CreateView):
         return self.render_to_response(context)
 
     def get_success_url(self):
+        self.request.session['invalid_inquiry_text_data'] = None
         messages.add_message(self.request, messages.INFO,
                              f'お問い合わせを受け付けました',)
         return self.success_url

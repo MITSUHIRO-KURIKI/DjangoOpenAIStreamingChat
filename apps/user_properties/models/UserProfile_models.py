@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
-from common.scripts import validate_bad_id_name_words
+from common.scripts.DjangoUtils import validate_bad_id_username_words
 from sorl.thumbnail import get_thumbnail, delete
 
 User = get_user_model()
@@ -33,7 +33,7 @@ class UserProfile(models.Model):
                     blank        = False,
                     null         = False,
                     unique       = False,
-                    validators   = [AbstractUser.username_validator, validate_bad_id_name_words],
+                    validators   = [AbstractUser.username_validator, validate_bad_id_username_words],
                     help_text    = '半角英数字 25文字以下',)
     user_icon = models.ImageField(
                     verbose_name = 'プロフィール画像',

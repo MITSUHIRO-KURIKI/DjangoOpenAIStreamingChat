@@ -1,0 +1,8 @@
+@charset "UTF-8";
+code[class*=language-],
+pre[class*='language-'] {
+    text-shadow: none !important;
+    white-space: pre-wrap !important;
+    line-height: 1.1 !important;
+    font-size:   0.9em !important;
+}

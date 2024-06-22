@@ -10,7 +10,7 @@ def access_security_notice_admin(sender, instance, **kwargs) -> None:
         if settings.IS_NOTIFICATION_ADMIN:
             if instance.type == 'SET_BLOCK_IP':
                 from_email = settings.DEFAULT_FROM_EMAIL
-                to_email   = settings.ADMIN_NOTICE_EMAIL
+                to_email   = settings.ADMIN_EMAIL_LIST
                 subject    = 'AccessSecurity Arrart!'
                 body       = f'{instance.ip} を大量アクセスでブロックリストに登録しました'
                 email_message = EmailMultiAlternatives(

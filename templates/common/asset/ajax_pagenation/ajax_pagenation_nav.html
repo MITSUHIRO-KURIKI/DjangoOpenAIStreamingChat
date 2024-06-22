@@ -10,7 +10,7 @@ template引数:
         <li class="page-item">
             <button type="button"
                     class="page-link"
-                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.previous_page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.previous_page }},{{ url_param.per_n }},'{{ url_param.sort }}')">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
         </li>
@@ -18,7 +18,7 @@ template引数:
             <li class="page-item {% if page == '…' %}disabled{% elif page == pagenate.page %}active{% endif %}">
                 <button type="button"
                         class="page-link"
-                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}')">
                     {{ page }}
                 </button>
             </li>
@@ -26,7 +26,7 @@ template引数:
         <li class="page-item">
             <button type="button"
                     class="page-link"
-                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.next_page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                    onclick="{{ AjaxFuncName }}({{ pagenate.nav_page_dict.next_page }},{{ url_param.per_n }},'{{ url_param.sort }}')">
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
         </li>
@@ -45,7 +45,7 @@ template引数:
             <li>
                 <button type="button"
                         class="dropdown-item"
-                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}',{% if url_param.q %}'{{ url_param.q }}'{% else %}''{% endif %})">
+                        onclick="{{ AjaxFuncName }}({{ page }},{{ url_param.per_n }},'{{ url_param.sort }}')">
                     {{ page }}
                 </button>
             </li>

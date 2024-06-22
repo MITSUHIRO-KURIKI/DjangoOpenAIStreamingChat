@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponseForbidden
-from common.scripts import RequestUtil, print_color
+from common.scripts.DjangoUtils import RequestUtil
+from common.scripts.PythonCodeUtils import print_color
 
 class AdminProtect:
     
@@ -17,6 +18,11 @@ class AdminProtect:
             # 送信元のIPアドレス
             ip = RequestUtil.get_ip(self, request)
 
+            # 許可IPアドレスリストが空の場合には全てのIPを許可
+            if settings.ALLOWED_IP_ADMIN == ['']:
+                response = self.get_response(request)
+                return response
+
             # 送信元IPが許可IPアドレスリストに含まれていない場合はForbiddenを返す
             if ip not in settings.ALLOWED_IP_ADMIN:
                 return HttpResponseForbidden()
@@ -25,13 +31,11 @@ class AdminProtect:
         # ここの if は動作確認用なので本番は消すこと
         if settings.ADMIN_PATH in url and settings.DEBUG:
             ip = RequestUtil.get_ip(self, request)
-            print(settings.ALLOWED_IP_ADMIN)
-            print_color('*'*10 + '[this print config.admin_protect.AdminProtect line:28]' + '*'*10, 4)
+            print_color('*'*10 + '[this print config.admin_protect.AdminProtect line:34]' + '*'*10, 4)
             print_color(f'* config.admin_protect.AdominProtect DEBUG CODE [admin access]: {ip}'   , 4)
             if ip not in settings.ALLOWED_IP_ADMIN:
                 return HttpResponseForbidden()
         ####################
 
         response = self.get_response(request)
-
         return response

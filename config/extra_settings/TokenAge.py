@@ -1,9 +1,8 @@
-import os
-import environ
 from django.conf import settings
+from config.read_env import read_env
 
-env = environ.Env()
-env.read_env(os.path.join(settings.BASE_DIR, '.env'))
+# LOAD SECRET STEEINGS
+env = read_env(settings.BASE_DIR)
 
 # メール認証用Tokenの有効時間(秒)
 EMAIL_CERTIFICATION_TOKEN_AGE = env.get_value('EMAIL_CERTIFICATION_TOKEN_AGE',int)

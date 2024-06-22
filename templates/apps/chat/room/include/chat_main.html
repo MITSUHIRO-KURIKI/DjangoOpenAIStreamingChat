@@ -1,52 +1,149 @@
+{% load json_loads %}
+
 <div class="chat-main">
-    {% for message_object in message_objects %}
-        {# --- Human --- #}
-        <div class="d-flex flex-row align-items-start mt-3">
-            <div class="flex-column">
-                <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
-                     class="row rounded-circle border border-1 message-icon"
-                     alt="user_icon" />
-                <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
+    {% if message_objects %}
+        {% for message_object in message_objects %}
+            {# --- Human --- #}
+            <div class="human-message-area">
+                <div class="d-flex flex-row align-items-start mt-3">
+                    <div class="flex-column">
+                        <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                            class="row rounded-circle border border-1 message-icon"
+                            alt="user_icon" />
+                        <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
+                    </div>
+                    <div class="flex-column ms-2 mt-2">
+                        <span class="human-message">
+                            {{ message_object.user_message | linebreaksbr }}
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="flex-column ms-2 mt-2">
-                <span class="human-message">
-                    {{ message_object.user_message | linebreaksbr }}
-                </span>
+            {# --- Ai --- #}
+            <div class="ai-message-area">
+                <div class="d-flex flex-row align-items-start mt-3">
+                    <div class="flex-column">
+                        <img src="{{ object.ai_icon.url }}"
+                            class="row rounded-circle border border-1 message-icon"
+                            alt="user_icon" />
+                        <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+                    </div>
+                    <div class="flex-column ms-2 mt-2">
+                        <span class="ai-message" data-llm-response="{{ message_object.llm_response | escapejs }}"></span>
+                    </div>
+                </div>
+                
+                {# --- footer action and timestomp --- #}
+                <div class="d-flex flex-row justify-content-end align-items-center">
+                    <div class="footer-hidden-visible footer-hidden-opacity">
+                        {# --- 評価 --- #}
+                        <span class="btn btn-sm m-1 p-1 dissatisfaction-action"
+                              value="{{ message_object.message_id }}"
+                              is-actioned={{ message_object.related_message_feedback_model_message_id.dissatisfaction | yesno:"true,false" }}
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-html="false"
+                              title="{% if not message_object.related_message_feedback_model_message_id.dissatisfaction %}回答に不満{% endif %}">
+                            {% if not message_object.related_message_feedback_model_message_id.dissatisfaction %}
+                                <i class="fa-regular fa-thumbs-down"></i> {# --- 不満評価なし --- #}
+                            {% else %}
+                                <i class="fa-solid fa-thumbs-down"></i>   {# --- 不満評価 --- #}
+                            {% endif %}
+                        </span>
+                        {# --- Delete --- #}
+                        <button class="delete-room-button btn btn-sm m-1 p-1"
+                                type="submit"
+                                name="DeleteMessage"
+                                value="{{ message_object.message_id }}"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-html="false"
+                                title="この回答を削除">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                        {# --- infomation --- #}
+                        <button class="btn btn-sm rounded"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseArea_{{ forloop.counter }}"
+                                aria-expanded="false"
+                                aria-controls="collapseArea_{{ forloop.counter }}">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </button>
+                    </div>
+                    <div class="fs-10 fw-2">{{ message_object.date_create }}</div>
+                </div>
             </div>
-        </div>
-        {# --- Ai --- #}
-        <div class="d-flex flex-row align-items-start mt-3">
-            <div class="flex-column">
-                <img src="{{ object.ai_icon.url }}"
-                     class="row rounded-circle border border-1 message-icon"
-                     alt="user_icon" />
-                <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+            {# --- infomation collapse --- #}
+            <div class="collapse"
+                 id="collapseArea_{{ forloop.counter }}">
+                <div class="card card-body">
+                    <ul class="list-group">
+                        <li class="border-bottom py-2">user_settings: {{ message_object.user_settings }}</li>
+                        <li class="border-bottom py-2">tokens_info_dict: {{ message_object.tokens_info_dict }}</li>
+                        <li class="border-bottom py-2">history_list: {{ message_object.history_list }}</li>
+                        <li class="py-2">next_question_assist_data_list: {{ message_object.next_question_assist_data_list }}</li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex-column ms-2 mt-2">
-                <span class="ai-message">
-                    {{ message_object.llm_response | linebreaksbr }}
-                </span>
+        {% endfor %}
+    {% else %}
+            {# --- Ai --- #}
+            <div class="d-flex flex-row align-items-start mt-3">
+                <div class="flex-column">
+                    <img src="{{ room_settings.ai_icon.url }}"
+                        class="row rounded-circle border border-1 message-icon"
+                        alt="user_icon" />
+                    <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+                </div>
+                <div class="flex-column ms-2 mt-2">
+                    <span class="ai-message">
+                        こんにちは！
+                    </span>
+                </div>
             </div>
-        </div>
-        {# --- timestomp and infomation --- #}
-        <div class="d-flex flex-row justify-content-end align-items-center">
-            <span class="fs-9 fw-2">{{ message_object.date_create }}</span>
-            <button class="btn btn-sm rounded"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseArea_{{ forloop.counter }}"
-                    aria-expanded="false"
-                    aria-controls="collapseArea_{{ forloop.counter }}">
-                <i class="fa-solid fa-circle-info"></i>
-            </button>
-        </div>
-        <div class="collapse"
-             id="collapseArea_{{ forloop.counter }}">
-            <div class="card card-body">
-                <small>user_settings: {{ message_object.user_settings }}</small>
-                <small>response_info: {{ message_object.response_info }}</small>
-            </div>
-        </div>
-    {% endfor %}
+    {% endif %}
     <div id="ChatOutputArea"></div>
 </div>
+
+{# --- ai-message の Markdown を HTML に変換 --- #}
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        marked.setOptions({renderer: markedRenderer, breaks: true, gfm: true,});
+        document.querySelectorAll('.ai-message').forEach(function(element) {
+            if (element.dataset.llmResponse) {
+                // Unicodeエスケープシーケンスを実際の文字に変換
+                let decodedString = element.dataset.llmResponse.replace(/\\u([\d\w]{4})/gi, function (match, grp) {
+                    return String.fromCharCode(parseInt(grp, 16)); 
+                });
+                let htmlContentClean = DOMPurify.sanitize(decodedString),
+                    htmlContent      = marked.parse(htmlContentClean);
+                element.innerHTML = htmlContent;
+            };
+        });
+        Prism.highlightAll();
+    });
+</script>
+
+{# --- ai-message の フッターアニメーション --- #}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const aiMessageAreas = document.querySelectorAll('.ai-message-area');
+    
+        aiMessageAreas.forEach(function (aiMessageArea) {
+            aiMessageArea.addEventListener('mouseenter', function () {
+                this.querySelectorAll('.footer-hidden-visible').forEach(function (element) {
+                    element.classList.remove('footer-hidden-opacity');
+                    element.classList.add('footer-visible-opacity');
+                });
+            });
+    
+            aiMessageArea.addEventListener('mouseleave', function () {
+                this.querySelectorAll('.footer-hidden-visible').forEach(function (element) {
+                    element.classList.remove('footer-visible-opacity');
+                    element.classList.add('footer-hidden-opacity');
+                });
+            });
+        });
+    });
+</script>

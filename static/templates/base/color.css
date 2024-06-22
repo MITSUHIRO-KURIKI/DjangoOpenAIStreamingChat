@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
 :root {
-    /* navbar */
-    --frosted-glass-bg-color:          rgba(255, 255, 255, 0.1);
-    --navbar-frosted-glass-text-color: #FFF;
     /* Django */
     --django-theme-color: #092E20;
     /* ChatGPT */

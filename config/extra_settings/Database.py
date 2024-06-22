@@ -1,9 +1,9 @@
 import os
-import environ
+from config.read_env import read_env
 from django.conf import settings
 
-env = environ.Env()
-env.read_env(os.path.join(settings.BASE_DIR, '.env'))
+# LOAD SECRET STEEINGS
+env = read_env(settings.BASE_DIR)
 
 # Database
 if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
@@ -16,6 +16,7 @@ if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
                 'NAME':     env.get_value('DB_SQL_DB_NAME',str),
                 'USER':     env.get_value('DB_SQL_USER_NAME',str),
                 'PASSWORD': env.get_value('DB_SQL_USER_PASSWORD_GCP',str),
+                # 'HOST':     env.get_value('DB_SQL_PRIVATE_IP',str),
                 'HOST':     '/cloudsql/' + env.get_value('DB_SQL_CONNECTION_NAME',str),
             }
         }
@@ -36,8 +37,9 @@ else:
                 'NAME':     env.get_value('DB_SQL_DB_NAME',str),
                 'USER':     env.get_value('DB_SQL_USER_NAME',str),
                 'PASSWORD': env.get_value('DB_SQL_USER_PASSWORD_GCP',str),
+                # 'HOST':     env.get_value('DB_SQL_PUBLIC_IP',str),
                 'HOST':     'localhost',
-                'PORT':     env.get_value('DB_SQL_LOCAL_PORT',str),
+                # 'PORT':     env.get_value('DB_SQL_LOCAL_PORT',str),
             }
         }
     else:

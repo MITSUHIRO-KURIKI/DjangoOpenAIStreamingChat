@@ -17,6 +17,17 @@
     --frosted-glass-border-bottom-px:    1px;
     --frosted-glass-border-bottom-color: var(--bs-border-color-translucent);
 }
+
+[data-bs-theme="light"]{
+    /* すりガラス color */
+    --frosted-glass-bg-color:          rgba(255, 255, 255, 0.1);
+    --navbar-frosted-glass-text-color: #000;
+}
+[data-bs-theme="dark"]{
+    /* すりガラス color */
+    --frosted-glass-bg-color:          rgba(255, 255, 255, 0.1);
+    --navbar-frosted-glass-text-color: #FFF;
+}
 /* Navbar */
 #Navbar {
     height:             var(--navber-height);

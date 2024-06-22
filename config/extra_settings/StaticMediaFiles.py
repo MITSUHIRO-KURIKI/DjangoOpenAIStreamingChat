@@ -1,9 +1,9 @@
 import os
-import environ
 from django.conf import settings
+from config.read_env import read_env
 
-env = environ.Env()
-env.read_env(os.path.join(settings.BASE_DIR, '.env'))
+# LOAD SECRET STEEINGS
+env = read_env(settings.BASE_DIR)
 
 # THUMBNAIL
 # https://sorl-thumbnail.readthedocs.io/en/latest/reference/settings.html
@@ -18,7 +18,7 @@ STATIC_URL = '/static/'
 # Media files
 MEDIA_URL = '/media/'
 
-if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
+if os.getenv('GAE_APPLICATION', None):
     from google.oauth2 import service_account
     STORAGES = {
         'default':     {'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage'},
@@ -32,14 +32,12 @@ if os.getenv('GAE_APPLICATION', None) or os.getenv('GAE_INSTANCE', None):
     GS_BUCKET_NAME      = env.get_value('GS_BUCKET_NAME',str)
     GS_IS_GZIPPED       = False
     GS_DEFAULT_ACL      = None
-    GS_QUERYSTRING_AUTH = False # 公開URL設定: Trueで認証型URL
+    GS_QUERYSTRING_AUTH = False # 公開URL設定: Trueで認証型URL(サービスアカウントの秘密鍵が必要なためGS_CREDENTIALSを含む必要がある)
     GS_FILE_OVERWRITE   = True
     
     # Static files
-    STATIC_ROOT = os.path.join(settings.BASE_DIR, 'static')
-    STATICFILES_DIRS = [
-        os.path.join(settings.BASE_DIR, 'static')
-        ]
+    STATIC_ROOT      = os.path.join(settings.BASE_DIR, 'static')
+    STATICFILES_DIRS = [ os.path.join(settings.BASE_DIR, 'static') ]
     # Media files
     MEDIA_ROOT = os.path.join(settings.BASE_DIR, 'media')
 else:

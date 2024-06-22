@@ -6,9 +6,9 @@ template引数:
  * CyDisplayAreaHeight
  * IdCyLayoutStyle
  * IdCyEdgeStyle
- * IdCyNavigationSwitch
- * IdExpandCollapseOpen
- * IdExpandCollapseClose
+ * IdCyBirdsNavigationSwitch
+ * IdExpandCollapseSwitch
+ * IdCySearchBox
 {% endcomment %}
 
 {% load static %}
@@ -28,43 +28,41 @@ template引数:
 </style>
 
 {# --- cytoscape --- #}
-<script src="{% static 'templates/common/lib/cytoscape/cytoscape.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.27.0/cytoscape.min.js" integrity="sha512-ZNCw/dHSJygOg60ih5fI0f2RKqa8EeVm2ivm3PcrD6SEv2WzK8VJoe5IxS4QzvLcaSIQeaxgZMRCW01QlVJTZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {# --- cytoscape-panzoom --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-panzoom/cytoscape-panzoom.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape-panzoom.min.js" integrity="sha512-coQmIYa/SKS8wyZw14FTLJhHmp5jqIO2WxyGhjAnLGdym6RsLX412wLO1hqnFifU0NacrJvlUukRJEwjRkm0Xg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {# --- cytoscape-navigator --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-navigator/cytoscape-navigator.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-navigator@2.0.1/cytoscape-navigator.js"></script>
 {# --- cytoscape-expand-collapse --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-expand-collapse/cytoscape-expand-collapse.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-expand-collapse@4.1.0/cytoscape-expand-collapse.min.js"></script>
 {# --- cytoscape-undo-redo --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-undo-redo/cytoscape-undo-redo.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-undo-redo@1.3.3/cytoscape-undo-redo.min.js"></script>
 {# --- numeric --- #}
-<script src="{% static 'templates/common/lib/numeric/numeric.js' %}"></script>
-<script src="{% static 'templates/common/lib/numeric/quadprog.js' %}"></script>
-<script src="{% static 'templates/common/lib/numeric/seedrandom.js' %}"></script>
-<script src="{% static 'templates/common/lib/numeric/sparse2.js' %}"></script>
-<script src="{% static 'templates/common/lib/numeric/svd.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js" integrity="sha512-BK/c8SKG4PMGMg8wo/56FdGMkgQFJgFl8rnVdF1wqIZW73Vw6M/Tde9GmwibV8MoBSBJcwurXGg6B9yvd/Fvcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/quadprog@1.6.1/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js" integrity="sha512-+Ru50BzEpZjlFzVnjSmJfYFPFfY2hS0Kjlu/IvqaJoux7maF5lJrRVUJWJ2LevPls7rd242GLbWEt+zAo4OVVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {# --- layout-base --- #}
 <script src="{% static 'templates/common/lib/cytoscape-extensions/layout-base/layout-base.js' %}"></script>
 {# --- cose --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cose-base/cose-base.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cose-base@2.2.0/cose-base.min.js"></script>
 {# --- fcose --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-fcose/cytoscape-fcose.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-fcose@2.2.0/cytoscape-fcose.min.js"></script>
 {# --- cola --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/WebCola/cola.min.js' %}"></script>
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-cola/cytoscape-cola.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/webcola@3.4.0/WebCola/cola.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-cola@2.5.1/cytoscape-cola.min.js"></script>
 {# --- avsdf --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/avsdf-base/avsdf-base.js' %}"></script>
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-avsdf/cytoscape-avsdf.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/avsdf-base@1.0.0/avsdf-base.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-avsdf@1.0.0/cytoscape-avsdf.min.js"></script>
 {# --- dagre --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/dagre/dagre.js' %}"></script>
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-dagre/cytoscape-dagre.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js" integrity="sha512-psLUZfcgPmi012lcpVHkWoOqyztollwCGu4w/mXijFMK/YcdUdP06voJNVOJ7f/dUIlO2tGlDLuypRyXX2lcvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 {# --- euler --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-euler/cytoscape-euler.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-euler@1.2.2/cytoscape-euler.min.js"></script>
 {# --- klay --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/klay/klay.js' %}"></script>
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-klay/cytoscape-klay.js' %}"></script>
+<script src="https://unpkg.com/klayjs@0.4.1/klay.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-klay@3.1.4/cytoscape-klay.min.js"></script>
 {# --- forcelayout --- #}
-<script src="{% static 'templates/common/lib/cytoscape-extensions/cytoscape-ngraph-forcelayout/cytoscape-ngraph-forcelayout.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/ngraph.forcelayout@3.3.1/dist/ngraph.forcelayout.min.js"></script>
 {# --- Custom script for text_highlight --- #}
 <script src="{% static 'templates/common/func/text_highlight/text_highlight.js' %}"></script>
 <script type="text/javascript">
@@ -121,7 +119,16 @@ template引数:
             'selector': 'node[role="Node"].highlight-target',
             'style':  {
                 'background-blacken': setBlackenVal(),
-                'opacity': '1',
+                'opacity':            '0.7',
+                'text-outline-color': getComputedStyle(document.documentElement).getPropertyValue('--bs-highlight-bg'),
+                'text-outline-width': 2,
+            },
+        },
+        {
+            'selector': 'node[role="Groupe"].highlight-target',
+            'style':  {
+                'text-outline-color': getComputedStyle(document.documentElement).getPropertyValue('--bs-highlight-bg'),
+                'text-outline-width': 2,
             },
         },
         {
@@ -131,7 +138,7 @@ template引数:
             },
         },
         {
-            'selector': 'edge[role="Edge"].highlight',
+            'selector': 'node[role="Groupe"].highlight',
             'style':  {
                 'opacity': '1',
             },
@@ -143,11 +150,23 @@ template引数:
             },
         },
         {
+            'selector': 'node[role="Groupe"].transparent',
+            'style':  {
+                'opacity': '0.2',
+            },
+        },
+        {
+            'selector': 'edge[role="Edge"].highlight',
+            'style':  {
+                'opacity': '1',
+            },
+        },
+        {
             'selector': 'edge[role="Edge"].transparent',
             'style':  {
-                'opacity': '0.1',
+                'opacity': '0.01',
             },
-        }
+        },
     ];
     document.addEventListener('DOMContentLoaded', function () {
         let setStyles = function (nodes, edges, EdgeStyle) {
@@ -157,10 +176,10 @@ template引数:
                     randomColor = colors[Math.floor(Math.random() * (colors.length))];
                 if (!data.type) {
                     node.css('content',            data.label||data.name||data.id);
-                    node.css('width',              data.width||data.size||'20px');
-                    node.css('height',             data.height||data.size||'20px');
+                    node.css('width',              data.width||data.size||'label');
+                    node.css('height',             data.height||data.size||'1px');
                     node.css('margin',             data.margin||'0px');
-                    node.css('padding',            data.padding||'5px');
+                    node.css('padding',            data.padding||'20px');
                     node.css('color',              data.color||randomColor||Color);
                     node.css('font-size',          data.fontSize||FontSize);
                     node.css('font-weight',        data.fontWeight||400);
@@ -177,13 +196,13 @@ template引数:
                     node.css('z-index',            1030);
                 } else if ((data.type).match(/^g/)) {
                     // 親ノードのスタイル
-                    node.css("content",            data.label||data.name||data.id);
+                    node.css("content",            data.groupeLabel||data.label||data.name||data.id);
                     node.css('margin',             data.margin||'0px');
                     node.css('padding',            data.padding||'20px');
                     node.css('color',              data.color||Color)
                     node.css('font-size',          data.fontSize||FontSize);
                     node.css('font-weight',        data.fontWeight||400);;
-                    node.css("background-color",   randomColor);
+                    node.css("background-color",   data.bgColor||randomColor);
                     node.css('background-opacity', data.bgOpacity||.1);
                     node.css('border-color',       data.borderColor||randomColor);
                     node.css('border-width',       data.borderWidth||'5px');
@@ -191,7 +210,9 @@ template引数:
                     node.css('shape',              data.nodeShape||'round-rectangle'); // doc: https://js.cytoscape.org/#style/node-body
                     node.css('text-valign',        data.textValigen||'top');
                     node.css('text-halign',        data.textHaligen||'center');
+                    node.css('text-justification', data.textJustification||'left');
                     node.css('z-index',            1029);
+                    node.css('text-wrap',          'wrap');
                 }
             });
             // edge Styles
@@ -211,6 +232,7 @@ template引数:
                 edge.css('target-arrow-shape', data.arrowShape||{% if NetWorkType == 'directed' %}'vee'{% else %}'none'{% endif %}); // doc: https://js.cytoscape.org/#style/edge-arrow
             });
         };
+
         // 実体化
         let cy = cytoscape({
             container: $('#{{ IdCyDisplayArea }}'),
@@ -218,9 +240,10 @@ template引数:
             ready: function () {
                 setStyles(this.nodes(), this.edges(), $('#{{ IdCyEdgeStyle }}').val());
             },
-            style:     CustomStyle,
+            style: CustomStyle,
+            // マウスホイールの感度
+            wheelSensitivity: 0.05,
         });
-        CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
 
         // パン、ズームイン／ズームアウトコントロールの配置
         const PanZoomOptions = {
@@ -247,10 +270,13 @@ template引数:
             },
         };
         cy.panzoom(PanZoomOptions);
+
         // 鳥瞰図ウィジェットの配置(初期 hide クラス付与)
+        {% if IS_USE_BIRDs_NAVIGATION %}
         const nav = cy.navigator({});
         $('.cytoscape-navigator').addClass('hide');
-        $('#{{ IdCyNavigationSwitch }}').on('click', function () {
+
+        $('#{{ IdCyBirdsNavigationSwitch }}').on('click', function () {
             if ( $(this).val() == 'false' ) {
                 $(this).val('true');
                 $('.cytoscape-navigator').removeClass('hide');
@@ -259,6 +285,8 @@ template引数:
                 $('.cytoscape-navigator').addClass('hide');
             }
         });
+        {% endif %}
+
         // undo-redo
         let ur = cy.undoRedo({});
         document.addEventListener("keydown", function (e) {
@@ -274,24 +302,44 @@ template引数:
                     ur.redo();
         });
         // expand-collapse
+        {% if IS_USE_EXPAND_COLLAPSE %}
         let ExpandCollapseOptions = {
             animationDuration: 1000,
             zIndex:            1029, // panzoom より下にすること
         };
         let ExpandCollapseApi = cy.expandCollapse(ExpandCollapseOptions);
-        cy.nodes().on("expandcollapse.aftercollapse", function() { 
+        cy.nodes().on("expandcollapse.aftercollapse", function() {
             CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
         });
-        cy.nodes().on("expandcollapse.afterexpand", function() { 
+        cy.nodes().on("expandcollapse.afterexpand", function() {
             CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
         });
-        $('#{{ IdExpandCollapseOpen }}').on('click', function () {
-            ur.do('expandAll');
+        $('#{{ IdExpandCollapseSwitch }}').on('click', function () {
+            if ( $(this).val() == 'false' ) {
+                $(this).val('true');
+                ur.do('expandAll');
+            } else {
+                $(this).val('false');
+                ur.do('collapseAll');
+            }
         });
-        $('#{{ IdExpandCollapseClose }}').on('click', function () {
-            ur.do('collapseAll');
+        {% endif %}
+
+        // 初期値で該当ノードだけ閉じる
+        cy.ready(function() {
+            {% if IS_USE_EXPAND_COLLAPSE %}
+            // "Groupe" role を持つノードを検索
+            var targetNodes = cy.nodes().filter(function(node) {
+                return node.data('role') === 'Groupe';
+            });
+            // 該当するノードがあれば、それらを閉じる
+            if (targetNodes.length > 0) {
+                ExpandCollapseApi.collapse(targetNodes);
+            };
+            {% endif %}
+            CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
         });
-        
+
         // レイアウトの変更
         $('#{{ IdCyLayoutStyle }}').change(function () {
             CytLayout.setLeyout(cy, $('#{{ IdCyLayoutStyle }}').val());
@@ -299,6 +347,7 @@ template引数:
         $('#{{ IdCyEdgeStyle }}').change(function () {
             setStyles(cy.nodes(), cy.edges(), $('#{{ IdCyEdgeStyle }}').val());
         });
+
         // ノードクリックで要素を強調
         function resetHighLight() {
             cy.elements().removeClass('highlight-target');
@@ -307,24 +356,70 @@ template引数:
         };
         cy.on('tap', function(e){
             if ( e.target == cy ) {
-                // cy tap
+                // cy-tap
+                // すべての要素のハイライトをリセット
                 resetHighLight();
-                // text_highlight
                 clearTextHighlight();
             } else if ( e.target.isNode() ) {
                 // node tap
                 resetHighLight();
+
                 let selectTarget = e.target;
-                selectTarget.addClass('highlight-target');
-                {% if NetWorkType == 'directed' %}
-                // 有向グラフの場合には全子要素をハイライト
-                selectTarget.successors().addClass('highlight');
-                cy.elements().difference(selectTarget.successors()).not(selectTarget).addClass('transparent');
-                {% else %}
-                // 無向グラフの場合には近傍要素をハイライト
-                selectTarget.neighborhood().addClass('highlight');
-                cy.elements().difference(selectTarget.neighborhood()).not(selectTarget).addClass('transparent');
-                {% endif %}
+                if( selectTarget.data('role') === "Node" ) {
+                    selectTarget.addClass('highlight-target');
+    
+                    // 有向グラフの場合には全子要素をハイライト
+                    // selectTarget.successors().addClass('highlight');
+                    // 無向グラフの場合には近傍要素をハイライト
+                    selectTarget.neighborhood().addClass('highlight');
+
+                    // タップされたノードが子ノードの場合、その親をハイライト
+                    if (selectTarget.data('parent')) {
+                        let parent = cy.getElementById(selectTarget.data('parent'));
+                        parent.addClass('highlight');        // 親ノードをハイライト
+                    }
+                    // タップされたノードに直接接続されているノードを取得
+                    let connectedNodes = selectTarget.connectedEdges().connectedNodes();
+                    // 接続されたノードの中で、子ノードを探し、それらの親をハイライト
+                    connectedNodes.forEach(node => {
+                        if (node.data('parent')) {
+                            let parentNode = cy.getElementById(node.data('parent'));
+                            parentNode.addClass('highlight'); // 子ノードの親をハイライト
+                        }
+                    });
+
+                } else if( selectTarget.data('role') === "Groupe" )  {
+                    // タップされたtargetと近傍をハイライト
+                    selectTarget.addClass('highlight-target');
+
+                    // 有向グラフの場合には全子要素をハイライト
+                    // selectTarget.successors().addClass('highlight');
+                    // 無向グラフの場合には近傍要素をハイライト
+                    selectTarget.neighborhood().addClass('highlight');
+
+                    // 親ノードに属する子ノードを探してハイライトする
+                    let childNodes = cy.nodes().filter(n => n.data('parent') === selectTarget.id());
+                    childNodes.addClass('highlight');
+                    childNodes.neighborhood().addClass('highlight');
+
+                    // 親ノードと子ノードの接続されたノード（近傍）を特定し、それらの親をハイライト
+                    selectTarget.connectedEdges().connectedNodes().forEach(node => {
+                        if (node.data('parent')) {
+                            let parentNode = cy.getElementById(node.data('parent'));
+                            parentNode.addClass('highlight');
+                        }
+                    });
+                    childNodes.connectedEdges().connectedNodes().forEach(node => {
+                        if (node.data('parent')) {
+                            let parentNode = cy.getElementById(node.data('parent'));
+                            parentNode.addClass('highlight');
+                        }
+                    });
+                } else {
+                    cy.elements().addClass('highlight')
+                };
+                // ここまででハイライトされなかったものを透明化
+                cy.elements().not('.highlight-target').not('.highlight').addClass('transparent');
 
                 // text_highlight
                 let highlightTextList    = [],
@@ -339,19 +434,19 @@ template引数:
                     }
                     highlightTextList.push(word);
                 });
-                {% if NetWorkType == 'directed' %}
+
                 // 有向グラフの場合には全子要素をハイライト
-                selectTarget.successors().forEach(function(node, _) {
-                    if ( node.json().data['label'] ) {
-                        var word = node.json().data['label']
-                    } else if ( node.json().data['name'] ) {
-                        var word = node.json().data['name']
-                    } else {
-                        var word = node.json().data['id']
-                    }
-                    subhighlightTextList.push(word);
-                });
-                {% else %}
+                // selectTarget.successors().forEach(function(node, _) {
+                //     if ( node.json().data['label'] ) {
+                //         var word = node.json().data['label']
+                //     } else if ( node.json().data['name'] ) {
+                //         var word = node.json().data['name']
+                //     } else {
+                //         var word = node.json().data['id']
+                //     }
+                //     subhighlightTextList.push(word);
+                // });
+
                 // 無向グラフの場合には近傍要素をハイライト
                 selectTarget.neighborhood().forEach(function(node, _) {
                     if ( node.json().data['label'] ) {
@@ -363,7 +458,7 @@ template引数:
                     }
                     subhighlightTextList.push(word);
                 });
-                {% endif %}
+
                 addTextHighlight( {
                     HighlightWords:    highlightTextList,
                     subHighlightWords: subhighlightTextList,
@@ -371,9 +466,18 @@ template引数:
             } else {
                 // edge tap: 接続されたノードをハイライト
                 resetHighLight();
+
                 let selectTarget = e.target;
+                selectTarget.addClass('highlight');
                 selectTarget.connectedNodes().addClass('highlight');
-                cy.elements().difference(selectTarget.connectedNodes()).not(selectTarget).addClass('transparent');
+                // エッジに接続されたノードから、それぞれの親ノードをハイライト
+                selectTarget.connectedNodes().forEach(function(node) {
+                    if (node.data('parent')) {
+                        let parentNode = cy.getElementById(node.data('parent'));
+                        parentNode.addClass('highlight'); // 子ノードの親をハイライト
+                    }
+                });
+                cy.elements().not('.highlight-target').not('.highlight').addClass('transparent');
                 
                 // text_highlight
                 let highlightTextList    = [],
@@ -393,6 +497,60 @@ template引数:
                     subHighlightWords: subhighlightTextList,
                 });
             };
+        });
+
+        // ノードの検索機能
+        $('#{{ IdCySearchBox }}').on('input', function() {
+            var searchText = $(this).val();
+            // すべての要素のハイライトをリセット
+            resetHighLight();
+            clearTextHighlight();
+
+            // テキストが入力されていれば、一致するノードをハイライト
+            if (searchText) {
+                let highlightTextList    = [],
+                    subhighlightTextList = [];
+
+                // 検索にマッチする全ノードを取得
+                let matchedNodes = cy.elements().nodes().filter(function(node) {
+                    var nodeName = node.data('name') || node.data('label') || node.data('id');
+                    return nodeName.includes(searchText);
+                });
+
+                // マッチした各ノードに対してハイライト処理
+                matchedNodes.forEach(function(node) {
+                    node.addClass('highlight-target');
+                    let nodeName = node.data('name') || node.data('label') || node.data('id');
+                    highlightTextList.push(nodeName);
+
+                    // ノードの親をハイライト（親ノードがある場合）
+                    if (node.data('parent')) {
+                        let parentNode = cy.getElementById(node.data('parent'));
+                        parentNode.addClass('highlight');
+                    }
+
+                    // 無向グラフの場合には近傍要素もハイライト
+                    node.neighborhood().forEach(function(subNode) {
+                        subNode.addClass('highlight');
+                        let subNodeName = subNode.data('name') || subNode.data('label') || subNode.data('id');
+                        subhighlightTextList.push(subNodeName);
+                        // ノードの親をハイライト（親ノードがある場合）
+                        if (subNode.data('parent')) {
+                            let parentNode = cy.getElementById(subNode.data('parent'));
+                            parentNode.addClass('highlight');
+                        }
+                    });
+                });
+
+                // マッチしたノードとその近傍以外を透明化
+                cy.elements().not('.highlight-target').not('.highlight').addClass('transparent');
+
+                // テキストハイライトの更新
+                addTextHighlight({
+                    HighlightWords: highlightTextList,
+                    subHighlightWords: subhighlightTextList
+                });
+            }
         });
     });
 </script>

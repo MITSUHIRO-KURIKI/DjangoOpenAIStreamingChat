@@ -51,6 +51,47 @@
             </div>
 
             <div class="row d-flex justify-content-center border-bottom py-3">
+                {# --- SINGLE SELECT TYPE --- #}
+                <div class="col-xl-10 col-lg-10 col-sm-12">
+                    <label for="{{ room_settings_form.model_name.id_for_label }}"
+                           class="form-label">
+                            {{ room_settings_form.model_name.label }}
+                    </label>
+                    <select type="{{ room_settings_form.model_name.field.widget.input_type }}"
+                            class="form-select form-select-sm {% if room_settings_form.model_name.errors %}is-invalid{% endif %}"
+                            name="{{ room_settings_form.model_name.html_name }}"
+                            id="{{ room_settings_form.model_name.id_for_label }}"
+                            data-placeholder="Choose Model Name"
+                            data-allow-clear="false"
+                            {% if room_settings_form.model_name.field.required %}required{% endif %}>
+                        {% for choice in room_settings_form.model_name.field.choices %}
+                            {% if choice.1 %}
+                                {% if choice.0 == room_settings_form.model_name.value %}
+                                    <option value="{{ choice.0 }}" selected>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% else %}
+                                    <option value="{{ choice.0 }}">
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if room_settings_form.model_name.errors %}
+                        {% for error in room_settings_form.model_name.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if room_settings_form.model_name.help_text %}
+                        <div class="form-text">
+                            {{ room_settings_form.model_name.help_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-bottom py-3">
                 <div class="col-xl-10 col-lg-10 col-sm-12">
                     {# --- TEXTAREA TYPE --- #}
                     <label for="{{ room_settings_form.system_sentence.id_for_label }}"
@@ -133,7 +174,7 @@
                            id="{{ room_settings_form.history_len.id_for_label }}"
                            value="{{ room_settings_form.history_len.value }}"
                            min="0"
-                           max="{{ MaxHistoryLen }}"
+                           max="{{ MAX_HISSTORY_N }}"
                            step="1"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
@@ -167,8 +208,8 @@
                            name="{{ room_settings_form.max_tokens.html_name }}"
                            id="{{ room_settings_form.max_tokens.id_for_label }}"
                            value="{{ room_settings_form.max_tokens.value }}"
-                           min="{{ MinTokens }}"
-                           max="{{ MaxTokens }}"
+                           min="{{ MIN_TOKENS }}"
+                           max="{{ MAX_TOKENS }}"
                            step="1"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
@@ -204,7 +245,7 @@
                            value="{{ room_settings_form.temperature.value }}"
                            min="0"
                            max="2"
-                           step="0.1"
+                           step="0.01"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="{{ room_settings_form.temperature.value }}"
@@ -239,7 +280,7 @@
                            value="{{ room_settings_form.top_p.value }}"
                            min="0"
                            max="1"
-                           step="0.1"
+                           step="0.01"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="{{ room_settings_form.top_p.value }}"
@@ -274,7 +315,7 @@
                            value="{{ room_settings_form.presence_penalty.value }}"
                            min="-2"
                            max="2"
-                           step="0.1"
+                           step="0.01"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="{{ room_settings_form.presence_penalty.value }}"
@@ -309,7 +350,7 @@
                            value="{{ room_settings_form.frequency_penalty.value }}"
                            min="-2"
                            max="2"
-                           step="0.1"
+                           step="0.01"
                            data-bs-toggle="tooltip"
                            data-bs-placement="top"
                            title="{{ room_settings_form.frequency_penalty.value }}"
@@ -367,7 +408,7 @@
 
             <div class="row d-flex justify-content-center py-3">
                 <div class="col-xl-10 col-lg-10 col-sm-12 me-1 pt-2">
-                    <button type="submit" name="submit_room_settings_form" class="btn btn-primary on-click-disable w-100">更新</button>
+                    <button type="submit" name="RoomSettingsUpdate" class="btn btn-primary on-click-disable w-100">更新</button>
                 </div>
             </div>
         </div>

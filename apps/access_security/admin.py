@@ -1,7 +1,21 @@
 from django.contrib import admin
+from import_export.admin import ExportMixin
+from import_export.resources import ModelResource
 from .models import AccessSecurity, BlockIpList
 
-class BlockIpListAdmin(admin.ModelAdmin):
+class BlockIpListResource(ModelResource):
+    class Meta:
+        model  = BlockIpList
+        fields = ('id',
+                  'date_create',
+                  'ip',
+                  'reason',)
+        export_order = fields
+        clean_model_instances = True
+
+class BlockIpListAdmin(ExportMixin, admin.ModelAdmin):
+
+    resource_class = BlockIpListResource
 
     # 一覧画面
     list_display_ = ('date_create',
@@ -36,7 +50,7 @@ class BlockIpListAdmin(admin.ModelAdmin):
     # 権限設定
     # CRUD を True で is_superuser に制限(is_stuff の権限剥奪)
     is_only_superuser_Create = True
-    is_only_superuser_Read   = True
+    is_only_superuser_Read   = False
     is_only_superuser_Update = True
     is_only_superuser_Delete = True
     
@@ -69,7 +83,25 @@ class BlockIpListAdmin(admin.ModelAdmin):
         def has_delete_permission(self, request, obj=None) -> bool:
             return request.user.is_superuser or request.user.is_staff
 
-class AccessSecurityAdmin(admin.ModelAdmin):
+
+class AccessSecurityResource(ModelResource):
+    class Meta:
+        model  = AccessSecurity
+        fields = ('id',
+                  'date_create',
+                  'ip',
+                  'type',
+                  'request_host_url',
+                  'request_url',
+                  'user_agent',
+                  'csrf_token',
+                  'time_zone',)
+        export_order = fields
+        clean_model_instances = True
+
+class AccessSecurityAdmin(ExportMixin, admin.ModelAdmin):
+
+    resource_class = AccessSecurityResource
 
     # 一覧画面
     list_display_ = ('date_create',
@@ -109,7 +141,7 @@ class AccessSecurityAdmin(admin.ModelAdmin):
     # 権限設定
     # CRUD を True で is_superuser に制限(is_stuff の権限剥奪)
     is_only_superuser_Create = True
-    is_only_superuser_Read   = True
+    is_only_superuser_Read   = False
     is_only_superuser_Update = True
     is_only_superuser_Delete = True
     

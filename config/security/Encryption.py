@@ -1,11 +1,10 @@
 # References
 # https://pypi.org/project/django-searchable-encrypted-fields/
-import os
-import environ
 from django.conf import settings
+from config.read_env import read_env
 
-env = environ.Env()
-env.read_env(os.path.join(settings.BASE_DIR, '.env'))
+# LOAD SECRET STEEINGS
+env = read_env(settings.BASE_DIR)
 
 FIELD_ENCRYPTION_KEYS = [
     env.get_value('FIELD_ENCRYPTION_KEYS_01',str),

@@ -1,12 +1,11 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView
-from django.views.generic.edit import UpdateView
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView
 from ..models import UserProfile, UserReceptionSetting
+
 User = get_user_model()
 
 
@@ -26,12 +25,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
             'IS_USE_SIDENAV': True,
         })
         return context
-
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        return super().form_valid(form)
 
     def get_success_url(self):
         messages.add_message(self.request, messages.INFO,
@@ -54,12 +47,6 @@ class UserReceptionSettingsUpdateView(LoginRequiredMixin, UpdateView):
             'IS_USE_SIDENAV': True,
         })
         return context
-
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        return super().form_valid(form)
 
     def get_success_url(self):
         messages.add_message(self.request, messages.INFO,

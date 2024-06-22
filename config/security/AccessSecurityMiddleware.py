@@ -1,19 +1,19 @@
 # Referrer
 # https://qiita.com/kin292929/items/92aa0f6f5e1fbca553ee
 # https://qiita.com/kenkono/items/d95aee6e79f671c67aba
-import os
-import environ
 from django.conf import settings
 from django.core.cache import cache
 from django.http import Http404
 from django.utils.deprecation import MiddlewareMixin
+from apps.access_security.models import BlockIpList, AccessSecurity
+from common.scripts.DjangoUtils import RequestUtil
+from common.scripts.PythonCodeUtils import print_color
+from config.read_env import read_env
 import subprocess
 import time
-from apps.access_security.models import BlockIpList, AccessSecurity
-from common.scripts import RequestUtil, print_color
 
-env = environ.Env()
-env.read_env(os.path.join(settings.BASE_DIR, '.env'))
+# LOAD SECRET STEEINGS
+env = read_env(settings.BASE_DIR)
 
 # 一定期間の大量アクセスを遮断
 ACCESS_COUNT_SECONDS_TIME = env.get_value('ACCESS_COUNT_SECONDS_TIME',int) # アクセス計測する対象時間(秒)
@@ -27,14 +27,20 @@ PASS_IP_LIST    = 'pass_ip_list'
 BLOCK_IP_LIST   = 'block_ip_list'
 CONTROL_IP_LIST = 'control_ip_list'
 CONTROL_IP_LIST_DEFAULT = {
-    PASS_IP_LIST: [],
+    PASS_IP_LIST:  [],
     BLOCK_IP_LIST: [],
 }
 
 class AccessSecurityMiddleware(MiddlewareMixin):
 
-    @staticmethod
-    def process_request(request):
+    def process_response(self, request, response):
+
+        # 全ページ(static,media以外)にキャッシュ禁止のHTTPヘッダーを付加し、キャッシュ禁止▽
+        if request.path_info.startswith('/static/') or request.path_info.startswith('/media/'):
+            response['Cache-Control'] = 'public, max-age=3600'
+        else:
+            response['Cache-Control'] = 'max-age=0, no-cache, no-store, must-revalidate, private'
+        # 全ページ(static,media以外)にキャッシュ禁止のHTTPヘッダーを付加し、キャッシュ禁止△
 
         request_util    = RequestUtil(request)
         ip              = request_util.get_ip()
@@ -43,7 +49,7 @@ class AccessSecurityMiddleware(MiddlewareMixin):
         if is_registered_block_ip(ip):
             AccessSecurity.objects.insert_access_log(request, 'REGISTERED_IP_BLOCK')
             if settings.DEBUG:
-                print_color('info: config.security.AccessSecurityMiddleware(line 46), REGISTERED_IP_BLOCK', 4)
+                print_color('info: config.security.AccessSecurityMiddleware(line 52), REGISTERED_IP_BLOCK', 4)
             raise Http404('Page not found')
         # 登録済みブロックリストに基づくアクセス遮断△
         
@@ -63,7 +69,7 @@ class AccessSecurityMiddleware(MiddlewareMixin):
                 # ログ記録
                 AccessSecurity.objects.insert_access_log(request, 'IP_BLOCK')
                 if settings.DEBUG:
-                    print_color('info: config.security.AccessSecurityMiddleware(line 66), IP_BLOCK', 4)
+                    print_color('info: config.security.AccessSecurityMiddleware(line 72), IP_BLOCK', 4)
                 raise Http404('Page not found')
 
         ip_time_list = cache.get(ip, [])
@@ -84,7 +90,7 @@ class AccessSecurityMiddleware(MiddlewareMixin):
             # ログ記録
             AccessSecurity.objects.insert_access_log(request, 'SET_BLOCK_IP')
             if settings.DEBUG:
-                print_color('info: config.security.AccessSecurityMiddleware(line 87), SET_BLOCK_IP', 4)
+                print_color('info: config.security.AccessSecurityMiddleware(line 93), SET_BLOCK_IP', 4)
 
         # アクセス拒否        
         if len(ip_time_list) > N_TIMES_TO_BLOCK_ACCESS:
@@ -98,10 +104,11 @@ class AccessSecurityMiddleware(MiddlewareMixin):
                 # ログ記録
                 AccessSecurity.objects.insert_access_log(request, 'COUNT_BLOCK')
                 if settings.DEBUG:
-                    print_color('info: config.security.AccessSecurityMiddleware(line 101), COUNT_BLOCK', 4)
+                    print_color('info: config.security.AccessSecurityMiddleware(line 107), COUNT_BLOCK', 4)
                 raise Http404('Page not found')
         # 一定期間の大量アクセスに基づくアクセス遮断△
 
+        return response
 
 # 登録済みブロックリストをキャッシュに保存
 def is_registered_block_ip(ip) -> bool:

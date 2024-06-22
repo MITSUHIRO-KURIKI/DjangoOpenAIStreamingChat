@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+.tempus-dominus-widget * {
+  padding:   .1rem;
+  font-size: .8rem;
+}
+.tempus-dominus-widget .date-container-days,
+.tempus-dominus-widget .time-container-clock {
+  grid-auto-rows: 1.5rem;
+}
+div[data-action="selectDay"]:nth-of-type(7n) {
+  color: var(--bs-red);
+}
+div[data-action="selectDay"]:nth-of-type(7n-1) {
+  color: var(--bs-blue);
+}

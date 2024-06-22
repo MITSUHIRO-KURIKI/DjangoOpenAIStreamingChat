@@ -1,0 +1,15 @@
+{% comment %} 
+template引数:
+ * ClickerId
+ * TargetId
+{% endcomment %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#{{ ClickerId }}').click(function() {
+            var url = $('#{{ TargetId }}').val();
+            if(url) {
+                window.location.href = url;
+            }
+        });
+    });
+</script>

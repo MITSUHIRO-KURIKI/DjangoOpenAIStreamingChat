@@ -1,0 +1,157 @@
+@charset "UTF-8";
+:root {
+    --blockquote-icon-size: 1rem;
+}
+/* menu */
+.SummernoteTextArea {
+    font-family: var(--font-family-base);
+    padding:     .5rem;
+}
+.SummernoteTextArea .note-toolbar,
+.SummernoteTextArea .note-dropdown-menu,
+.SummernoteTextArea button,
+.SummernoteTextArea .note-btn,
+.SummernoteTextArea .note-modal-header,
+.SummernoteTextArea .note-modal-title,
+.SummernoteTextArea .note-modal-body,
+.SummernoteTextArea .note-form-label,
+.SummernoteTextArea .note-modal-footer,
+.SummernoteTextArea .note-dropdown-menu .note-dropdown-item,
+.SummernoteTextArea .note-popover,
+.SummernoteTextArea .note-image-input {
+    color:            var(--bs-body-color);
+    border-color:     var(--bs-border-color);
+}
+.SummernoteTextArea .note-toolbar,
+.SummernoteTextArea .note-dropdown-menu,
+.SummernoteTextArea .note-modal-header,
+.SummernoteTextArea .note-modal-body,
+.SummernoteTextArea .note-modal-body input,
+.SummernoteTextArea .note-modal-footer,
+.SummernoteTextArea .note-popover,
+.SummernoteTextArea .note-image-input {
+    background-color: var(--navbar-bg);
+}
+.SummernoteTextArea .note-btn {
+    background-color: var(--bs-button-bg-color);
+}
+/* menu botton */
+.SummernoteTextArea .note-editor .note-toolbar,
+.SummernoteTextArea .note-popover .popover-content {
+    padding-bottom: .2rem;
+    padding-left:   .1rem;
+}
+.SummernoteTextArea .note-editor .note-toolbar>.note-btn-group,
+.SummernoteTextArea .note-popover .popover-content>.note-btn-group {
+    margin-right: .1rem;
+    margin-top:   .2rem;
+}
+/* dropdown-menu */
+.SummernoteTextArea .note-dropdown-menu .note-dropdown-item {
+    background-color: var(--navbar-bg);
+}
+.SummernoteTextArea .note-dropdown-menu .note-dropdown-item:hover {
+    color:            var(--bs-emphasis-color);
+    border-color:     var(--bs-border-color);
+    background-color: var(--bs-secondary-bg);
+}
+/* modal */
+.SummernoteTextArea .note-modal-footer .note-btn-primary {
+    color:            var(--bs-btn-color);
+    background-color: var(--bs-btn-bg);
+    border-color:     var(--bs-btn-border-color);
+}
+.SummernoteTextArea .note-modal-footer .note-btn-primary:hover {
+    color:            var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color:     var(--bs-btn-hover-border-color);
+}
+.SummernoteTextArea .note-editor .note-toolbar .note-color-all .note-dropdown-menu,
+.SummernoteTextArea .note-popover .popover-content .note-color-all .note-dropdown-menu {
+    min-width: 5vw;
+}
+.SummernoteTextArea .btn-light {
+    border-color:     var(--bs-border-color);
+    background-color: var(--bs-secondary-bg);
+}
+/* table */
+.SummernoteTextArea .note-dimension-picker-highlighted,
+.SummernoteTextArea .note-dimension-picker-unhighlighted {
+    color:            var(--bs-body-color);
+    border-color:     var(--bs-border-color);
+}
+.SummernoteTextArea .note-dimension-picker-highlighted {
+    background-color: var(--bs-primary-bg-subtle);
+}
+.SummernoteTextArea .note-dimension-picker-unhighlighted {
+    background-color: var(--bs-dark-bg-subtle);
+}
+/* popover */
+.SummernoteTextArea .note-popover.bottom,
+.SummernoteTextArea .note-popover-arrow {
+    border-bottom-color: var(--bs-border-color);
+}
+.SummernoteTextArea .note-popover-arrow::after {
+    border-bottom-color: var(--navbar-bg);
+}
+/* editing-area */
+.SummernoteTextArea .note-editing-area {
+    color:            var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+}
+/* code area */
+.SummernoteTextArea .CodeMirror-cursor,
+.SummernoteTextArea .CodeMirror-secondarycursor {
+    color:       var(--bs-highlight-bg) !important;
+    border-left: 1px solid var(--bs-body-color)!important;
+}
+.SummernoteTextArea .CodeMirror-gutter {
+    color:            var(--bs-body-color);
+    background-color: var(--navbar-bg);
+}
+.SummernoteTextArea .CodeMirror-scroll {
+    color:            var(--bs-body-color);
+    background-color: var(--navbar-bg);
+}
+/* styles */
+/* anker */
+.SummernoteTextArea a,
+.SummernoteTextArea a:link,
+.SummernoteTextArea a:active,
+.SummernoteTextArea a:visited {
+    color: var(--bs-link-color);
+}
+.SummernoteTextArea a:hover {
+    color: var(--bs-link-hover-color);
+}
+/* hr */
+.SummernoteTextArea hr {
+    margin-top:    .5rem;
+    margin-bottom: .5rem;
+}
+/* pre code */
+.SummernoteTextArea pre {
+    padding:    0.3em;
+    background: var(--bs-tertiary-bg);
+    border:     1px solid var(--bs-border-color);
+}
+/* blockquote */
+.SummernoteTextArea blockquote {
+    position:   relative;
+    padding:    0 0 .25rem calc( var(--blockquote-icon-size) + ( var(--blockquote-icon-size) / 4 ) );
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    font-style: italic;
+}
+.SummernoteTextArea blockquote:before{
+    position:    absolute;
+    left:        calc( var(--blockquote-icon-size) / 5 );
+    font-family: 'FontAwesome';
+    content:     "\F10D";
+    color:       var(--bs-border-color);
+    font-size:   var(--blockquote-icon-size);
+}
+/* list */
+.SummernoteTextArea li {
+    list-style-type: inherit;
+}

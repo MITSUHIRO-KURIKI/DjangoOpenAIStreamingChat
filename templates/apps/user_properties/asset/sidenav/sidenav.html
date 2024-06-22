@@ -28,7 +28,7 @@
         </li>
         <li class="pt-lg-2">
             <a class="list-group-item list-group-item-action {{ password_change_active }}"
-               href="{% url 'accounts:password_change' %}">
+               href="{% if user.is_social_login and user.date_password_change is None %}{% url 'accounts:password_change_OneStep' %}{% else %}{% url 'accounts:password_change' %}{% endif %}">
                <span>パスワード変更</span>
             </a>
         </li>

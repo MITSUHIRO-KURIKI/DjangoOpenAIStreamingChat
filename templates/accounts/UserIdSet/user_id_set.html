@@ -1,0 +1,62 @@
+{% extends 'accounts/accounts_base.html' %}
+
+{# --- TITLE --- #}
+{% block accounts_title %} - Set user_id{% endblock %}
+
+{# --- CONTENT --- #}
+{% block accounts_content %}
+
+<div class="row mx-auto">
+    <div class="col-lg-9 col-md-12 mx-auto">
+        <div class="row text-center pb-3">
+            <h1 class="f-content-title">ユーザ名の設定をお願いします</h1>
+        </div>
+        <form method="post" onSubmit="is_note_msg=false;">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="row">
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-xl-6 col-lg-10 col-sm-12">
+                        <label for="{{ form.unique_user_id.id_for_label }}"
+                               class="sr-only">
+                            {{ form.unique_user_id.label }}
+                        </label>
+                        <div class="form-floating">
+                            <input type="{{ form.unique_user_id.field.widget.input_type }}"
+                                   class="form-control {% if form.unique_user_id.errors %}is-invalid{% endif %}"
+                                   name="{{ form.unique_user_id.html_name }}"
+                                   id="{{ form.unique_user_id.id_for_label }}"
+                                   {% if invalid_unique_user_id_data %}
+                                        value="{{invalid_unique_user_id_data}}"
+                                   {% elif request.session.invalid_unique_user_id_data %}
+                                        value="{{request.session.invalid_unique_user_id_data}}"
+                                   {% endif %}
+                                   autofocus
+                                   required/>
+                            <label for="{{ form.unique_user_id.id_for_label }}">
+                                {{ form.unique_user_id.label }}
+                            </label>
+                            {% if form.unique_user_id.errors %}
+                                {% for error in form.unique_user_id.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.unique_user_id.help_text %}
+                                <div class="form-text">
+                                    {{ form.unique_user_id.help_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 mt-4">
+                        <button id="submit" type="submit" class="btn btn-primary on-click-disable w-100">登録</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

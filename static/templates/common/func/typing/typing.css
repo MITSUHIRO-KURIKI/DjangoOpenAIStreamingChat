@@ -1,0 +1,14 @@
+@charset "UTF-8";
+.typing span,
+.typing-NoRandom span {
+    display: none;
+}
+.typing.active:after,
+.typing-NoRandom.active:after {
+  content: "|";
+  animation: typingCursor .8s ease infinite;
+}
+@keyframes typingCursor {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

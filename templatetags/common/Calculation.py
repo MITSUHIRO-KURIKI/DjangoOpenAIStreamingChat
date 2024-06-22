@@ -4,9 +4,11 @@ from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 
 register = template.Library()
 
+
 @register.simple_tag
 def calculation_Add(val1:Union[int, float],
-                    val2:Union[int, float]) -> Union[int, float, None]:
+                    val2:Union[int, float],
+                    ) -> Union[int, float, None]:
     try:
         result = val1 + val2
         return result
@@ -15,7 +17,8 @@ def calculation_Add(val1:Union[int, float],
 
 @register.simple_tag
 def calculation_Multiplication(val1:Union[int, float],
-                               val2:Union[int, float]) -> Union[int, float, None]:
+                               val2:Union[int, float],
+                               ) -> Union[int, float, None]:
     try:
         result = val1 * val2
         return result
@@ -26,7 +29,8 @@ def calculation_Multiplication(val1:Union[int, float],
 def calculation_Division(val1:Union[int, float],
                          val2:Union[int, float],
                          decimals:str = '0',
-                         rounding:str = 'ROUND_HALF_UP') -> Union[int, float, None]:
+                         rounding:str = 'ROUND_HALF_UP',
+                         ) -> Union[int, float, None]:
     """
     ## Args: 
     ### decimals

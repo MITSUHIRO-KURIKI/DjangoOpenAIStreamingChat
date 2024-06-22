@@ -25,14 +25,19 @@
                     <div class="col-xl-6 col-lg-10 col-sm-12 me-1 pt-2">
                         <label for="{{ form.user_icon.id_for_label }}">{{ form.user_icon.label }}</label>
                     </div>
-                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 d-flex justify-content-center py-3">
+                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 d-flex justify-content-center pt-3">
                         <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
                              class="rounded-circle border border-2"
                              id="CustomFileInputPreviewImage"
                              alt="user_icon"
                              style="width:200px;height:200px;" />
                     </div>
-                    <div class="col-xl-6 col-lg-10 col-sm-12 me-1 d-flex justify-content-center pt-2">
+                    <div class="row d-flex justify-content-center mb-3">
+                        {% if user.unique_user_id %}
+                            @{{ user.unique_user_id }}
+                        {% endif %}
+                    </div>
+                    <div class="col-xl-6 col-lg-10 col-sm-12 d-flex justify-content-center pt-2">
                         <div class="invisible" id="CustomFileInitFile" hidden>{{ user.related_user_profile_unique_account_id.user_icon.url }}</div>
                         <div class="input-group bs-custom-file">
                             <input type="{{ form.user_icon.field.widget.input_type }}"

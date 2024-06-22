@@ -1,11 +1,11 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from common.scripts.DjangoUtils import generate_uuid_hex
+from datetime import datetime, timedelta
 from encrypted_fields.fields import (
     SearchField, EncryptedTextField,
 )
-from datetime import datetime, timedelta
-from uuid import uuid4
 
 User = get_user_model()
 
@@ -13,8 +13,20 @@ User = get_user_model()
 # 仮登録/本登録機能
 # TOKEN発行用モデル
 class ActivateTokenManager(models.Manager):
-    
-    # サインアップ時のメールアドレスの認証
+
+    # トークンの破棄
+    def token_delete(self, token):
+        delete_token = self.filter(token = token,).first()
+        if delete_token is None:
+            res = False
+            msg ='認証に失敗しました'
+        else:
+            delete_token.delete()
+            res = True
+            msg ='認証を無効化しました'
+        return res, msg
+
+    # 1.サインアップ時のメールアドレスの認証
     def activate_user_by_token(self, token):
         user_activate_token = self.filter(
                                 token           = token,
@@ -28,18 +40,18 @@ class ActivateTokenManager(models.Manager):
                 user_activate_token.delete()
             res = False
             msg ='仮登録URLの有効期限が切れています 再度サインアップしてください'
-            return res, msg
         else:
             user           = user_activate_token.user
             user.is_active = True
             user.save()
-            res = True
-            msg ='本登録が完了しました'
             # 使用した Token の破棄  
             user_activate_token.delete()
-            return res, msg
+            res = True
+            msg ='本登録が完了しました'
+        
+        return res, msg
     
-    # メールアドレス変更時のメールアドレスの認証
+    # 2.メールアドレス変更時のメールアドレスの認証
     def activate_change_email_by_token(self, token):
         user_email_activate_token = self.filter(
                                         token           = token,
@@ -53,28 +65,27 @@ class ActivateTokenManager(models.Manager):
                 user_email_activate_token.delete()
             res = False
             msg = '仮登録URLの有効期限が切れています'
-            return res, msg
         else:
             user = user_email_activate_token.user
             
-            if user.is_change_email_request is True:
+            # メールアドレスの変更の申請があった場合に処理
+            if user.is_change_email_request:
                 user.is_change_email_request = False
-                user.save() # 同じアドレスによって弾かれた場合に備えて一旦モデル保存
-                user.email        = user.change_email  # email の変更
-                user.change_email = 'dummy@mail.com' # 変更後の email を認証したら change_email フィールドをリセット
-                user.save()  # SUCCESS
+                user.save()                           # 同じアドレスによって弾かれた場合に備えて一旦モデル保存(is_change_email_request = False の処理は保持したい)
+                user.email        = user.change_email # email の変更
+                user.change_email = 'dummy@mail.com'  # 変更後の email を認証したら change_email フィールドをリセット
+                user.save()                           # SUCCESS
                 res = True
                 msg = 'メールアドレスの変更が完了しました\n\
                        変更したメールアドレスでログインしてください。'
                 # 使用した Token の破棄
                 user_email_activate_token.delete()
-                return res, msg
             else:
                 # アクセスされた無効な Token を削除
                 user_email_activate_token.delete()
                 res = False
                 msg = '再度メールアドレスの変更を行ってください'
-                return res, msg
+        return res, msg
 
 class ActivateToken(models.Model):
     
@@ -86,7 +97,7 @@ class ActivateToken(models.Model):
                     verbose_name = 'Token(Encrypted:Form使用不可)',
                     blank        = False,
                     null         = False,
-                    default      = uuid4().hex,)
+                    default      = generate_uuid_hex,)
     token  = SearchField(
                     verbose_name   = 'Token',
                     hash_key       = settings.ENCRYPTION_HASH_KEY,

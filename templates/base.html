@@ -13,11 +13,11 @@
         document.querySelector("[name=viewport]").setAttribute("content", "width=device-width, initial-scale=1, user-scalable=no");
     </script>
     {# --- TITLE and DESCRIPTION --- #}
-    <title>Django Chat{% block title %}{% endblock %}</title>
+    <title>Django myapp{% block title %}{% endblock %}</title>
     <meta name="description" content="{% block description %}{% endblock %}" />
     <meta name="keywords"    content="{% block keywords %}{% endblock %}" />
     {# --- OGP --- #}
-    <meta property="og:title"        content="Django Chat{% block og1_title %}{% endblock %}" />
+    <meta property="og:title"        content="Django myapp{% block og1_title %}{% endblock %}" />
     <meta property="og:type"         content="website" />
     <meta property="og:url"          content="{{FRONTEND_URL}}" />
     {% comment %} <meta property="og:image"        content="{% static 'templates/meta_image/ogp.jpg' %}" /> {# 1200px 630px #} {% endcomment %}
@@ -26,7 +26,7 @@
     <meta name="twitter:card"        content="summary" />
     <meta name="twitter:site"        content="@mitsuhiro-k" />
     <meta name="twitter:creator"     content="@mitsuhiro-k" />
-    <meta name="twitter:title"       content="Django Chat{% block og2_title %}{% endblock %}" />
+    <meta name="twitter:title"       content="Django myapp{% block og2_title %}{% endblock %}" />
     <meta name="twitter:description" content="{% block og2_description %}{% endblock %}" />
     {# --- CSS --- #}
     {# --- ress 5.0.2 --- #}
@@ -87,12 +87,14 @@
     {# --- NO CONTEINER --- #}
     <div>{% block no_container %}{% endblock %}</div>
     {# --- CONTEINER--- #}
-    <div class="container {% if not IS_USE_NO_CONTAINER %}min-vh-100"{% else %}" hidden{% endif %}>
+    {% if not IS_NO_USE_CONTEINER %}
+    <div class="container min-vh-100">
         {# --- TOP MESSAGE --- #}
         {% include 'top_messages.html' %}
         {# --- CONTENT --- #}
         {% block content %}{% endblock %}
     </div>
+    {% endif %}
     {# --- SCRIPT rear --- #}
     {# --- boostrap 5.3.2 --- #}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

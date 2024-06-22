@@ -1,0 +1,59 @@
+{% comment %} 
+template引数:
+ * AjaxEndPoint: ex MFDU_AjaxEndPoint
+{% endcomment %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        var isAjaxProcessing = false;
+        $(document).on('click', '.dissatisfaction-action', function() {
+
+            // 一度評価したら変更しない
+            if ( $(this).attr('is-actioned') === 'false' ){
+                // アイコンを変更, is-actioned=trueに変更, tooltipを削除
+                this.innerHTML = '<i class="fa-solid fa-thumbs-down"></i>';
+                $(this).attr('is-actioned', 'true');
+                $(this).removeAttr('aria-label');
+                $(this).removeAttr('data-bs-original-title');
+                $(this).removeAttr('title');
+
+                // フィードバックモーダルを表示
+                $('#submitFeedbackModal').attr('feedback-type', 'message');
+                $('#submitFeedbackModal').attr('feedback-id',   $(this).attr('value'));
+                $('#FeedbackModal').modal('show');
+
+                // Ajax 処理中の場合にはさらなる要求は受け付けない
+                if( isAjaxProcessing ) {
+                    console.log('Ajax: Request rejected because it is being processed');
+                    return;
+                };
+                isAjaxProcessing = true;
+                // Ajax
+                var message_id = $(this).attr('value'),
+                    csrf_token = getCookie('csrftoken');
+                $.ajax({
+                    url:      '{{ AjaxEndPoint }}',
+                    type:     'POST',
+                    dataType: 'json',
+                    data: {
+                        'message_id': message_id,
+                    },
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                        }
+                    },
+                // Ajax 通信成功処理
+                }).done( function (data) {
+                    console.log('Ajax: sucsess');
+                // Ajax 通信エラー処理
+                }).fail( function () {
+                    console.log('Ajax: error');
+                // Ajax 通信終了時処理(エラーでも実行)
+                }).always(function() {
+                    isAjaxProcessing = false;
+                });
+
+            };
+        });
+    });
+</script>

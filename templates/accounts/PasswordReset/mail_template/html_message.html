@@ -1,6 +1,6 @@
 {% autoescape off %}
 
-<h1>パスワード再設定の手続きを受け付けました。</h1>
+<h3>パスワード再設定の手続きを受け付けました。</h3>
 以下のURLにアクセスして、新しいパスワードを設定してください。<br />
 
 {{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confilm' uid token %}

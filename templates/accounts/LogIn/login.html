@@ -17,8 +17,8 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-xl-6 col-lg-10 col-sm-12">
                     <div class="alert alert-info" role="alert">
-                        正しいメールアドレスとパスワードを入力してください。<br>
-                        パスワードを忘れた場合は<a href="{% url 'accounts:password_reset' %}" class="alert-link">こちらで</a>再設定できます。
+                        正しいメールアドレスとパスワードを入力してください<br>
+                        パスワードを忘れた場合は<a href="{% url 'accounts:password_reset' %}" class="alert-link">こちらで</a>再設定できます
                     </div>
                 </div>
             </div>
@@ -28,11 +28,11 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-xl-6 col-lg-10 col-sm-12">
                         <label for="{{ form.username.id_for_label }}"
-                            class="sr-only">
+                               class="sr-only">
                             {{ form.username.label }}
                         </label>
                         <div class="form-floating">
-                            <input type="{{ form.username.field.widget.input_type }}"
+                            <input type="email"
                                    class="form-input-vertical-cluster-beginning form-control {% if form.username.errors %}is-invalid{% endif %}"
                                    name="{{ form.username.html_name }}"
                                    id="{{ form.username.id_for_label }}"
@@ -42,6 +42,7 @@
                                         placeholder="{{ form.username.label }}"
                                         autofocus
                                    {% endif %}
+                                   autocomplete="username"
                                    {% if form.username.field.required %}required{% endif %} />
                             <label for="{{ form.username.id_for_label }}">
                                 {{ form.username.label }}
@@ -58,7 +59,7 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-xl-6 col-lg-10 col-sm-12">
                         <label for="{{ form.password.id_for_label }}"
-                            class="sr-only">
+                               class="sr-only">
                             {{ form.password.label }}
                         </label>
                         <div class="form-floating">
@@ -67,6 +68,7 @@
                                    name="{{ form.password.html_name }}" 
                                    id="{{ form.password.id_for_label }}"
                                    placeholder="{{ form.password.label }}"
+                                   autocomplete="current-password"
                                    {% if invalid_username %}
                                         autofocus
                                    {% endif %}
@@ -87,18 +89,18 @@
                     <div class="col-xl-6 col-lg-10 col-sm-12 mt-3">
                         {# --- CHECK TYPE --- #}
                         <div class="form-check form-switch">
-                            <input type="{{ form.is_login_remenber.field.widget.input_type }}"
+                            <input type="{{ form.is_login_remember.field.widget.input_type }}"
                                    class="form-check-input" 
                                    role="switch"
-                                   name="{{ form.is_login_remenber.html_name }}" 
-                                   id="{{ form.is_login_remenber.id_for_label }}"
-                                   {% if form.is_login_remenber.field.required %}required{% endif %} />
+                                   name="{{ form.is_login_remember.html_name }}" 
+                                   id="{{ form.is_login_remember.id_for_label }}"
+                                   {% if form.is_login_remember.field.required %}required{% endif %} />
                             <label class="form-check-label"
-                                    for="{{ form.is_login_remenber.id_for_label }}">
-                                {{ form.is_login_remenber.label }}
+                                   for="{{ form.is_login_remember.id_for_label }}">
+                                {{ form.is_login_remember.label }}
                             </label>
-                            {% if form.is_login_remenber.errors %}
-                                {% for error in form.is_login_remenber.errors %}
+                            {% if form.is_login_remember.errors %}
+                                {% for error in form.is_login_remember.errors %}
                                     <div class="invalid-feedback">{{ error }}</div>
                                 {% endfor %}
                             {% endif %}

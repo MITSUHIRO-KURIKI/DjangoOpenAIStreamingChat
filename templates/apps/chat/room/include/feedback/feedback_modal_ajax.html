@@ -1,0 +1,50 @@
+{% comment %} 
+template引数:
+ * AjaxEndPoint: ex MFDC_AjaxEndPoint
+{% endcomment %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        var isAjaxProcessing = false;
+        $(document).on('click', '#submitFeedbackModal', function() {
+
+            // Ajax 処理中の場合にはさらなる要求は受け付けない
+            if( isAjaxProcessing ) {
+                console.log('Ajax: Request rejected because it is being processed');
+                return;
+            };
+            isAjaxProcessing = true;
+            // Ajax
+            var feedbackType = $(this).attr('feedback-type'),
+                feedbackId   = $(this).attr('feedback-id'),
+                feedbackText = $('#feedback-modal-text').val(),
+                csrf_token   = getCookie('csrftoken');
+            $.ajax({
+                url:      '{{ AjaxEndPoint }}',
+                type:     'POST',
+                dataType: 'json',
+                data: {
+                    'feedbackType': feedbackType,
+                    'feedbackId':   feedbackId,
+                    'feedbackText': feedbackText,
+                },
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                    }
+                },
+            // Ajax 通信成功処理
+            }).done( function (data) {
+                console.log('Ajax: sucsess');
+            // Ajax 通信エラー処理
+            }).fail( function () {
+                console.log('Ajax: error');
+            // Ajax 通信終了時処理(エラーでも実行)
+            }).always(function() {
+                $('#feedback-modal-text').val('');
+                $('#FeedbackModal').modal('hide');
+                $('#thankYouNotification').fadeIn('slow').delay(5000).fadeOut('slow');
+                isAjaxProcessing = false;
+            });
+        });
+    });
+</script>

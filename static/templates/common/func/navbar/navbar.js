@@ -1,6 +1,6 @@
-var navber_transition    = 300,
-    startPos             = 0,
-    navber_height_rem    = 3,
+var navber_transition = 300,
+    startPos          = 0,
+    navber_height_rem = 3,
     in_page_anker_transition_speed = 0;
 
 // rem → px 変換

@@ -1,9 +1,21 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from import_export.admin import ExportMixin
+from import_export.resources import ModelResource
 from .models import UserProfile, UserReceptionSetting
 
+class UserProfileResource(ModelResource):
+    class Meta:
+        model  = UserProfile
+        fields = ('id',
+                  'unique_account_id',
+                  'display_name',)
+        export_order = fields
+        clean_model_instances = True
 
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(ExportMixin, admin.ModelAdmin):
+
+    resource_class = UserProfileResource
 
     # ユーザアイコンの表示
     def user_icon_preview(self, obj):
@@ -78,7 +90,20 @@ class UserProfileAdmin(admin.ModelAdmin):
         def has_delete_permission(self, request, obj=None) -> bool:
             return request.user.is_superuser or request.user.is_staff
 
-class UserReceptionSettingAdmin(admin.ModelAdmin):
+
+class UserReceptionSettingResource(ModelResource):
+    class Meta:
+        model  = UserReceptionSetting
+        fields = ('id',
+                  'unique_account_id',
+                  'is_receive_all',
+                  'is_receive_important_only',)
+        export_order = fields
+        clean_model_instances = True
+
+class UserReceptionSettingAdmin(ExportMixin, admin.ModelAdmin):
+
+    resource_class = UserReceptionSettingResource
 
     # 一覧画面
     list_display_ = ('unique_account_id',

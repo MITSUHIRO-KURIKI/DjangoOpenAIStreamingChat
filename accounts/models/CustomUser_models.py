@@ -1,16 +1,17 @@
-from django.conf import settings
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin,
 )
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.utils import timezone
+from common.scripts.DjangoUtils import generate_uuid_hex
+from datetime import datetime
 from encrypted_fields.fields import (
     SearchField, EncryptedEmailField,
 )
 from typing import Dict, List, Union, Any
-from uuid import uuid4
 
 
 # 拡張ユーザモデル
@@ -30,27 +31,27 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         
-        # 管理者権限が付与されないよう念のためdefault値を再設定
-        extra_fields.setdefault('is_staff',     False) 
-        extra_fields.setdefault('is_superuser', False)
+        # unique_account_id を付与
+        extra_fields.setdefault('unique_account_id', generate_uuid_hex())
 
         # social_login: password == None を判定条件としてフラグを付与
         ## social_login フラグを立てる
-        ## email を変更する際、password を先に設定させるようにフラグを付与 is_set_password
         if password is None:
-            extra_fields.setdefault('unique_account_id', uuid4().hex) # unique_account_id を自動付与
-            extra_fields.setdefault('is_social_login',   True)
-            extra_fields.setdefault('is_set_password',   False)
-            extra_fields.setdefault('is_active',         True)        # メール認証を行わない
+            extra_fields.setdefault('is_social_login', True)
+            extra_fields.setdefault('is_active',       True) # メール認証を行わない
 
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         
+        # unique_account_id を付与
+        extra_fields.setdefault('unique_account_id', generate_uuid_hex())
+        
         # 管理者権限の付与
-        extra_fields.setdefault('is_active',    True) # メール認証を行わない
         extra_fields.setdefault('is_staff',     True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active',    True)                   # メール認証を行わない
+        extra_fields.setdefault('date_password_change', datetime.now()) # パスワード設定時刻の登録
 
         if extra_fields.get('is_staff') is not True: 
             raise ValueError('Superuser must have is_staff=True.') 
@@ -62,14 +63,23 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     unique_account_id  = models.SlugField(
-                    verbose_name   = 'アカウント名(日本語不可)',
+                    verbose_name   = 'アカウントID(自動付与)',
                     db_index       = True,
                     unique         = True,
                     blank          = False,
                     null           = False,
-                    default        = uuid4().hex,
+                    default        = generate_uuid_hex,
+                    error_messages = {'unique': '内部エラー: IDが重複しました。再登録で回避できる場合があります。',},
+                    help_text      = 'アカウントID(自動付与)',)
+    unique_user_id  = models.SlugField(
+                    verbose_name   = 'ユーザ名(日本語不可)',
+                    db_index       = True,
+                    unique         = True,
+                    blank          = True,
+                    null           = True,
+                    max_length     = 50,
                     error_messages = {'unique': 'このアカウント名は既に利用されています',},
-                    help_text      = 'アルファベット、数字、アンダーバー、ハイフン 32文字以下',)
+                    help_text      = 'アルファベット、数字、アンダーバー、ハイフン 50文字以下',)
     _email = EncryptedEmailField(
                     verbose_name = 'メールアドレス(Encrypted:Form使用不可)',
                     blank        = False,
@@ -96,12 +106,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_social_login = models.BooleanField(
                     verbose_name = 'ソーシャルログイン',
                     default      = False,)
-    is_set_password = models.BooleanField(
-                    verbose_name = 'パスワード設定状況',
-                    default      = True,)
     is_active = models.BooleanField(
                     verbose_name = 'アカウントが有効',
-                    default      = True,
+                    default      = False,
                     help_text    = '無効の場合にはログイン不可になります',)
     is_staff = models.BooleanField(
                     verbose_name = 'ITスタッフ',
@@ -111,14 +118,25 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     verbose_name = 'IT管理者',
                     default      = False,
                     help_text    = 'IT管理者権限(通常はチェックをつけない)',)
+    date_password_change = models.DateTimeField(
+                    verbose_name = 'パスワード更新日時',
+                    blank        = True,
+                    null         = True,
+                    default      = None,
+                    help_text    = '管理者によるパスワード設定の場合には None がセットされます',)
     date_create = models.DateTimeField(
                     verbose_name = '作成日時',
                     default      = timezone.now,
                     help_text    = '作成日時',)
-    last_login = None
+    before_last_login = models.DateTimeField(
+                    verbose_name = '前々回のログイン日時',
+                    blank        = True,
+                    null         = True,
+                    default      = None,
+                    help_text    = '前々回のログイン日時',)
 
-    USERNAME_FIELD  = 'email'               # UNIQUE CustomUser
-    REQUIRED_FIELDS = ['unique_account_id'] # MUST Create Superuser
+    USERNAME_FIELD  = 'email'            # UNIQUE CustomUser
+    REQUIRED_FIELDS = ['unique_user_id',] # MUST Create Superuser
 
     objects = CustomUserManager()
 
@@ -168,4 +186,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta(AbstractBaseUser.Meta):
         app_label    = 'accounts'
         db_table     = 'custom_user_model'
-        verbose_name = verbose_name_plural = '01_ユーザ情報'
+        verbose_name = verbose_name_plural = '01_アカウント情報'

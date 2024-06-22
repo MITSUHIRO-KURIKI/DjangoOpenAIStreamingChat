@@ -83,6 +83,39 @@
         padding-bottom: calc( 5vw );
     }
 }
+/* min-width -height */
+.min-vw-75,
+.min-vw-50,
+.min-vw-25 {
+    min-width: 100vw!important;
+}
+.min-vh-75,
+.min-vh-50,
+.min-vh-25 {
+    min-height: 100vh!important;
+}
+/* breakpoint md */
+@media screen and (min-width: 992px) {
+    .min-vw-75 {
+        min-width: 75vw!important;
+    }
+    .min-vw-50 {
+        min-width: 50vw!important;
+    }
+    .min-vw-25 {
+        min-width: 25vw!important;
+    }
+    .min-vh-75 {
+        min-height: 75vh!important;
+    }
+    .min-vh-50 {
+        min-height: 50vh!important;
+    }
+    .min-vh-25 {
+        min-height: 25vh!important;
+    }
+}
+
 /* icon */
 .beginning-sentence-icon {
     padding-right: 0.5rem !important;
@@ -98,6 +131,43 @@
     --border-radius-xl:   1rem;
     --border-radius-xxl:  2rem;
     --border-radius-pill: 50rem;
+}
+.no-top-border-radius {
+    border-top-left-radius:  0;
+    border-top-right-radius: 0;
+}
+.no-bottom-border-radius {
+    border-bottom-left-radius:  0;
+    border-bottom-right-radius: 0;
+}
+.no-right-border-radius {
+    border-top-right-radius:  0;
+    border-bottom-right-radius: 0;
+}
+.no-left-border-radius {
+    border-top-left-radius:  0;
+    border-bottom-left-radius: 0;
+}
+
+.only-top-right-border-radius {
+    border-top-left-radius:  0;
+    border-bottom-left-radius:  0;
+    border-bottom-right-radius: 0;
+}
+.only-top-left-border-radius {
+    border-top-right-radius: 0;
+    border-bottom-left-radius:  0;
+    border-bottom-right-radius: 0;
+}
+.only-bottom-right-border-radius {
+    border-top-left-radius:  0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius:  0;
+}
+.only-bottom-left-border-radius {
+    border-top-left-radius:  0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 .outer-rounded {
     padding:          calc( var(--border-radius) * 0.293 ); /* pad*((√2 -1 )/√2) */
@@ -132,6 +202,19 @@
     padding:          calc( var(--border-radius-pill) * 0.293 ); /* pad*((√2 -1 )/√2) */
     border-radius:    var(--border-radius-pill);
 }
+/* border */
+.no-top-border {
+    border-top: none !important;
+}
+.no-bottom-border {
+    border-bottom: none !important;
+}
+.no-right-border {
+    border-right: none !important;
+}
+.no-left-border {
+    border-left: none !important;
+}
 /* graph */
 :root {
     --graph-tertiary-bg:   var(--bs-tertiary-bg);
@@ -150,23 +233,4 @@
 }
 .graph-tertiary-bg {
     background-color: var(--graph-tertiary-bg);
-}
-/* min-** */
-.min-vw-25 {
-    min-width: 25vw!important
-}
-.min-vw-50 {
-    min-width: 50vw!important
-}
-.min-vw-75 {
-    min-width: 75vw!important
-}
-.min-vh-25 {
-    min-height: 25vh!important
-}
-.min-vh-50 {
-    min-height: 50vh!important
-}
-.min-vh-75 {
-    min-height: 75vh!important
 }

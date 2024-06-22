@@ -25,37 +25,35 @@
             {{ form.non_field_errors }}
 
             <div class="row">
-                <div class="row d-flex justify-content-center">
+                <div class="row d-flex justify-content-center pt-2">
                     <div class="col-xl-6 col-lg-10 col-sm-12">
-                        <label for="{{ form.unique_account_id.id_for_label }}"
+                        <label for="{{ form.unique_user_id.id_for_label }}"
                                class="sr-only">
-                            {{ form.unique_account_id.label }}
+                            {{ form.unique_user_id.label }}
                         </label>
                         <div class="form-floating">
-                            <input type="{{ form.unique_account_id.field.widget.input_type }}"
-                                   class="form-control {% if form.unique_account_id.errors %}is-invalid{% endif %}"
-                                   name="{{ form.unique_account_id.html_name }}"
-                                   id="{{ form.unique_account_id.id_for_label }}"
-                                   {% if invalid_unique_account_id %}
-                                        value="{{invalid_unique_account_id}}"
-                                   {% elif request.session.invalid_unique_account_id %}
-                                        value="{{request.session.invalid_unique_account_id}}"
-                                   {% else %}
-                                        placeholder="{{ form.unique_account_id.label }}"
+                            <input type="{{ form.unique_user_id.field.widget.input_type }}"
+                                   class="form-control {% if form.unique_user_id.errors %}is-invalid{% endif %}"
+                                   name="{{ form.unique_user_id.html_name }}"
+                                   id="{{ form.unique_user_id.id_for_label }}"
+                                   {% if invalid_unique_user_id_data %}
+                                        value="{{invalid_unique_user_id_data}}"
+                                   {% elif request.session.invalid_unique_user_id_data %}
+                                        value="{{request.session.invalid_unique_user_id_data}}"
                                    {% endif %}
                                    autofocus
-                                   {% if form.unique_account_id.field.required %}required{% endif %} />
-                            <label for="{{ form.unique_account_id.id_for_label }}">
-                                {{ form.unique_account_id.label }}
+                                   required/>
+                            <label for="{{ form.unique_user_id.id_for_label }}">
+                                {{ form.unique_user_id.label }}
                             </label>
-                            {% if form.unique_account_id.errors %}
-                                {% for error in form.unique_account_id.errors %}
+                            {% if form.unique_user_id.errors %}
+                                {% for error in form.unique_user_id.errors %}
                                     <div class="invalid-feedback">{{ error }}</div>
                                 {% endfor %}
                             {% endif %}
-                            {% if form.unique_account_id.help_text %}
+                            {% if form.unique_user_id.help_text %}
                                 <div class="form-text">
-                                    {{ form.unique_account_id.help_text }}
+                                    {{ form.unique_user_id.help_text }}
                                 </div>
                             {% endif %}
                         </div>
@@ -69,18 +67,16 @@
                             {{ form.email.label }}
                         </label>
                         <div class="form-floating">
-                            <input type="{{ form.email.field.widget.input_type }}"
+                            <input type="email"
                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
                                    name="{{ form.email.html_name }}"
                                    id="{{ form.email.id_for_label }}"
-                                   {% if invalid_email %}
-                                        value="{{invalid_email}}"
-                                   {% elif request.session.invalid_email %}
-                                        value="{{request.session.invalid_email}}"
-                                   {% else %}
-                                        placeholder="{{ form.invalid_email.label }}"
+                                   {% if invalid_email_data %}
+                                        value="{{invalid_email_data}}"
+                                   {% elif request.session.invalid_email_data %}
+                                        value="{{request.session.invalid_email_data}}"
                                    {% endif %}
-                                   autofocus
+                                   autocomplete="username"
                                    {% if form.email.field.required %}required{% endif %} />
                             <label for="{{ form.email.id_for_label }}">
                                 {{ form.email.label }}
@@ -111,6 +107,7 @@
                                    name="{{ form.password1.html_name }}"
                                    id="{{ form.password1.id_for_label }}"
                                    placeholder="{{ form.password1.label }}"
+                                   autocomplete="new-password"
                                    autofocus
                                    {% if form.password1.field.required %}required{% endif %} />
                             <label for="{{ form.password1.id_for_label }}">
@@ -134,20 +131,21 @@
                                    name="{{ form.password2.html_name }}"
                                    id="{{ form.password2.id_for_label }}"
                                    placeholder="{{ form.password2.label }}"
+                                   autocomplete="new-password"
                                    autofocus
                                    {% if form.password2.field.required %}required{% endif %} />
                             <label for="{{ form.password2.id_for_label }}">
                                 {{ form.password2.label }}
                             </label>
-                            {% if form.password2.errors %}
-                                {% for error in form.password2.errors %}
-                                    <div class="invalid-feedback">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
                             {% if form.password2.help_text %}
                                 <div class="form-text">
                                     {{ form.password2.help_text }}
                                 </div>
+                            {% endif %}
+                            {% if form.password2.errors %}
+                                {% for error in form.password2.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
                             {% endif %}
                         </div>
                     </div>

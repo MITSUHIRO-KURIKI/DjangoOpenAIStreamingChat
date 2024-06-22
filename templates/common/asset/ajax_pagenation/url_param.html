@@ -6,9 +6,10 @@ template引数:
 
     {# --- search --- #}
     <div class="flex-grow-1">
-        <form class="search-input-form w-50" action="{% url 'sample:items' %}" method="GET">
+        <form class="search-input-form w-50" action="{{ search_form_action_url }}" method="GET">
             <input type="text"
                    class=""
+                   id="searchInput"
                    name="q"
                    {% if url_param.q %}
                         value="{{url_param.q}}"

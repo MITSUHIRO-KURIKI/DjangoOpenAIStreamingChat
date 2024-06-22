@@ -8,7 +8,7 @@ from ...models import Inquiry
 @receiver(post_save, sender=Inquiry)
 def inquirer_notice_admin(sender, instance, **kwargs) -> None:
     if kwargs['created']:
-        if settings.IS_NOTIFICATION_ADMIN:
+        if settings.IS_NOTIFICATION_ADMIN and instance.is_notice_admin:
             subject_template_name    = 'apps/inquiry/inquiry_form/notice_admin_mail_template/subject.html'
             email_template_name      = 'apps/inquiry/inquiry_form/notice_admin_mail_template/text_message.html'
             html_email_template_name = 'apps/inquiry/inquiry_form/notice_admin_mail_template/html_message.html'
@@ -20,7 +20,7 @@ def inquirer_notice_admin(sender, instance, **kwargs) -> None:
                 'IP_ADDRESS':        instance.ip_address,
             }
             from_email  = settings.DEFAULT_FROM_EMAIL
-            to_email    = settings.ADMIN_NOTICE_EMAIL
+            to_email    = settings.ADMIN_EMAIL_LIST
     
             subject = loader.render_to_string(subject_template_name, context)
             subject = ''.join(subject.splitlines())

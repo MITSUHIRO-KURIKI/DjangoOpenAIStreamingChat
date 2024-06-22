@@ -1,16 +1,21 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from ..forms import LogInForm
 
 
 # ログイン
-class LogInView(LoginView):
+class OverlapLoginView(LoginView):
     
     authentication_form = LogInForm
     template_name       = 'accounts/LogIn/login.html'
     success_url         = reverse_lazy('home')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -21,21 +26,22 @@ class LogInView(LoginView):
 
     def form_valid(self, form):
         # ログイン状態の保持機能
-        login_remenber = form.cleaned_data['is_login_remenber']
-        if login_remenber:
-            self.request.session.set_expiry(60*60*24*5)
+        login_remember = form.cleaned_data['is_login_remember']
+        if login_remember:
+            self.request.session.set_expiry(settings.SESSION_COOKIE_SET_EXPIRY_AGE)
+        else:
+            # SESSION_EXPIRE_AT_BROWSER_CLOSE が設定されている場合には0秒セット
+            if settings.SESSION_EXPIRE_AT_BROWSER_CLOSE:
+                self.request.session.set_expiry(0)
+            else:
+                self.request.session.set_expiry(settings.SESSION_COOKIE_AGE)
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        context = self.get_context_data()
-        # invalid の場合に入力された内容を返す
-        context.update({
-            'invalid_username': self.request.POST['username'],
-        })
-        return self.render_to_response(context)
+        return super().form_invalid(form)
 
 # ログアウト
-class LogoutView(LogoutView):
+class OverlapLogoutView(LogoutView):
     
     success_url = reverse_lazy('accounts:login')
 

@@ -1,16 +1,47 @@
 from django.contrib import admin
+from import_export.admin import ExportMixin
+from import_export.resources import ModelResource
 from .models import Inquiry
 
+class InquiryResource(ModelResource):
+    class Meta:
+        model  = Inquiry
+        fields = ('id',
+                  'unique_account_id',
+                  'email',
+                  'inquiry_text',
+                  'ip_address',
+                  'date_create',
+                  'situation',
+                  'date_complete',
+                  'is_notice_admin',
+                  )
+        export_order = fields
+        clean_model_instances = True
 
-class InquiryAdmin(admin.ModelAdmin):
+class InquiryAdmin(ExportMixin, admin.ModelAdmin):
+    
+    resource_class = InquiryResource
+    
+    # 表示する文字数の制限▽
+    def character_limit_inquiry_text(self, obj):
+        limit=20
+        character = obj.inquiry_text
+        if character:
+            if len(character)>limit:
+                character=character[:limit]+'...'
+        return character
+    # 表示する文字数の制限△
 
     # 一覧画面
     list_display_ = ('unique_account_id',
                      'email',
+                     'character_limit_inquiry_text',
                      'date_create',
                      'situation',
-                     'date_complete',)
-    list_filter   = []
+                     'date_complete',
+                     'is_notice_admin',)
+    list_filter        = ['is_notice_admin','situation',]
     list_display       = list_display_
     list_display_links = list_display_
     search_fields      = ('unique_account_id',)
@@ -36,10 +67,14 @@ class InquiryAdmin(admin.ModelAdmin):
         ('照会者情報', {'fields': (
             'unique_account_id',
             'email',
+            'ip_address',
             )}),
         ('対応状況', {'fields': (
             'situation',
             'date_complete',
+            )}),
+        ('その他', {'fields': (
+            'is_notice_admin',
             )}),
     )
 

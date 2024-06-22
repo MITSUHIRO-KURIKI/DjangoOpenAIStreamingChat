@@ -2,6 +2,7 @@
     <form method="post" id='SubmitWithFocusOff'>
         {% csrf_token %}
         {{ form.non_field_errors }}
+
         <div class="d-flex flex-row">
             <div class="flex-column flex-grow-1">
                 <div class="input-group submit-button-hide-show">
@@ -65,5 +66,8 @@
                 </button>
             </div>
         </div>
+    </div>
+    <div class='fs-10 fw-3 text-center'>
+        生成AIの回答は必ずしも正しいとは限りません。重要な情報は確認するようにしてください。
     </div>
 </div>

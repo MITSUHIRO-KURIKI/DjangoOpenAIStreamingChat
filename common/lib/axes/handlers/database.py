@@ -157,8 +157,9 @@ class AxesDatabaseHandler(AbstractAxesHandler, AxesBaseHandler):
             return
 
         # This replaces null byte chars that crash saving failures.
-        get_data = get_query_str(request.GET).replace("\0", "0x00")
-        post_data = get_query_str(request.POST).replace("\0", "0x00")
+        # (20240617)エラーがでるため get_data と post_data を None に置き換え
+        get_data = 'None'  # get_query_str(request.GET).replace("\0", "0x00")
+        post_data = 'None' # get_query_str(request.POST).replace("\0", "0x00")
 
         if self.is_whitelisted(request, credentials):
             log.info("AXES: Login failed from whitelisted client %s.", client_str)
@@ -204,11 +205,9 @@ class AxesDatabaseHandler(AbstractAxesHandler, AxesBaseHandler):
                 # in order to bypass the defense mechanisms that are used by the site.
                 else:
                     separator = "\n---------\n"
-
-                    attempt.get_data = Concat("get_data", Value(separator + get_data))
-                    attempt.post_data = Concat(
-                        "post_data", Value(separator + post_data)
-                    )
+                    # (20240617)エラーがでるため get_data と post_data を None に置き換え
+                    attempt.get_data = 'None'  # Concat("get_data", Value(separator + get_data))
+                    attempt.post_data = 'None' # Concat("post_data", Value(separator + post_data))
                     attempt.http_accept = request.axes_http_accept
                     attempt.path_info = request.axes_path_info
                     attempt.failures_since_start = F("failures_since_start") + 1

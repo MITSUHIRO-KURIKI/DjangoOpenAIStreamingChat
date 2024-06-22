@@ -68,7 +68,6 @@ class AccessLogAdmin(admin.ModelAdmin):
 
     list_filter = ["attempt_time", "logout_time",]
 
-    # search_fields = ["ip_address", "user_agent", "username", "path_info"]
     search_fields = []
 
     date_hierarchy = "attempt_time"
@@ -117,7 +116,6 @@ class AccessFailureLogAdmin(admin.ModelAdmin):
 
     list_filter = ["attempt_time", "locked_out",]
 
-    # search_fields = ["ip_address", "user_agent", "username", "path_info"]
     search_fields = []
 
     date_hierarchy = "attempt_time"

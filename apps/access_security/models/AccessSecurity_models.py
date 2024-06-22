@@ -3,7 +3,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from common.scripts import RequestUtil
+from common.scripts.DjangoUtils import RequestUtil
 from datetime import datetime, timedelta
 from encrypted_fields.fields import (
     SearchField, EncryptedFieldMixin, EncryptedCharField,

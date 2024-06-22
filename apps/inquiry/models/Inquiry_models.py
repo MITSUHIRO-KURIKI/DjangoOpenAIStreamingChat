@@ -40,31 +40,26 @@ class Inquiry(models.Model):
                     unique       = False,
                     help_text    = '内容によっては私たちからお問い合わせ内容について連絡させて頂きます',
                     encrypted_field_name = '_email',)
-    _inquiry_text = EncryptedTextField(
-                    verbose_name = '問い合わせ内容(Encrypted:Form使用不可)',
+    inquiry_text = models.TextField(
+                    verbose_name = 'お問い合わせ内容 / ご意見',
+                    max_length   = 3000,
                     blank        = False,
                     null         = False,
-                    max_length   = 2000,)
-    inquiry_text = SearchField(
-                    verbose_name = '問い合わせ内容',
-                    hash_key     = settings.ENCRYPTION_HASH_KEY,
-                    db_index     = False,
-                    unique       = False,
-                    encrypted_field_name = '_inquiry_text',)
-    date_create   = models.DateTimeField(
-                    verbose_name = '問い合わせ日時',
-                    default      = timezone.now,)
+                    help_text    = '3,000文字以内',)
     _ip_address = EncryptedIPAddressField(
-                    verbose_name = '照会者IPアドレス(Encrypted:Form使用不可)',
+                    verbose_name = 'IPアドレス(Encrypted:Form使用不可)',
                     blank        = True,
                     null         = True,)
     ip_address = SearchField(
-                    verbose_name = '照会者IPアドレス',
+                    verbose_name = 'IPアドレス',
                     hash_key     = settings.ENCRYPTION_HASH_KEY,
                     db_index     = False,
                     unique       = False,
                     encrypted_field_name = "_ip_address",)
-    situation     = models.IntegerField(
+    date_create = models.DateTimeField(
+                    verbose_name = '問い合わせ日時',
+                    default      = timezone.now,)
+    situation = models.IntegerField(
                     verbose_name = '対応状況',
                     blank        = False,
                     null         = False,
@@ -75,7 +70,11 @@ class Inquiry(models.Model):
                     blank        = True,
                     null         = True,
                     default      = None,)
-    
+    is_notice_admin = models.BooleanField(
+                    verbose_name = '管理者へ通知',
+                    default      = True,
+                    help_text    = 'Falseの場合には管理者へ通知しない',)
+
     class Meta:
         app_label    = 'inquiry'
         db_table     = 'inquiry_model'

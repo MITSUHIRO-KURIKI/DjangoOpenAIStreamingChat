@@ -1,0 +1,139 @@
+{% comment %} 
+template引数:
+ * AjaxEndPoint
+ * ListAreaId:      item の表示場所
+ * PagenationNavId: pagenation nav の表示場所
+{% endcomment %}
+<script type="text/javascript">
+    var isAjaxProcessing = false;
+    function ajax_pagenate_fnc(request_page, per_n, sort) {
+        const scroll_time  = 0;
+        // Ajax 処理中の場合にはさらなる要求は受け付けない
+        if( isAjaxProcessing ) {
+            console.log('Ajax: Request rejected because it is being processed');
+            return;
+        };
+        isAjaxProcessing = true;
+        // Ajax
+        var csrf_token = getCookie('csrftoken'),
+            q          = $('#searchInput').val();
+        $.ajax({
+            url:      '{{ AjaxEndPoint }}',
+            type:     'POST',
+            dataType: 'json',
+            data: {
+                'request_page': request_page,
+                'per_n':        per_n,
+                'sort':         sort,
+                'q':            q,
+            },
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader('X-CSRFToken', csrf_token);
+                }
+            },
+        // Ajax 通信成功処理
+        }).done( function (data) {
+            let objs_data     = JSON.parse(data.objs_data),
+                nav_list      = data.nav_list,
+                nav_page_dict = data.nav_page_dict;
+            // ListArea
+            $('#{{ ListAreaId }}').empty();
+            $.each(objs_data, function(i, obj) {
+                {% if isShareMode %}
+                    $('#{{ ListAreaId }}').append(' \
+                        <li> \
+                            <a class="list-group-item list-group-item-action" \
+                               href="' + obj['url'] + '">\
+                                <div class="d-flex flex-row align-items-start py-2"> \
+                                    <div class="d-flex flex-grow-1 align-items-center"> \
+                                        <div class="flex-grow-1">' + escape_html(obj['room_name']) + '</div> \
+                                    </div> \
+                                </div> \
+                            </a> \
+                        </li> \
+                    ');
+                {% else %}
+                    $('#{{ ListAreaId }}').append(' \
+                        <li> \
+                            <a class="list-group-item list-group-item-action" \
+                               href="' + obj['url'] + '">\
+                                <div class="d-flex flex-row"> \
+                                    <div class="d-flex flex-grow-1 align-items-center"> \
+                                        <div class="flex-grow-1">' + escape_html(obj['room_name']) + '</div> \
+                                    </div> \
+                                    <div class="flex-shrink-1"> \
+                                        <div class="flex-column flex-shrink-1"> \
+                                            <button class="delete-room-button btn btn-sm btn-outline-danger m-1 p-1" \
+                                                    type="submit" \
+                                                    name="DeleteRoom" \
+                                                    value="' + obj['room_id'] + '" \
+                                                    data-bs-toggle="tooltip" \
+                                                    data-bs-placement="left" \
+                                                    data-html="false" \
+                                                    title="削除"> \
+                                                <i class="fa-regular fa-trash-can"></i> \
+                                            </button> \
+                                        </div> \
+                                    </div> \
+                                </div> \
+                            </a> \
+                        </li> \
+                    ');
+                {% endif %}
+            });
+            // PageNav
+            $('#{{ PagenationNavId }}').empty();
+            $('#{{ PagenationNavId }}').append(
+                '<li class="page-item">\
+                    <button type="button" class="page-link" onclick="ajax_pagenate_fnc(' + nav_page_dict.previous_page + ',' + per_n + ',\'' + sort + '\')">\
+                        <i class="fa-solid fa-chevron-left"></i>\
+                    </button>\
+                </li>'
+            );
+            $.each(nav_list, function(i, page) {
+                if ( page == '…' ) {
+                    $('#{{ PagenationNavId }}').append(
+                        '<li class="page-item disabled">\
+                            <span class="page-link">' + page + '</span>\
+                        </li>'
+                    );
+                } else if ( page == request_page ) {
+                    $('#{{ PagenationNavId }}').append(
+                        '<li class="page-item active">\
+                            <button type="button" class="page-link" onclick="ajax_pagenate_fnc(' + page + ',' + per_n + ',\'' + sort + '\')">\
+                                ' + page + '\
+                            </button>\
+                        </li>'
+                    );
+                } else {
+                    $('#{{ PagenationNavId }}').append(
+                        '<li class="page-item">\
+                            <button type="button" class="page-link" onclick="ajax_pagenate_fnc(' + page + ',' + per_n + ',\'' + sort + '\')">\
+                                ' + page + '\
+                            </button>\
+                        </li>'
+                    );
+                };
+            });
+            $('#{{ PagenationNavId }}').append(
+                '<li class="page-item">\
+                    <button type="button" class="page-link" onclick="ajax_pagenate_fnc(' + nav_page_dict.next_page + ',' + per_n + ',\'' + sort + '\')">\
+                        <i class="fa-solid fa-chevron-right"></i>\
+                    </button>\
+                </li>'
+            );
+        // Ajax 通信エラー処理
+        }).fail( function () {
+            $('#{{ ListAreaId }}').empty();
+            $('#{{ ListAreaId }}').append('<span>error...</span>');
+        // Ajax 通信終了時処理(エラーでも実行)
+        }).always(function() {
+            isAjaxProcessing = false;
+        });
+        $("body,html").animate({
+            scrollTop: 0,
+        }, scroll_time, 'easeInOutCubic');
+        return false;
+    }
+</script>

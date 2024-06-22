@@ -1,0 +1,15 @@
+{% extends 'accounts/accounts_base.html' %}
+
+{# --- TITLE --- #}
+{% block accounts_title %} - Authentication invalidation{% endblock %}
+
+{# --- CONTENT --- #}
+{% block accounts_content %}
+<h1 class="f-content-title">認証を無効化しました</h1>
+<div class="card mt-4">
+    <div class="card-body">
+        <p class="card-text">不審なメールが引き続き届く場合には、お問い合わせフォームよりお問い合わせください</p>
+        <a class="btn btn-primary mt-3" role="button" href="{% url 'inquiry:inquiry_form' %}">お問い合わせフォーム</a>
+    </div>
+</div>
+{% endblock %}

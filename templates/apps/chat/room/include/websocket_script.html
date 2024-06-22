@@ -1,20 +1,40 @@
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-        const ChatOutputArea = document.getElementById('ChatOutputArea'),
-              ChatInputArea  = document.getElementById('ChatInputArea'),
-              ChatSendButton = document.getElementById('ChatSendButton');
 
-        const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws",
-              ws_port   = '',
-              ws_url    = `${ws_scheme}://${window.location.host}${ws_port}/ws/chat/room/{{ object.room_id.room_id }}`;
-        
-        let socket    = null,
-            iteration = 0;
+    // WebSocketのURLを生成する関数
+    function createWebSocketUrl() {
+        const wsScheme = window.location.protocol === "https:" ? "wss" : "ws",
+              wsPort   = '';
+        return `${wsScheme}://${window.location.host}${wsPort}/ws/chat/room/{{ object.room_id.room_id }}`;
+    };
+
+    // 任意の offcanvas の状態を管理
+    var isAnyOffcanvasOpen = false;
+    $(document).on('show.bs.offcanvas', '.offcanvas', function(e) {
+        isAnyOffcanvasOpen = true;
+    });
+    $(document).on('hidden.bs.offcanvas', '.offcanvas', function(e) {
+        isAnyOffcanvasOpen = false;
+    });
+    // 任意の modal の状態を管理
+    var isAnyModalOpen = false;
+    $(document).on('show.bs.modal', '.modal', function(e) {
+        isAnyModalOpen = true;
+    });
+    $(document).on('hidden.bs.modal', '.modal', function(e) {
+        isAnyModalOpen = false;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const ChatOutputArea     = document.getElementById('ChatOutputArea'),
+              ChatInputArea      = document.getElementById('ChatInputArea'),
+              ChatSendButton     = document.getElementById('ChatSendButton'),
+              allowedDomainsList = {{ ALLOWD_DOMAINS_LIST|safe }}; // LLMストリームで表示を許可するURLドメイン
 
         // WebSocket接続を確立するための関数
         function connectWebSocket() {
 
-            socket = new WebSocket(ws_url);
+            const wsUrl = createWebSocketUrl();
+            let socket  = new WebSocket(wsUrl);
 
             socket.addEventListener('open', () => {
                 updateSendButton('send');
@@ -27,81 +47,128 @@
             });
             socket.addEventListener('error', (error) => {
                 console.error('WebSocket error:', error);
+                updateSendButton('disconnect');
             });
-        };
 
+            return socket;
+        };
         // 送信ボタンの状態を更新
         function updateSendButton(status) {
             if (status === 'send') {
                 // 送信可能状態
+                ChatSendButton.disabled  = false;
                 ChatSendButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+            } else if (status === 'streaming') {
+                // ストリーミング中
+                ChatSendButton.disabled  = true;
+                ChatSendButton.innerHTML = '<i class="text-info fa-solid fa-spinner fa-spin"></i>';
             } else if (status === 'disconnect') {
                 // 切断状態
-                ChatSendButton.innerHTML = '<i class="fa-solid fa-plug"></i>';
+                ChatSendButton.disabled  = false;
+                ChatSendButton.innerHTML = '<i class="text-danger fa-solid fa-plug"></i>';
+            };
+        };
+
+        let iteration = 0;
+
+        // チャットエリアボタンでの送信
+        ChatSendButton.addEventListener('click', sendMessage);
+        // エンターキーでの送信
+        window.document.onkeydown = function(e){
+            // 送信ボタンが無効の場合は何もしない
+            if ( ChatSendButton.disabled ) {
+                return;
+            // チャットインプットor送信ボタンorルーム名インプットにフォーカスしていない
+            } else if ( document.activeElement !== document.getElementById('ChatInputArea')  &&
+                        document.activeElement !== document.getElementById('ChatSendButton') &&
+                        document.activeElement !== document.getElementById('{{ form.room_name.id_for_label }}') &&
+                        document.activeElement !== document.getElementsByClassName('form-control') &&
+                        !isAnyOffcanvasOpen && !isAnyModalOpen) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();  // デフォルトのエンターキーの動作を阻止
+                    e.stopPropagation(); // イベントの伝播を止める
+                    sendMessage();       // メッセージ送信関数呼出し
+                };
+            // チャットインプットではシフトエンターで送信可能
+            } else if (document.activeElement === document.getElementById('ChatInputArea')) {
+                if (e.key === 'Enter' && e.shiftKey) {
+                    e.preventDefault();  // デフォルトのエンターキーの動作を阻止
+                    e.stopPropagation(); // イベントの伝播を止める
+                    sendMessage();       // メッセージ送信関数呼出し
+                };
             };
         };
 
         // メッセージを送信する
         function sendMessage() {
             if (socket && socket.readyState == WebSocket.OPEN) {
+
                 let post_data = {
                     'user_sentence': ChatInputArea.value,
-                    {% if room_settings_form.system_sentence %}   'system_sentence':"{{ room_settings_form.system_sentence.value | linebreaksbr }}",{% endif %}
-                    {% if room_settings_form.assistant_sentence %}'assistant_sentence':"{{ room_settings_form.assistant_sentence.value | linebreaksbr }}",{% endif %}
-                    {% if room_settings_form.history_len %}       'history_len':{{ room_settings_form.history_len.value }},{% endif %}
-                    {% if room_settings_form.model_name %}        'model_name':"{{ room_settings_form.model_name.value }}",{% endif %}
-                    {% if room_settings_form.max_tokens %}        'max_tokens':{{ room_settings_form.max_tokens.value }},{% endif %}
-                    {% if room_settings_form.temperature %}       'temperature':{{ room_settings_form.temperature.value }},{% endif %}
-                    {% if room_settings_form.top_p %}             'top_p':{{ room_settings_form.top_p.value }},{% endif %}
-                    {% if room_settings_form.presence_penalty %}  'presence_penalty':{{ room_settings_form.presence_penalty.value }},{% endif %}
-                    {% if room_settings_form.frequency_penalty %} 'frequency_penalty':{{ room_settings_form.frequency_penalty.value }},{% endif %}
                 };
                 socket.send(JSON.stringify(post_data));
+
+                // メッセージ送信後にボタンを無効化
+                updateSendButton('streaming');
                 // HumanMessageDiv をチャットエリアに表示
-                let HumanMessageDiv       = document.createElement('div');
-                HumanMessageDiv.classList.add('d-flex', 'flex-row', 'align-items-start', 'mt-3');
+                let HumanMessageDiv = document.createElement('div');
+                HumanMessageDiv.classList.add('human-message-area');
                 HumanMessageDiv.innerHTML = `
-                        <a name="HumanMessageIter_${iteration}"></a> 
-                        <div class="flex-column">
-                            <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
-                                 class="row rounded-circle border border-1 message-icon"
-                                 alt="user_icon" />
-                            <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
-                        </div>
-                        <div class="flex-column ms-2 mt-2">
-                            <span class="human-message" id="HumanMessageIter_${iteration}"></span>
+                        <a name="HumanMessageIter_${iteration}"></a>
+                        <div class="d-flex flex-row align-items-start mt-3">
+                            <div class="flex-column">
+                                <img src="{{ user.related_user_profile_unique_account_id.user_icon.url }}"
+                                    class="row rounded-circle border border-1 message-icon"
+                                    alt="user_icon" />
+                                <small class="row justify-content-center fs-7 fw-3 lh-s-2">you</small>
+                            </div>
+                            <div class="flex-column ms-2 mt-2">
+                                <span class="human-message" id="HumanMessageIter_${iteration}"></span>
+                            </div>
                         </div>`;
                 let humanMessageId = 'HumanMessageIter_' + iteration;
                 ChatOutputArea.appendChild(HumanMessageDiv);
                 document.getElementById(humanMessageId).innerText = ChatInputArea.value;
                 // AIMessageDiv をチャットエリアに表示
                 let AIMessageDiv = document.createElement('div');
-                AIMessageDiv.classList.add('d-flex', 'flex-row', 'align-items-start', 'mt-3');
+                // 時刻
+                let now = new Date(),
+                TimeStampDiv = document.createElement('div');
+                AIMessageDiv.classList.add('ai-message-area');
                 AIMessageDiv.innerHTML = `
-                        <a name="AiMessageIter_${iteration}"></a> 
-                        <div class="flex-column">
-                            <img src="{{ object.ai_icon.url }}"
-                                 class="row rounded-circle border border-1 message-icon"
-                                 alt="user_icon" />
-                            <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+                        <a name="AiMessageIter_${iteration}"></a>
+                        <div class="d-flex flex-row align-items-start mt-3">
+                            <div class="flex-column">
+                                <img src="{{ object.ai_icon.url }}"
+                                    class="row rounded-circle border border-1 message-icon"
+                                    alt="ai_icon" />
+                                <small class="row justify-content-center fs-7 fw-3 lh-s-2">ai</small>
+                            </div>
+                            <div class="flex-column ms-2 mt-2">
+
+                                <span id="loadingIndicator_${iteration}">
+                                    <span class="spinner-grow spinner-grow-sm text-info me-1" role="status" aria-hidden="true"></span>
+                                    <small class="text-info">Generating...</small>
+                                </span>
+                                <span class="ai-message" id="AiMessageIter_${iteration}"></span>
+
+                                <span id="NextQuestionloadingIndicator_${iteration}" style="display: none;">
+                                    <span class="spinner-grow spinner-grow-sm text-info me-1" role="status" aria-hidden="true"></span>
+                                    <small class="text-info">次の質問を生成中...</small>
+                                </span>
+                                <div class="ai-message p-3" id="NextQuestionAssistIter_${iteration}"></div>
+
+                            </div>
                         </div>
-                        <div class="flex-column ms-2 mt-2">
-                            <span id="loadingIndicator_${iteration}">
-                                <span class="spinner-grow spinner-grow-sm text-info me-1" role="status" aria-hidden="true"></span>
-                                <small class="text-info">Generating...</small>
-                            </span>
-                            <span class="ai-message" id="AiMessageIter_${iteration}"></span>
+                        <div class="d-flex flex-row justify-content-end align-items-center"
+                             id="FooterIter_${iteration}">
+                            <div id="FooterActionIter_${iteration}"></div>
+                            <div id="FooterTimeIter_${iteration}" class="fs-10 fw-2">
+                                ${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日${now.getHours()}:${now.getMinutes()}
+                            </div>
                         </div>`;
                 ChatOutputArea.appendChild(AIMessageDiv);
-                // 時刻
-                let now          = new Date(),
-                    TimeStampDiv = document.createElement('div');
-                TimeStampDiv.classList.add('d-flex', 'flex-row', 'justify-content-end');
-                TimeStampDiv.innerHTML = `
-                <span class="fs-9 fw-2">
-                    ${now.getFullYear()}年${now.getMonth()}月${now.getDate()}日${now.getHours()}:${now.getMinutes()}
-                </span>`;
-                ChatOutputArea.appendChild(TimeStampDiv);
+
                 // ChatInputAreaクリア
                 ChatInputArea.value = '';
 
@@ -121,48 +188,132 @@
                 connectWebSocket();
             };
         };
-
-        // チャットメッセージの送信
-        ChatSendButton.addEventListener('click', sendMessage);
-        // エンターキーでの送信
-        // Offcanvasの開閉状態を管理する
-        let isSettingsOffcanvasOpen = false;
-        const settingsOffcanvas = document.getElementById('RoomSettingsOffcanvasWithEndOptions');
-        settingsOffcanvas.addEventListener('show.bs.offcanvas', () => {
-            isSettingsOffcanvasOpen = true;
-        });
-        settingsOffcanvas.addEventListener('hidden.bs.offcanvas', () => {
-            isSettingsOffcanvasOpen = false;
-        });
-        // エンターキーでの送信判定
-        window.document.onkeydown = function(event){
-            // チャットインプットor送信ボタンorルーム名インプットにフォーカスしていない
-            // かつRoomSettingsOffcanvasが開いていないことを確認
-            if ( document.activeElement !== document.getElementById('ChatInputArea') &&
-                 document.activeElement !== document.getElementById('ChatSendButton') &&
-                 document.activeElement !== document.getElementById('{{ form.room_name.id_for_label }}') &&
-                 !isSettingsOffcanvasOpen ) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();  // デフォルトのエンターキーの動作を阻止
-                    event.stopPropagation(); // イベントの伝播を止める
-                    sendMessage();           // メッセージ送信関数呼出し
-                };
-            };
-        };
-
+        
         // WebSocketからのメッセージを受け取る
+        // ストリーミング出力(Markdown)をHTMLに変換するため累積されたテキストを保持する器
+        let accumulatedMarkdownText = '',
+            updateCounter           = 0,
+            message_id              = '';
+        marked.setOptions({renderer: markedRenderer, breaks: true, gfm: true,});
         function receiveMessage(event) {
+            let aiMessageId                    = 'AiMessageIter_'                + (iteration - 1),
+                loadingIndicatorId             = 'loadingIndicator_'             + (iteration - 1),
+                nextQuestionloadingIndicatorId = 'NextQuestionloadingIndicator_' + (iteration - 1),
+                nextQuestionAssistId           = 'NextQuestionAssistIter_'       + (iteration - 1),
+                nextQuestionAssistDiv          = document.getElementById(nextQuestionAssistId),
+                footerActionId                 = 'FooterActionIter_'             + (iteration - 1);
             try {
-                let data               = JSON.parse(event.data),
-                    aiMessageId        = 'AiMessageIter_' + (iteration - 1),
-                    loadingIndicatorId = 'loadingIndicator_' + (iteration - 1);
-                document.getElementById(loadingIndicatorId).style.display = 'none';
-                document.getElementById(aiMessageId).innerText += `${data.llm_answer}`;
+                let data = JSON.parse(event.data);
+
+                // 1.LLM 回答の受信
+                if (data.type === 'llm_answer') {
+                    // インジゲータの非表示
+                    document.getElementById(loadingIndicatorId).style.display = 'none';
+                    // 回答のストリーミング
+                    updateCounter           += 1
+                    let catchContent        = data.llm_answer;
+                    accumulatedMarkdownText += catchContent;
+                    // document.getElementById(aiMessageId).innerHTML += catchContent;
+                    // MarkdownをHTMLに変換(一定文字ごとに実行)
+                    if ( updateCounter >= 1 ) {
+                        updateCounter = 0;
+                        let harmlessText     = textUrlHarmless(accumulatedMarkdownText, allowedDomainsList),
+                            htmlContentClean = DOMPurify.sanitize(harmlessText),
+                            htmlContent      = marked.parse(htmlContentClean);
+                        document.getElementById(aiMessageId).innerHTML = htmlContent;
+                    }
+
+                // 1-1.LLM 回答終了の受信
+                } else if (data.type === 'llm_answer_complete') {
+                    // 累積されたMarkdownテキストを最終 parse してリセット
+                    updateCounter   = 0;
+                    let harmlessText     = textUrlHarmless(accumulatedMarkdownText, allowedDomainsList),
+                        htmlContentClean = DOMPurify.sanitize(harmlessText),
+                        htmlContent      = marked.parse(htmlContentClean);
+                    document.getElementById(aiMessageId).innerHTML = htmlContent;
+                    accumulatedMarkdownText = "";
+                    // シンタックスハイライト/mermaidを適用
+                    Prism.highlightAll();
+                    mermaid.run();
+                    // インジゲータの表示
+                    document.getElementById(nextQuestionloadingIndicatorId).style.display = 'block';
+                    // message_id の取得
+                    message_id = data.message_id
+
+                // 2.次の質問候補の受信
+                } else if (data.type === 'next_question_assist') {
+                    // インジゲータの非表示
+                    document.getElementById(nextQuestionloadingIndicatorId).style.display = 'none';
+                    // 次の質問候補の表示
+                    // リストの各要素に対してボタンを生成
+                    nextQuestionAssistDiv.innerHTML = '';
+                    data.next_question_assist.forEach((question, index) => {
+                        let button = document.createElement('button');
+                            button.innerText = question;
+                        button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+                        button.onclick = function(e) {
+                            // ボタンクリック時の動作
+                            e.preventDefault();                 // デフォルトのエンターキーの動作を阻止
+                            e.stopPropagation();                // イベントの伝播を止める
+                            if ( !ChatSendButton.disabled ) {
+                                ChatInputArea.value = question; // テキストエリアに質問を設定
+                                sendMessage();                  // メッセージを送信
+                            };
+                        };
+                        nextQuestionAssistDiv.appendChild(button);
+                    });
+                
+                // 2-2.次の質問候補の終了の受信
+                } else if (data.type === 'next_question_assist_complete') {
+                    // インジゲータの非表示
+                    document.getElementById(nextQuestionloadingIndicatorId).style.display = 'none';
+                
+                // final
+                } else if (data.type === 'is_streaming_complete') {
+                    // ストリーミングが終わったところでボタンを有効化
+                    updateSendButton('send');
+                    // 累積されたMarkdownテキストをリセット()
+                    accumulatedMarkdownText = "";
+
+                    if ( message_id !== '') {
+                        document.getElementById(footerActionId).innerHTML = `
+                        <span class="btn btn-sm m-1 p-1 dissatisfaction-action"
+                              value="${ message_id }"
+                              is-actioned="false"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-html="false"
+                              title="回答に不満">
+                            <i class="fa-regular fa-thumbs-down"></i>
+                        </span>
+                        <button class="delete-room-button btn btn-sm m-1 p-1"
+                                type="submit"
+                                name="DeleteMessage"
+                                value="${ message_id }"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="left"
+                                data-html="false"
+                                title="この回答を削除">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                        `;
+                    };
+                    // 連続して一定回数使ったらフィードバックをアナウンス
+                    if ( iteration === 3 ){
+                        // フィードバックモーダルを表示
+                        $('#submitFeedbackModal').attr('feedback-type', 'room');
+                        $('#submitFeedbackModal').attr('feedback-id',   '{{ room_settings.room_id.room_id }}');
+                        $('#FeedbackModal').modal('show');
+                    };
+                };
             } catch (e) {
                 console.error('Error parsing message data:', e);
                 document.getElementById(loadingIndicatorId).style.display = 'none';
             };
         };
+
+        // WebSocket接続を開始
+        let socket = connectWebSocket();
 
         // ウィンドウが閉じられる際にはWebSocket切断
         window.addEventListener('beforeunload', () => {
@@ -171,7 +322,5 @@
             };
         });
 
-        // WebSocket接続を開始
-        connectWebSocket();
     });
 </script>

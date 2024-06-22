@@ -1,0 +1,46 @@
+{% load static %}
+<div class="modal fade"
+     id="FeedbackModal"
+     tabindex="-1"
+     aria-labelledby="FeedbackModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="fs-6"
+                   id="FeedbackModalLabel">
+                    フィードバックをお寄せください<br>
+                    <span class="fs-9">頂いた内容は今後のサービス改善に役立てて参ります</span>
+                </p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="message-text"
+                               class="col-form-label">
+                        </label>
+                        <textarea class="form-control"
+                                  id="feedback-modal-text"
+                                  style="height: 15vh;"></textarea>
+                        <span class="fs-9">3,000文字以内</span>
+                    </div>
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-primary"
+                        id="submitFeedbackModal">
+                        回答する
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="thankYouNotification"
+     class="text-center">
+    <i class="fa-solid fa-heart"></i>
+    <p class="fs-8 m-2">
+        ご意見ありがとうございます！
+    </p>
+</div>

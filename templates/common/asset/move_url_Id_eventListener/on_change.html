@@ -1,0 +1,12 @@
+{% comment %} 
+template引数:
+ * TargetId
+{% endcomment %}
+<script type="text/javascript">
+    $('#{{ TargetId }}').on('change', function(e) {
+        var url = this.value;
+        if(url) {
+            window.location.href = url;
+        };
+    });
+</script>
