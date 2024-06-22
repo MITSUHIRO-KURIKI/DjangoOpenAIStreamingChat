@@ -38,7 +38,7 @@ def NextQuestionAssistantPrompt(user_sentence:str,
         "B",
         "C",
         "D"
-        ]
+    ]
 }}
 ```
 """
