@@ -25,7 +25,7 @@
 <center><img width="540px" src="https://github.com/MITSUHIRO-KURIKI/DjangoOpenAIStreamingChat/blob/main/static/templates/pages/home/img/img_fps10.gif"></center>
 
 ## 設置
-<sup>[DjangoTemplate](https://mitsuhiro-kuriki.github.io/DjangoTemplate/ "DjangoTemplate")との差分のみ表示</sup>
+<sup>[DjangoTemplate](https://github.com/MITSUHIRO-KURIKI/DjangoTemplate/ "DjangoTemplate")との差分のみ表示</sup>
 
 #### config > settings.pyでの設定
 ###### RADISの使用
