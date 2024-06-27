@@ -23,8 +23,8 @@ IS_USE_EMAIL_SERVICE = False
 IS_USE_GCS    = False # Cloud Strage を利用する
 IS_USE_GC_SQL = False # Cloud SQL を利用する
 
-# RADIS(WebSoocket)
-IS_USE_RADIS = False
+# RADIS(WebSoocket/Celery)
+IS_USE_RADIS = True
 
 # USE Asure OpenAI Service
 IS_USE_AZURE_OPENAI = False
@@ -157,6 +157,11 @@ ASGI_APPLICATION = 'config.asgi.application'
 # [LOAD extra_settings] ChannelLayers.py
 try:
     from .extra_settings.ChannelLayers import *
+except ImportError:
+    pass
+# [LOAD extra_settings] Celery.py
+try:
+    from .extra_settings.Celery import *
 except ImportError:
     pass
 

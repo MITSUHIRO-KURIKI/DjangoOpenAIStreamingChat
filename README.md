@@ -5,6 +5,7 @@
 [DjangoTemplate](https://github.com/MITSUHIRO-KURIKI/DjangoTemplate/ "DjangoTemplate")をベースに[OpenAI API](https://openai.com/blog/openai-api "OpenAI API")を利用したチャットアプリを学習として作成しました
 
 ### 🍭UPDATE
+* [celery](https://github.com/celery/celery/tree/main/examples/django "celery")を[Django Channels](https://channels.readthedocs.io/en/latest/ "Django Channels")と統合し、一部の処理を Worker で処理を行います(Localで動作確認済。GCPは未確認ですが、おそらくデプロイできると思います)   
 * [marked.js](https://github.com/markedjs/marked "marked.js"), [DOMPurify](https://github.com/cure53/DOMPurify "DOMPurify")を利用してLLMに含まれる Markdown を html化の実装  
 * [prism.js](https://prismjs.com/ "prism.js")を利用してLLMに含まれるコードをシンタックスハイライトの実装  
 * [mermaid.js](https://github.com/mermaidjs/mermaidjs.github.io "mermaid.js")を利用してLLMに含まれるフロー図表示の実装
@@ -31,7 +32,8 @@
 #### config > settings.pyでの設定
 ###### RADISの使用
 ```
-IS_USE_RADIS = False
+# RADIS(WebSoocket/Celery)
+IS_USE_RADIS = True
 ```
 
 #### .envファイル用意
@@ -40,17 +42,26 @@ IS_USE_RADIS = False
 OPENAI_API_KEY='*** YOUR OPENAI_API_KEY ***'
 ```
 
-###### Radisを利用する場合
+###### Radisの利用
 ```
 RADIS_HOST='*** RADIS HOST ***'  
 RADIS_PORT='*** RADIS PORT ***'
 ```
 
 ## 実行
+* terminal(0)  
 ```
 $ pip install -r requirements-base.txt
 $ ProjectSetupBat
 $ python manage.py runserver
+```
+* terminal(1)  
+```
+$ RunRedisServer
+```
+* terminal(2)  
+```
+$ RunCeleryWorker
 ```
 
 ## 主な実行環境
@@ -59,6 +70,7 @@ $ python manage.py runserver
 python=3.9.18
 Django==4.2.1
 channels==4.0.0
+celery==5.4.0
 ```
 
 ## Other

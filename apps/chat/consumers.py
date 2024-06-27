@@ -1,33 +1,31 @@
 from django.conf import settings
 import asyncio
 from common.scripts.DjangoUtils import generate_uuid_hex
-from common.scripts.LlmUtils import Llm, calc_token, is_tokens_less_than_settings
+from common.scripts.LlmUtils import calc_token, is_tokens_less_than_settings
 from common.scripts.PythonCodeUtils import print_color
 from channels.exceptions import StopConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 # from google.auth import default as google_default_credentials
 import json
 import openai
-from typing import List, AsyncGenerator
-from .models import Room, Message
+from typing import AsyncGenerator
 from .models.ModelNameChoice import MODEL_NAME_CHOICES
-from .settings import SEND_MAX_TOKENS, RETRY_LIMIT_N
+from .settings import SEND_MAX_TOKENS
+from .tasks import (
+    generate_next_question_assist, get_history,
+    save_message_models, replace_default_room_name,
+)
 from .Utils import (
-    NextQuestionAssistantPrompt, decompression,
-    get_room_settings, get_history, is_create_user_room,
-    save_data, save_room_name,
+    decompression, get_room_settings, is_create_user_room,
 )
 
-openai.api_key          = settings.OPENAI_API_KEY
 MODEL_NAME_CHOICES_DICT = dict(MODEL_NAME_CHOICES())
 
 
 class OpenAIChatConsumer(AsyncWebsocketConsumer):
-    
-    model = Message
 
     async def connect(self):
-        
+
         self.connect_user    = self.scope['user']
         self.room_id         = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = 'room_%s' % self.room_id
@@ -64,9 +62,9 @@ class OpenAIChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         data_dict      = decompression(text_data_json)
         # post データ取得△
-        
+
         # RoomSettings の取得
-        room_settings_dict = await get_room_settings(Room.objects, self.room_id)
+        room_settings_dict = await get_room_settings(self.room_id)
         data_dict          = data_dict | room_settings_dict
         
         # model_name の変換
@@ -75,12 +73,17 @@ class OpenAIChatConsumer(AsyncWebsocketConsumer):
         if settings.DEBUG:
             print_color(f'data_dict: {data_dict}', 4)
 
-        # ルームに紐づくヒストリーメッセージ時の取得▽
-        history_list, history_text = await get_history(self.model.objects, self.scope['url_route']['kwargs']['room_id'], data_dict['history_len'])
-        
-        data_dict['history_list'] = history_list
-        data_dict['history_text'] = history_text
-        # ルームに紐づくヒストリーメッセージ時の取得△
+        # ルームに紐づくヒストリーメッセージ時の取得(celery tasks)
+        get_history.delay(self.room_group_name, self.room_id, data_dict)
+
+
+    async def complete_task_get_history(self, event):
+        if settings.DEBUG:
+            print_color(f'info: Run OpenAIChatConsumer.complete_task_get_history:\n{event}', 3)
+        # ルームに紐づくヒストリーメッセージ時の取得
+        data_dict                 = event['response']['data_dict']
+        data_dict['history_list'] = event['response']['history_list']
+        data_dict['history_text'] = event['response']['history_text']
         
         # 入力のバリデーション▽
         ## 何も質問されてないときに返すテキスト▽
@@ -152,47 +155,77 @@ class OpenAIChatConsumer(AsyncWebsocketConsumer):
             }
             await self.send(json.dumps(message_data))
             data_dict['llm_response'] = llm_response
-
+            data_dict['message_id']   = message_id
+            
             ##################################################
-            # 2.次の質問の候補の取得とストリーム
-            async for next_question_list in self.generate_next_question_assist(data_dict, RETRY_LIMIT_N):
-                message_data = {
-                    'type':                'next_question_assist',
-                    'next_question_assist': next_question_list,
-                }
-                await self.send(json.dumps(message_data))
-            data_dict['next_question_assist_data_list'] = next_question_list
-            ## タスク終了をsend
+            # 2.次の質問の候補の取得とストリーム(celery tasks)
+            generate_next_question_assist.delay(self.room_group_name, data_dict)
+            
+            ## タスク開始をsend
             message_data = {
-                'type': 'next_question_assist_complete',
+                'type': 'task_start__next_question_assist',
             }
             await self.send(json.dumps(message_data))
 
-            ##################################################
-            # 3.追加情報(消費トークン数)の取得
-            tokens_info_dict = {
-                'sent_tokens':      calc_token(
-                                        sentence = data_dict['user_sentence']+data_dict['system_sentence']+data_dict['assistant_sentence']+history_text,
-                                        ),
-                'generated_tokens': calc_token(sentence = llm_response,),
-            }
-            data_dict['tokens_info_dict'] = tokens_info_dict
-            
-            ##################################################
-            # 4.Modelに結果を保存
-            await save_data(self.model.objects, Room.objects, self.room_id, message_id, data_dict)
-            await save_room_name(Room.objects, self.room_id, data_dict['user_sentence'])
-            ## タスク終了をsend
-            message_data = {
-                'type': 'save_model_complete',
-            }
-            await self.send(json.dumps(message_data))
-            
-            # 処理終了をsend
-            message_data = {
-                'type': 'is_streaming_complete',
-            }
-            await self.send(json.dumps(message_data))
+    async def complete_task_generate_next_question_assist(self, event):
+        if settings.DEBUG:
+            print_color(f'info: Run OpenAIChatConsumer.complete_task_generate_next_question_assist:\n{event}', 3)
+        
+        ##################################################
+        # 2.次の質問の候補の取得とストリーム
+        message_data = {
+            'type':                 'next_question_assist',
+            'next_question_assist': event['response']['next_question_list'],
+        }
+        await self.send(json.dumps(message_data))
+        
+        data_dict = event['response']['data_dict']
+        data_dict['next_question_assist_data_list'] = event['response']['next_question_list'],
+        ## タスク終了をsend
+        message_data = {
+            'type': 'next_question_assist_complete',
+        }
+        await self.send(json.dumps(message_data))
+
+        ##################################################
+        # 3.追加情報(消費トークン数)の取得
+        tokens_info_dict = {
+            'sent_tokens':      calc_token(
+                                    sentence = data_dict['user_sentence']+data_dict['system_sentence']+data_dict['assistant_sentence']+data_dict['history_text'],
+                                    ),
+            'generated_tokens': calc_token(sentence = data_dict['llm_response'],),
+        }
+        data_dict['tokens_info_dict'] = tokens_info_dict
+
+        # 処理終了をsend
+        message_data = {
+            'type': 'is_streaming_complete',
+        }
+        await self.send(json.dumps(message_data))
+
+        ##################################################
+        # 4.Modelに結果を保存(celery tasks)
+        save_message_models.delay(self.room_group_name, self.room_id, data_dict)
+        replace_default_room_name.delay(self.room_group_name, self.room_id, data_dict['user_sentence'])
+
+        ## タスク開始をsend
+        message_data = {
+            'type': 'task_start__save_model',
+        }
+        await self.send(json.dumps(message_data))
+
+    async def complete_task_save_message_models(self, response):
+        message_data = {
+            'type': 'task_complete__save_model',
+        }
+        await self.send(json.dumps(message_data))
+
+    async def complete_task_save_message_models(self, response):
+        message_data = {
+            'type': 'complete_task_replace_default_room_name',
+        }
+        await self.send(json.dumps(message_data))
+
 
     # 回答の生成を行う非同期関数
     async def chat_generater(self,
@@ -276,41 +309,6 @@ class OpenAIChatConsumer(AsyncWebsocketConsumer):
                 content = ''
             yield content
             await asyncio.sleep(asyncio_sleep)
-
-    # 次の質問アシストの生成と送信を行う非同期関数
-    async def generate_next_question_assist(self,
-                                            data_dict:dict,
-                                            RETRY_LIMIT_N:int   = 3,
-                                            ) -> AsyncGenerator[List[str], None]:
-        
-        llm = Llm(temperature       = 1.0,
-                  model_name        = data_dict['model_name'],
-                  api_key           = settings.OPENAI_API_KEY,
-                  azure_endpoint    = settings.AZURE_OPENAI_ENDPOINT if settings.IS_USE_AZURE_OPENAI else None,
-                  azure_api_version = settings.AZURE_OPENAI_API_VERSION if settings.IS_USE_AZURE_OPENAI else None,)
-
-        next_question_list = []
-        c = 0
-        while c < RETRY_LIMIT_N:
-            try:
-                next_question_jsonStr = llm.get_response(
-                    NextQuestionAssistantPrompt(data_dict['user_sentence'],
-                                                data_dict['llm_response'],
-                                                data_dict['history_text'])
-                )
-                if settings.DEBUG:
-                    print_color('*'*30, 4)
-                    print_color(f'next_question_jsonStr({c}):\n{next_question_jsonStr}', 4)
-                    print_color('*'*30, 4)
-                next_question_json = json.loads(next_question_jsonStr.replace('```python','')\
-                                                                     .replace('```json','')\
-                                                                     .replace('```', ''))
-                next_question_list = next_question_json['NextHumanQuestionsList']
-                c = RETRY_LIMIT_N
-            except:
-                c += 1
-
-        yield next_question_list
 
     # 文字列のストリームを行う非同期関数
     async def context_stremer(self,

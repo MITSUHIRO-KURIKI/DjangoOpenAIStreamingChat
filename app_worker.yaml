@@ -1,0 +1,39 @@
+runtime: python
+env: flex
+entrypoint: celery -A apps.chat worker --loglevel=info
+runtime_config:
+  operating_system: 'ubuntu18'
+  runtime_version:  '3.9'
+
+# https://cloud.google.com/appengine/docs/flexible/reference/app-yaml?hl=ja&tab=python#resource-settings
+resources:
+  cpu: 2
+  memory_gb: 2.3
+  disk_size_gb: 10
+
+# https://cloud.google.com/appengine/docs/flexible/reference/app-yaml?hl=ja&tab=python#automatic_scaling
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 5
+  cool_down_period_sec: 180
+  cpu_utilization:
+    target_utilization: 0.8
+  target_concurrent_requests: 100
+
+# https://cloud.google.com/memorystore/docs/redis/connect-redis-instance-flex?hl=ja#python_1
+# Update with Redis instance details
+
+env_variables:
+  REDISHOST: '*** YOUR_REDISHOST ***'
+  REDISPORT: '*** YOUR_REDISPORT ***'
+
+beta_settings:
+    # cloud_sql_instances: <DB_SQL_CONNECTION_NAME>
+    cloud_sql_instances: *** YOUR_DB_SQL_CONNECTION_NAME ***
+
+# Update with Serverless VPC Access connector details
+network:
+  name: *** default or YOUR_NETWORK_NAME ***
+  # subnetwork_name: *** YOUR_SUBNETWORK_NAME ***
+  # instance_ip_mode: internal
+  # session_affinity: true

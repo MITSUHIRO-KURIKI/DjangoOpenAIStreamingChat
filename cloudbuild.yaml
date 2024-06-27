@@ -1,0 +1,5 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', 'app.yaml']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', 'app_worker.yaml']
