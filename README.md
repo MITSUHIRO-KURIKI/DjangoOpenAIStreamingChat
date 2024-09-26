@@ -78,6 +78,8 @@ celery==5.4.0
 本アプリケーションで使われる各種ライブラリのライセンスは改変したものを含めて本ライセンスには含まれません。各種ライブラリの原ライセンスに従って利用してください。
 
 ## suppl.
+<details><summary>TREE</summary>
+
 ```
 DjangoOpenAIStreamingChat/
 ├─accounts
@@ -181,3 +183,4 @@ DjangoOpenAIStreamingChat/
 │      └─home
 └─templatetags
 ```
+</details>
