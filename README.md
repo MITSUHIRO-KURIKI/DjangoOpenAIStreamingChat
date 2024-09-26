@@ -50,6 +50,7 @@ RADIS_PORT='*** RADIS PORT ***'
 
 ## 実行
 * terminal(0)  
+<sup>ここでエラーがでる場合には python=3.9.18 を確認してみてください</sup>
 ```
 $ pip install -r requirements-base.txt
 $ ProjectSetupBat
