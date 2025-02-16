@@ -4,6 +4,9 @@
 ## What is this?
 [DjangoTemplate](https://github.com/MITSUHIRO-KURIKI/DjangoTemplate/ "DjangoTemplate")をベースに[OpenAI API](https://openai.com/blog/openai-api "OpenAI API")を利用したチャットアプリを学習として作成しました
 
+> [!IMPORTANT]
+> <sup>* [DjangoREST_NextJS_Demo](https://github.com/MITSUHIRO-KURIKI/DjangoREST_NextJS_Demo)への統合を行っています。</sup>  
+
 ### 🍭UPDATE
 * [celery](https://github.com/celery/celery/tree/main/examples/django "celery")を[Django Channels](https://channels.readthedocs.io/en/latest/ "Django Channels")と統合し、一部の処理を Worker で処理を行います(Localで動作確認済。GCPは未確認ですが、おそらくデプロイできると思います)   
 * [marked.js](https://github.com/markedjs/marked "marked.js"), [DOMPurify](https://github.com/cure53/DOMPurify "DOMPurify")を利用してLLMに含まれる Markdown を html化の実装  
