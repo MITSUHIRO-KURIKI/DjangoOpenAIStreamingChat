@@ -6,6 +6,8 @@
 
 > [!IMPORTANT]
 > [DjangoREST_NextJS_Demo](https://github.com/MITSUHIRO-KURIKI/DjangoREST_NextJS_Demo)への統合を行っています。 
+> > <sup>I'm integrating it into [DjangoREST_NextJS_Demo](https://github.com/MITSUHIRO-KURIKI/DjangoREST_NextJS_Demo).</sup>  
+
 
 ### 🍭UPDATE
 * [celery](https://github.com/celery/celery/tree/main/examples/django "celery")を[Django Channels](https://channels.readthedocs.io/en/latest/ "Django Channels")と統合し、一部の処理を Worker で処理を行います(Localで動作確認済。GCPは未確認ですが、おそらくデプロイできると思います)   
